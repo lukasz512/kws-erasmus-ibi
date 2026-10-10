@@ -125,11 +125,11 @@ window.DECKS = [
     slides: [
       { k: 'title', kicker: T('Erasmus+ · Edukacja dorosłych', 'Erasmus+ · Adult education', 'Erasmus+ · Educación de adultos'), h: T('KASZËBI W EUROPIE!', 'KASZËBI IN EUROPE!', '¡CASUBIOS EN EUROPA!'), p: T('Rzetelna i nowoczesna edukacja cyfrowa na terenach wiejskich · Ibi i Alicante, 11–21.10.2026', 'Reliable, modern digital education in rural areas · Ibi and Alicante, 11–21 Oct 2026', 'Educación digital fiable y moderna en zonas rurales · Ibi y Alicante, 11–21 oct 2026'), img: 'img/alicante.jpg' },
       { k: 'join' },
-      { k: 'text', h: T('Kim jesteśmy', 'Who we are', 'Quiénes somos'), img: 'img/kaszuby.jpg?v=10', li: [
-        T('Fundacja Kaszëbi we swiecë z Nakli, powiat bytowski', 'Kaszëbi we swiecë Foundation from Nakla, Bytów county, Poland', 'Fundación Kaszëbi we swiecë de Nakla, Polonia'),
-        T('Ok. 120 stałych słuchaczy: koła gospodyń wiejskich, seniorzy', 'About 120 regular adult learners: rural women’s circles, seniors', 'Unos 120 alumnos adultos: asociaciones de mujeres rurales, mayores'),
-        T('Bezpłatne zajęcia komputerowe, językowe i kulturowe', 'Free computer, language and culture classes', 'Clases gratuitas de informática, idiomas y cultura'),
-        T('Wcześniej: Teneryfa 2024, „Kaszëbi w Europie” 2025, partnerstwo ze Słowacją', 'Before: Tenerife 2024, “Kaszëbi w Europie” 2025, partnership with Slovakia', 'Antes: Tenerife 2024, «Kaszëbi w Europie» 2025, asociación con Eslovaquia')
+      { k: 'text', h: T('Kim jesteśmy', 'Who we are', 'Quiénes somos'), img: 'img/fundacja.jpg', li: [
+        T('Organizacja pozarządowa (NGO): fundacja non-profit z kaszubskiej wsi Nakla, działamy od 2023 r.', 'A non-governmental organisation (NGO): a non-profit foundation from the Kashubian village of Nakla, active since 2023', 'Una organización no gubernamental (ONG): fundación sin ánimo de lucro del pueblo casubio de Nakla, activa desde 2023'),
+        T('Ok. 120 dorosłych słuchaczy ze wsi: koła gospodyń wiejskich i seniorzy, wszystkie zajęcia bezpłatne', 'About 120 adult learners from villages: rural women’s circles and seniors, all classes free of charge', 'Unos 120 alumnos adultos de pueblos: asociaciones de mujeres rurales y mayores, todas las clases gratuitas'),
+        T('Uczymy kompetencji cyfrowych i języków, a kaszubski haft, język i tradycje pokazujemy w Europie', 'We teach digital and language skills, and take Kashubian embroidery, language and traditions to Europe', 'Enseñamos competencias digitales e idiomas, y llevamos el bordado, la lengua y las tradiciones casubias a Europa'),
+        T('3 projekty Erasmus+: Teneryfa, „Kaszëbi w Europie” i partnerstwo ze Słowacją (na zdjęciu)', '3 Erasmus+ projects: Tenerife, “Kaszëbi w Europie” and a partnership with Slovakia (in the photo)', '3 proyectos Erasmus+: Tenerife, «Kaszëbi w Europie» y una asociación con Eslovaquia (en la foto)')
       ] },
       { k: 'text', h: T('Nasz projekt', 'Our project', 'Nuestro proyecto'), img: 'img/tablet.jpg', li: [
         T('„KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”', '“KASZËBI IN EUROPE! – ensuring access to reliable and modern digital education in rural areas”', '«¡CASUBIOS EN EUROPA! – garantizar el acceso a una educación digital fiable y moderna en zonas rurales»'),
