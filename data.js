@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '53'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '54'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
@@ -138,7 +138,7 @@ window.SURVEY_UI = {
   problem: T('Skala problemu przed wyjazdem', 'The problem before the trip', 'El problema antes del viaje'),
   evaluation: T('Ocena wyjazdu', 'About the trip', 'Sobre el viaje'),
   sending: T('Wysyłanie…', 'Sending…', 'Enviando…'),
-  failed: T('Brak połączenia. Pokaż ten kod prowadzącemu – wpisze Twoje odpowiedzi:', 'No connection. Show this code to the presenter, who will enter your answers:', 'Sin conexión. Enseña este código a la persona que presenta:'),
+  failed: T('Odpowiedzi zapisane na telefonie, wysyłamy je w tle. Jeśli to trwa długo, pokaż ten kod prowadzącemu:', 'Answers saved on your phone and being sent in the background. If it takes long, show this code to the presenter:', 'Respuestas guardadas en el móvil; se envían en segundo plano. Si tarda, enseña este código a quien presenta:'),
   intro: T('Ankieta jest anonimowa i zajmuje ok. 12 minut.', 'The survey is anonymous and takes about 12 minutes.', 'La encuesta es anónima y dura unos 12 minutos.')
 };
 

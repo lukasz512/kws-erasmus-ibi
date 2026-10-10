@@ -11,20 +11,20 @@
   :root { --t: #0B1F3A; --td: #08172B; --navy: #0B1F3A; --eu: #003399; --ok: #1E7B4A; --line: #D9D5C8; --cream: #F5F3EC; }
   * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
   body { background: var(--cream); color: var(--navy); font-family: 'Public Sans', Arial, sans-serif; min-height: 100vh; }
-  body.team { background: linear-gradient(180deg, var(--t) 0, var(--t) 210px, var(--cream) 210px); }
+  body.team { background: var(--cream); }
   .wrap { padding: 14px 16px 40px; max-width: 520px; margin: 0 auto; }
   header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
   header img { height: 40px; background: #fff; border-radius: 10px; padding: 3px 6px; }
-  .langs button { border: 0; background: rgba(255,255,255,.85); border-radius: 8px; padding: 7px 9px; font: 700 14px 'Public Sans'; margin-left: 4px; color: var(--navy); }
+  .langs button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 7px 9px; font: 700 14px 'Public Sans'; margin-left: 4px; color: var(--navy); }
   .langs button.on { background: var(--navy); color: #fff; }
-  body.team .langs button.on { background: #fff; color: var(--t); }
+  body.team .langs button.on { background: var(--t); color: #fff; }
   h1 { font: 600 26px/1.2 'Source Serif 4', Georgia, serif; margin: 18px 0 14px; }
   .lobby h1 { text-align: center; }
   .tbtn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 18px; margin-bottom: 14px; border: 0; border-radius: 22px; color: #fff; font: 900 26px 'Public Sans'; text-align: left; box-shadow: 0 6px 0 rgba(0,0,0,.25); transition: transform .1s; }
   .tbtn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.25); }
   .tbtn .ic { font-size: 40px; width: 56px; height: 56px; background: rgba(255,255,255,.2); border-radius: 16px; display: grid; place-items: center; }
   .tbtn small { display: block; font: 700 15px 'Public Sans'; opacity: .9; }
-  .hero { color: #fff; margin: 16px 0 18px; display: flex; align-items: center; gap: 14px; }
+  .hero { color: #fff; margin: 14px 0 18px; display: flex; align-items: center; gap: 14px; background: var(--t); border-radius: 24px; padding: 16px; box-shadow: 0 6px 0 var(--td); }
   .hero .ic { font-size: 44px; width: 70px; height: 70px; background: rgba(255,255,255,.18); border-radius: 22px; display: grid; place-items: center; animation: bob 2.4s ease-in-out infinite; }
   @keyframes bob { 50% { transform: translateY(-5px) rotate(-4deg); } }
   .hero b { font: 900 28px 'Public Sans'; display: block; }
@@ -53,8 +53,8 @@
   .part { font: 900 13px 'Public Sans'; color: #fff; opacity: .9; text-transform: uppercase; letter-spacing: .05em; margin-top: 14px; }
   .prog { height: 12px; background: rgba(255,255,255,.3); border-radius: 99px; overflow: hidden; margin: 10px 0 4px; }
   .prog i { display: block; height: 100%; background: #fff; border-radius: 99px; transition: width .3s; }
-  .qhead { color: #fff; min-height: 150px; }
-  .qhead h1 { margin: 10px 0 0; }
+  .qhead { color: #fff; background: var(--t); border-radius: 24px; padding: 6px 18px 20px; margin: 14px 0 16px; box-shadow: 0 6px 0 var(--td); }
+  .qhead h1 { margin: 10px 0 0; font-size: 24px; }
   .help { font-size: 15px; color: #6A7385; line-height: 1.4; margin: 6px 0 12px; }
   input.code { width: 100%; font: 900 34px 'Public Sans'; letter-spacing: .15em; text-transform: uppercase; text-align: center; padding: 14px; border-radius: 16px; border: 3px solid var(--t); margin: 6px 0 14px; }
   .img { height: 170px; border-radius: 16px; background-size: cover; background-position: center; margin-bottom: 12px; }
@@ -75,10 +75,10 @@
   <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
   <main id="main"></main>
 </div>
-<script src="data.js?v=53"></script>
+<script src="data.js?v=54"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=53"></script>
-<script src="maps.js?v=53"></script>
+<script src="common.js?v=54"></script>
+<script src="maps.js?v=54"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -162,9 +162,31 @@ function drawList() {
       h('span', { class: 'ti' }, actIcon(a)), h('span', {}, h('b', {}, actTitle(a)), h('small', {}, sub)),
       h('span', { class: 'st' }, isDone ? '✓ ' + L(GAME_UI.done) : isLive ? '● ' + L(GAME_UI.live) : L(GAME_UI.todo))));
   });
+  const pb = pendingBox(); if (pb) main.append(pb);
   if (nDone === acts.length) main.append(h('div', { class: 'card alldone' }, '🏆 ' + L(GAME_UI.allDone)));
   if (done['survey-post']) main.append(h('a', { class: 'btn main', href: 'cert.html?lang=' + LANG, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle)));
   main.append(h('button', { class: 'link', style: 'color:#6A7385', onclick: () => { group = null; store(gKey, null); draw(); } }, L(UI.change)));
+}
+
+let flushing = false;
+async function flushOutbox() {
+  if (flushing) return; flushing = true;
+  const ob = store('kws-outbox') || {};
+  for (const [k, it] of Object.entries(ob)) {
+    const ok = Sheet.url() ? await Sheet.post(it.row) : await Live.send(it.topic, it.row);
+    if (Sheet.url()) Live.send(it.topic, it.row);
+    if (ok) { const cur = store('kws-outbox') || {}; delete cur[k]; store('kws-outbox', cur); }
+  }
+  flushing = false;
+  if (!view) draw();
+}
+setInterval(flushOutbox, 20000);
+function pendingBox() {
+  const ob = Object.values(store('kws-outbox') || {}).filter((it) => it.topic === topic);
+  if (!ob.length) return null;
+  return h('div', { class: 'card', style: 'margin-top:12px' }, h('p', { class: 'help', style: 'margin-top:0' }, '⏳ ' + L(SURVEY_UI.failed)),
+    ob.map((it) => h('p', { style: 'font:700 20px monospace;word-break:break-all' }, `${it.row.phase.toUpperCase()} · ${it.row.code} · ${it.str}`)),
+    h('button', { class: 'btn', style: 'justify-content:center', onclick: () => flushOutbox() }, '↻ ' + L(SURVEY_UI.send)));
 }
 
 function backBar(extra) {
@@ -220,16 +242,10 @@ function drawSurvey(a) {
   }
   if (d.step >= n) {
     const btn = h('button', { class: 'btn main', onclick: () => {
-      btn.disabled = true; btn.textContent = '⏳ ' + L(SURVEY_UI.sending);
+      // Answers are kept on the phone first, so the button never hangs; sending retries in the background.
       const row = { k: 's', phase: ph, code: d.code, g: group, ans: d.ans, d: dev };
-      const progress = (k) => { btn.textContent = `⏳ ${L(SURVEY_UI.sending)} (${k})`; };
-      const save = Sheet.url() ? Sheet.postSure(row, progress).then((ok) => { Live.send(topic, row); return ok; }) : Live.sendSure(topic, row, progress);
-      save.then((ok) => {
-        if (ok) { d.sent = true; saveD(); finished[dev] = group; finish(a); return; }
-        const str = items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('');
-        main.append(h('p', { class: 'msg' }, L(SURVEY_UI.failed)), h('p', { class: 'msg', style: 'font:700 22px monospace;word-break:break-all' }, `${d.code} · ${str}`));
-        btn.disabled = false; btn.textContent = L(SURVEY_UI.send);
-      });
+      const ob = store('kws-outbox') || {}; ob[topic + '|' + ph] = { topic, row, str: items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('') }; store('kws-outbox', ob);
+      d.sent = true; saveD(); finished[dev] = group; finish(a); flushOutbox();
     } }, '🚀 ' + L(SURVEY_UI.send));
     main.append(backBar(h('h1', {}, '✓ ' + d.code)), h('div', { class: 'card' }, btn, h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step = n - 1; saveD(); draw(); } }, '←')));
     return;
@@ -264,6 +280,7 @@ function handle(x, quiet) {
 }
 
 draw();
+flushOutbox();
 if (topic) {
   Live.history(topic).then((ms) => { ms.map(Live.parse).forEach((x) => handle(x, true)); if (!view) draw(); });
   Live.listen(topic, (m) => handle(Live.parse(m)));
