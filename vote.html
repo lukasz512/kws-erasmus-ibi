@@ -42,10 +42,10 @@
 <body>
 <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
 <main id="main"></main>
-<script src="data.js?v=43"></script>
+<script src="data.js?v=44"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=43"></script>
-<script src="maps.js?v=43"></script>
+<script src="common.js?v=44"></script>
+<script src="maps.js?v=44"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -140,7 +140,11 @@ function drawSurvey() {
   const d = store(dk) || { code: '', step: -1, ans: {} };
   const saveD = () => store(dk, d);
   main.append(h('p', { class: 'help' }, L(SURVEY_UI.title) + ' · ' + L(SURVEY_UI[ph])));
-  if (d.sent) { main.append(h('p', { class: 'msg ok' }, '✓ ' + L(SURVEY_UI.done))); return; }
+  if (d.sent) {
+    main.append(h('p', { class: 'msg ok' }, '✓ ' + L(SURVEY_UI.done)));
+    if (ph === 'post') main.append(h('a', { class: 'btn main', href: 'cert.html?lang=' + LANG, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle)));
+    return;
+  }
   if (d.step < 0) {
     const inp = h('input', { class: 'code', maxlength: '4', value: d.code, placeholder: 'A07', autocomplete: 'off' });
     main.append(h('h1', {}, L(SURVEY_UI.code)), h('p', { class: 'help' }, L(SURVEY_UI.codeHelp)), inp,
