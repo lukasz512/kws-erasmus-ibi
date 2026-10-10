@@ -241,7 +241,7 @@ window.DECKS = [
         T('Szukajcie błędów: dłonie, napisy, cienie, tło', 'Look for mistakes: hands, writing, shadows, background', 'Buscad fallos: manos, letras, sombras, fondo')
       ] },
       { k: 'results' },
-      { k: 'end', h: T('Myśl, zanim udostępnisz!', 'Think before you share!', '¡Piensa antes de compartir!') }
+      { k: 'end', h: T('Zatrzymaj się, zanim udostępnisz!', 'Stop before you share!', '¡Para antes de compartir!') }
     ]
   },
   {
