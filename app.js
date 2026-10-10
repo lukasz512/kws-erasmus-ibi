@@ -138,7 +138,7 @@ const R = {
   },
   text(s) {
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
-      h('div', { class: 'cols' }, h('div', { class: 'txt' }, bullets(s.li)), s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));
+      h('div', { class: 'cols' + (s.wide ? ' wide' : '') }, h('div', { class: 'txt' }, bullets(s.li)), s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));
   },
   compare(s) {
     const fig = (x) => h('figure', {}, h('div', { class: 'pic', style: bg(x.img) }), h('figcaption', {}, L(x.h)));

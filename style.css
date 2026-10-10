@@ -271,3 +271,7 @@ body.reader .people { grid-template-columns: 1fr 1fr; }
 .qrow { height: 50px; }
 .qbars { height: 42px; justify-content: center; flex: none; }
 .qlist { justify-content: flex-start; gap: 8px; }
+.cols.wide { gap: 48px; }
+.cols.wide > .txt { flex: 0.85; }
+.cols.wide > .pic { flex: 1.35; background-position: center 40%; }
+.cols.wide li { font-size: 34px; }
