@@ -145,5 +145,19 @@ window.CREDITS = [
   "author": "WDnet",
   "license": "CC0",
   "page": "https://commons.wikimedia.org/wiki/File:Pickled-cucumbers-1520638.jpg"
+ },
+ {
+  "file": "img/plince.jpg",
+  "title": "Potato pancakes.jpg",
+  "author": "Daniel Spils",
+  "license": "CC BY-SA 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Potato_pancakes.jpg"
+ },
+ {
+  "file": "img/fallera.jpg",
+  "title": "508 Vestit de fallera a l'aparador de la botiga Albaes",
+  "author": "Enric",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/"
  }
 ];

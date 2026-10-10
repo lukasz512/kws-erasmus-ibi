@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '45'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '46'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
@@ -173,9 +173,21 @@ window.DECKS = [
       { k: 'guess', g: 'g_elche' },
       { k: 'guess', g: 'g_vila' },
       { k: 'guess', g: 'g_ibi' },
-      { k: 'compare', a: { img: 'img/kaszuby.jpg?v=10', h: T('Kaszuby: jeziora i lasy', 'Kashubia: lakes and forests', 'Casubia: lagos y bosques') }, b: { img: 'img/villajoyosa.jpg', h: T('Walencja: góry i morze', 'Valencia: mountains and sea', 'Valencia: montaña y mar') } },
-      { k: 'compare', a: { img: 'img/haft.jpg', h: T('Haft kaszubski', 'Kashubian embroidery', 'Bordado casubio') }, b: { img: 'img/paella.jpg', h: T('Paella z Walencji', 'Valencian paella', 'Paella valenciana') } },
-      { k: 'compare', a: { img: 'img/dozynki.jpg?v=23', h: T('Dożynki (òżniwinë) w Parchowie', 'Harvest festival in Parchowo', 'Fiesta de la cosecha en Parchowo') }, b: { img: 'img/hogueras.jpg', h: T('Hogueras: święto ognia', 'Hogueras: the fire festival', 'Hogueras: la fiesta del fuego') } },
+      { k: 'unite', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/unity.svg', items: [
+        { i: '🗣️', h: T('Własny język', 'A language of our own', 'Una lengua propia'), a: T('kaszubski obok polskiego', 'Kashubian next to Polish', 'casubio junto al polaco'), b: T('walencki obok hiszpańskiego', 'Valencian next to Spanish', 'valenciano junto al castellano') },
+        { i: '🎉', h: T('Święta całej wspólnoty', 'Community festivals', 'Fiestas de todo el pueblo'), a: T('dożynki (òżniwinë)', 'harvest festival (òżniwinë)', 'fiesta de la cosecha'), b: T('Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos') },
+        { i: '🤝', h: T('Ludzie razem', 'People together', 'Gente unida'), a: T('koła gospodyń wiejskich', 'rural women’s circles', 'asociaciones de mujeres rurales'), b: T('stowarzyszenia i comparsas', 'associations and comparsas', 'asociaciones y comparsas') },
+        { i: '🧵', h: T('Rękodzieło', 'Crafts', 'Artesanía'), a: T('haft kaszubski', 'Kashubian embroidery', 'bordado casubio'), b: T('ceramika i koronka', 'ceramics and lace', 'cerámica y encaje') }
+      ], note: T('Ciekawostka: 28 grudnia w Ibi trwa Els Enfarinats – bitwa na mąkę i jajka', 'Fun fact: on 28 December Ibi holds Els Enfarinats – a flour and egg battle', 'Curiosidad: el 28 de diciembre Ibi celebra Els Enfarinats, batalla de harina y huevos') },
+      { k: 'rhythm', h: T('Rytm dnia', 'Daily rhythm', 'El ritmo del día'),
+        meals: [
+          { i: '🍽️', l: T('Obiad', 'Lunch', 'Comida'), ksz: [13, 14], es: [14, 15.5] },
+          { i: '🌙', l: T('Kolacja', 'Dinner', 'Cena'), ksz: [18, 19], es: [21, 22] }
+        ],
+        cards: [
+          { i: '🛒', l: T('Sklepy', 'Shops', 'Tiendas'), ksz: T('otwarte cały dzień', 'open all day', 'abiertas todo el día'), es: T('przerwa na sjestę (ok. 14–17) w małych miastach', 'siesta break (about 2–5 pm) in small towns', 'cierre de siesta (14–17 h aprox.) en pueblos') },
+          { i: '🌡️', l: T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), ksz: T('ok. 10°C', 'about 10°C', 'unos 10°C'), es: T('ok. 23°C', 'about 23°C', 'unos 23°C') }
+        ] },
       { k: 'phrases', h: T('Ważne zwroty', 'Useful phrases', 'Frases útiles'), rows: [
         [T('Witajcie!', 'Welcome!', '¡Bienvenidos!'), 'Witôjtaż!', '¡Bienvenidos!', 'Benvinguts!'],
         [T('Dzień dobry', 'Good morning', 'Buenos días'), 'Dobri dzéń', 'Buenos días', 'Bon dia'],
@@ -186,27 +198,15 @@ window.DECKS = [
         [T('Na zdrowie!', 'Cheers!', '¡Salud!'), 'Na zdrowié!', '¡Salud!', 'Salut!'],
         [T('Do widzenia', 'Goodbye', 'Adiós'), 'Do ùzdrzeniô', 'Adiós', 'Adéu']
       ], note: T('Kaszubski: język regionalny w Polsce (od 2005) · walencki: język współurzędowy w Walencji', 'Kashubian: a regional language in Poland (since 2005) · Valencian: co-official in the Valencian Community', 'Casubio: lengua regional en Polonia (desde 2005) · valenciano: lengua cooficial en la Comunidad Valenciana') },
-      { k: 'rhythm', h: T('Rytm dnia', 'Daily rhythm', 'El ritmo del día'),
-        meals: [
-          { i: '🍽️', l: T('Obiad', 'Lunch', 'Comida'), ksz: [13, 14], es: [14, 15.5] },
-          { i: '🌙', l: T('Kolacja', 'Dinner', 'Cena'), ksz: [18, 19], es: [21, 22] }
-        ],
-        cards: [
-          { i: '🛒', l: T('Sklepy', 'Shops', 'Tiendas'), ksz: T('otwarte cały dzień', 'open all day', 'abiertas todo el día'), es: T('przerwa na sjestę (ok. 14–17) w małych miastach', 'siesta break (about 2–5 pm) in small towns', 'cierre de siesta (14–17 h aprox.) en pueblos') },
-          { i: '🌡️', l: T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), ksz: T('ok. 10°C', 'about 10°C', 'unos 10°C'), es: T('ok. 23°C', 'about 23°C', 'unos 23°C') }
-        ] },
-      { k: 'unite', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/unity.svg', items: [
-        { i: '🗣️', h: T('Własny język', 'A language of our own', 'Una lengua propia'), a: T('kaszubski obok polskiego', 'Kashubian next to Polish', 'casubio junto al polaco'), b: T('walencki obok hiszpańskiego', 'Valencian next to Spanish', 'valenciano junto al castellano') },
-        { i: '🎉', h: T('Święta całej wspólnoty', 'Community festivals', 'Fiestas de todo el pueblo'), a: T('dożynki (òżniwinë)', 'harvest festival (òżniwinë)', 'fiesta de la cosecha'), b: T('Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos') },
-        { i: '🤝', h: T('Ludzie razem', 'People together', 'Gente unida'), a: T('koła gospodyń wiejskich', 'rural women’s circles', 'asociaciones de mujeres rurales'), b: T('stowarzyszenia i comparsas', 'associations and comparsas', 'asociaciones y comparsas') },
-        { i: '🧵', h: T('Rękodzieło', 'Crafts', 'Artesanía'), a: T('haft kaszubski', 'Kashubian embroidery', 'bordado casubio'), b: T('ceramika i koronka', 'ceramics and lace', 'cerámica y encaje') }
-      ], note: T('Ciekawostka: 28 grudnia w Ibi trwa Els Enfarinats – bitwa na mąkę i jajka', 'Fun fact: on 28 December Ibi holds Els Enfarinats – a flour and egg battle', 'Curiosidad: el 28 de diciembre Ibi celebra Els Enfarinats, batalla de harina y huevos') },
+      { k: 'compare', a: { img: 'img/dozynki.jpg?v=23', h: T('Dożynki (òżniwinë) w Parchowie', 'Harvest festival in Parchowo', 'Fiesta de la cosecha en Parchowo') }, b: { img: 'img/hogueras.jpg', h: T('Hogueras: święto ognia', 'Hogueras: the fire festival', 'Hogueras: la fiesta del fuego') } },
+      { k: 'compare', a: { img: 'img/haft.jpg', h: T('Haft kaszubski', 'Kashubian embroidery', 'Bordado casubio') }, b: { img: 'img/fallera.jpg', h: T('Haftowana suknia fallery', 'Embroidered fallera dress', 'Traje de fallera bordado') } },
+      { k: 'compare', a: { img: 'img/plince.jpg', h: T('Plińce: kaszubskie placki ziemniaczane', 'Plińce: Kashubian potato pancakes', 'Plińce: tortitas de patata casubias') }, b: { img: 'img/paella.jpg', h: T('Paella z Walencji', 'Valencian paella', 'Paella valenciana') } },
+      { k: 'compare', a: { img: 'img/kaszuby.jpg?v=10', h: T('Kaszuby: jeziora i lasy', 'Kashubia: lakes and forests', 'Casubia: lagos y bosques') }, b: { img: 'img/villajoyosa.jpg', h: T('Walencja: góry i morze', 'Valencia: mountains and sea', 'Valencia: montaña y mar') } },
       { k: 'task', h: T('Tłumacz w aparacie', 'Camera translator', 'Traductor con la cámara'), screen: 'translate', icons: ['🌐', '📷', '🎙️'], li: [
         T('Otwórzcie Tłumacza Google → „Aparat”', 'Open Google Translate → “Camera”', 'Abrid Google Traductor → «Cámara»'),
         T('Nakierujcie tablet na hiszpańskie menu lub szyld', 'Point the tablet at a Spanish menu or sign', 'Apuntad a un menú o cartel en español'),
         T('Nagrajcie powitanie po kaszubsku dla Hiszpanów', 'Record a Kashubian greeting for our Spanish hosts', 'Grabad un saludo en casubio para los anfitriones')
       ] },
-      { k: 'pins' },
       { k: 'end', h: T('Dziękujemy! ¡Gracias!', 'Thank you! ¡Gracias!', '¡Gracias! Dziękujemy!') }
     ]
   },
