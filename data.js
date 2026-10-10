@@ -212,10 +212,10 @@ window.DECKS = [
     id: 'p4', title: T('Dezinformacja: jak nie dać się nabrać', 'Disinformation: how not to be fooled', 'Desinformación: cómo no dejarse engañar'),
     slides: [
       { k: 'title', kicker: T('Prezentacja 2', 'Presentation 2', 'Presentación 2'), h: T('Nie daj się nabrać!', "Don't get fooled!", '¡Que no te engañen!'), p: T('Fake newsy, deepfake i sztuczna inteligencja', 'Fake news, deepfakes and artificial intelligence', 'Bulos, deepfakes e inteligencia artificial'), img: 'img/phone.jpg' },
-      { k: 'text', h: T('Czym jest dezinformacja?', 'What is disinformation?', '¿Qué es la desinformación?'), li: [
-        T('Fałszywa informacja szerzona celowo: dla pieniędzy, polityki albo kliknięć', 'False information spread on purpose: for money, politics or clicks', 'Información falsa difundida a propósito: por dinero, política o clics'),
-        T('Działa, bo budzi emocje: strach, złość, oburzenie', 'It works because it triggers emotions: fear, anger, outrage', 'Funciona porque despierta emociones: miedo, rabia, indignación'),
-        T('Najszybciej rozchodzi się przez znajomych i rodzinę', 'It spreads fastest through friends and family', 'Se difunde más rápido a través de amigos y familia')
+      { k: 'disinfo', h: T('Czym jest dezinformacja?', 'What is disinformation?', '¿Qué es la desinformación?'), cards: [
+        { h: T('Celowe kłamstwo', 'A deliberate lie', 'Una mentira a propósito'), p: T('Fałszywa informacja szerzona celowo: dla pieniędzy, polityki albo kliknięć', 'False information spread on purpose: for money, politics or clicks', 'Información falsa difundida a propósito: por dinero, política o clics') },
+        { h: T('Gra na emocjach', 'It plays on emotions', 'Juega con las emociones'), p: T('Działa, bo budzi strach, złość i oburzenie', 'It works by stirring fear, anger and outrage', 'Funciona porque despierta miedo, rabia e indignación') },
+        { h: T('Szerzy się przez bliskich', 'It spreads through loved ones', 'Se difunde a través de los cercanos'), p: T('Najszybciej rozchodzi się przez znajomych i rodzinę', 'It spreads fastest through friends and family', 'Se difunde más rápido entre amigos y familia') }
       ] },
       { k: 'post', text: T('PILNE!!! Od jutra UE ZAKAZUJE kiszenia ogórków w domu! Udostępnij, zanim to usuną!!!', 'URGENT!!! From tomorrow the EU BANS home-made pickles! Share before they delete this!!!', '¡¡¡URGENTE!!! ¡Desde mañana la UE PROHÍBE hacer conservas en casa! ¡¡Comparte antes de que lo borren!!'), img: 'img/ogorki.jpg', stamp: T('ZAKAZ UE', 'EU BAN', 'PROHIBIDO UE'), note: T('Przykład wymyślony na potrzeby zajęć', 'A made-up example for this class', 'Ejemplo inventado para la clase') },
       { k: 'stop', h: T('STOP: 4 kroki przed udostępnieniem', 'STOP: 4 steps before you share', 'STOP: 4 pasos antes de compartir'), items: [

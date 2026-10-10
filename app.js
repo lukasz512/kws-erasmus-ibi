@@ -171,6 +171,21 @@ const R = {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
   },
+  disinfo(s) {
+    const n = 7, R = 150, C = 190;
+    const nodes = Array.from({ length: n }, (_, i) => { const t = (i / n) * Math.PI * 2 - Math.PI / 2; return [C + R * Math.cos(t), C + R * Math.sin(t)]; });
+    const net = `<svg viewBox="0 0 380 380" class="net">${nodes.map(([x, y], i) => `<line x1="${C}" y1="${C}" x2="${x}" y2="${y}" class="ln" style="animation-delay:${i * 0.35}s"/>`).join('')}
+      ${nodes.map(([x, y], i) => `<g class="nd"><circle cx="${x}" cy="${y}" r="30" style="animation-delay:${0.6 + i * 0.35}s"/><text x="${x}" y="${y + 11}" text-anchor="middle" font-size="30">${['👵', '👴', '👩', '🧑', '👨', '👧', '🧓'][i]}</text></g>`).join('')}
+      <circle cx="${C}" cy="${C}" r="46" class="src"/><text x="${C}" y="${C + 9}" text-anchor="middle" class="srct">FAKE</text></svg>`;
+    const visuals = [
+      h('div', { class: 'dv money' }, h('span', {}, '💰'), h('span', {}, '🏛️'), h('span', {}, '🖱️')),
+      h('div', { class: 'dv faces' }, h('span', {}, '😨'), h('span', {}, '😠'), h('span', {}, '😤')),
+      h('div', { class: 'dv spread' })
+    ];
+    visuals[2].innerHTML = net;
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
+      h('div', { class: 'dgrid3' }, s.cards.map((c, i) => h('div', { class: 'dicard' }, visuals[i], h('h3', {}, L(c.h)), h('p', {}, L(c.p)))))));
+  },
   scams(s) {
     const phone = (it) => {
       let screen;

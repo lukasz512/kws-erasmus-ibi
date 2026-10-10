@@ -530,3 +530,28 @@ body.reader .tscr.ai .gimg { font-size: 60px; } body.reader .tscr.tr .menu b, bo
 #langov .card { background: #fff; border-radius: 28px; padding: 32px 40px; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; font-family: var(--sans); color: var(--navy); }
 #langov .card p { font-size: 26px; font-weight: 700; margin: 0; }
 #langov .card small { font-size: 16px; color: var(--muted); }
+/* What is disinformation */
+.dgrid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; flex: 1; }
+.dicard { background: #fff; border-radius: 28px; padding: 30px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 6px 24px rgba(11,31,58,.08); border-top: 10px solid #C8102E; }
+.dicard h3 { font: 600 44px/1.1 var(--serif); }
+.dicard p { font-size: 30px; color: var(--muted); }
+.dv { height: 380px; border-radius: 20px; background: #FBF3E6; display: flex; align-items: center; justify-content: center; gap: 22px; }
+.dv.money span { font-size: 96px; animation: bounce 1.8s ease-in-out infinite; }
+.dv.money span:nth-child(2) { animation-delay: .3s; } .dv.money span:nth-child(3) { animation-delay: .6s; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-34px) rotate(-6deg); } 60% { transform: translateY(0); } }
+.dv.faces span { font-size: 100px; animation: beat 1.2s ease-in-out infinite; }
+.dv.faces span:nth-child(2) { animation-delay: .4s; } .dv.faces span:nth-child(3) { animation-delay: .8s; }
+@keyframes beat { 0%, 100% { transform: scale(1); filter: none; } 15% { transform: scale(1.25); filter: drop-shadow(0 0 18px rgba(200,16,46,.6)); } 30% { transform: scale(1); } }
+.dv.spread { background: #FBF3E6; padding: 0; }
+.net { width: 100%; height: 100%; }
+.net .ln { stroke: #C8102E; stroke-width: 4; stroke-dasharray: 160; stroke-dashoffset: 160; animation: spreadLn 5s infinite; }
+@keyframes spreadLn { 0% { stroke-dashoffset: 160; } 20%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 160; opacity: 0; } }
+.net .nd circle { fill: #fff; stroke: #D9D5C8; stroke-width: 4; animation: infect 5s infinite; animation-delay: inherit; }
+.net .nd { animation: none; }
+@keyframes infect { 0%, 18% { fill: #fff; stroke: #D9D5C8; } 26%, 88% { fill: #FDE2E4; stroke: #C8102E; } 100% { fill: #fff; stroke: #D9D5C8; } }
+.net .src { fill: #C8102E; animation: srcPulse 1.2s ease-in-out infinite; transform-origin: 190px 190px; }
+@keyframes srcPulse { 50% { transform: scale(1.12); } }
+.net .srct { fill: #fff; font: 900 26px Arial, sans-serif; }
+body.reader .dgrid3 { grid-template-columns: 1fr; gap: 12px; }
+body.reader .dv { height: 160px; } body.reader .dv.money span, body.reader .dv.faces span { font-size: 44px; }
+body.reader .dicard { padding: 14px; } body.reader .dicard h3 { font-size: 20px; } body.reader .dicard p { font-size: 15px; }
