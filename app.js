@@ -145,7 +145,9 @@ const R = {
   },
   text(s) {
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
-      h('div', { class: 'cols' + (s.wide ? ' wide' : '') }, h('div', { class: 'txt' }, bullets(s.li)), s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));
+      h('div', { class: 'cols' + (s.wide || s.video ? ' wide' : '') }, h('div', { class: 'txt' }, bullets(s.li)),
+        s.video ? h('div', { class: 'vid' }, h('iframe', { src: `https://www.youtube-nocookie.com/embed/${s.video}?rel=0&modestbranding=1`, title: L(s.h), allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen', allowfullscreen: '' }), h('small', {}, s.videoSrc))
+          : s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));
   },
   compare(s) {
     const fig = (x) => h('figure', {}, h('div', { class: 'pic', style: bg(x.img) }), h('figcaption', {}, L(x.h)));
@@ -341,7 +343,7 @@ function applyNav(x) {
   render(); scrollTo(0, 0);
 }
 
-let ANIM = params.get('anim') || (!READER && store('kws-anim')) || 'a';
+let ANIM = params.get('anim') || (!READER && store('kws-anim')) || 'mix';
 function skeletons(root) {
   root.querySelectorAll('[style*="background-image"]').forEach((el) => {
     const m = /url\(['"]?([^'")]+)/.exec(el.style.backgroundImage);
@@ -363,8 +365,9 @@ function render(dir = 0) {
   const old = [...vp.children];
   const animate = !READER && dir !== 0 && ANIM !== 'none';
   if (animate) {
-    frame.classList.add('in-' + ANIM, dir > 0 ? 'fwd' : 'back');
-    old.forEach((o) => { o.classList.add('out-' + ANIM, dir > 0 ? 'fwd' : 'back'); setTimeout(() => o.remove(), 900); });
+    const move = ANIM === 'a' ? 'a' : 'b', items = ANIM === 'b' ? 'b' : 'a';
+    frame.classList.add('in-' + move, 'items-' + items, dir > 0 ? 'fwd' : 'back');
+    old.forEach((o) => { o.classList.add('out-' + move, dir > 0 ? 'fwd' : 'back'); setTimeout(() => o.remove(), 900); });
   } else old.forEach((o) => o.remove());
   vp.append(frame);
   skeletons(frame);
@@ -454,7 +457,7 @@ function menu(on) {
       h('button', { onclick: paperForm }, '✍ Ankieta z kartki'),
       h('button', { onclick: exportCsv }, '⬇ CSV ankiety'),
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
-      [['a', 'Animacja A: płynnie'], ['b', 'Animacja B: kinowo'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
+      [['mix', 'Animacja: przejścia B + lista A'], ['a', 'Animacja A'], ['b', 'Animacja B'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
       h('button', { onclick: () => { if (confirm('Nowa sesja głosowania? (wyniki ankiety zostają na tym laptopie)')) { store('kws-topic', null); location.search = ''; } } }, '↺ Nowa sesja')),
     h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`),
     h('p', {}, 'Klawisze: ← → / spacja / pilot (na mapie podróży: kolejne przystanki) · R pokaż odpowiedź w zgadywance · F pełny ekran · M menu. Klik w odpowiedź sondy = +1 głos z sali.'),

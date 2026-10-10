@@ -314,9 +314,9 @@ body.reader #viewport .frame { position: static; }
 .frame.out-a { animation: aOut .45s ease both; pointer-events: none; }
 @keyframes aIn { from { opacity: 0; transform: scale(1.015); } to { opacity: 1; transform: none; } }
 @keyframes aOut { from { opacity: 1; } to { opacity: 0; transform: scale(.985); } }
-.frame.in-a .slide h1, .frame.in-a .slide h2, .frame.in-a .kicker, .frame.in-a .badge, .frame.in-a .chip { animation: rise .6s .12s cubic-bezier(.2,.7,.2,1) both; }
-.frame.in-a li, .frame.in-a .opt, .frame.in-a .stopcard, .frame.in-a .kpi, .frame.in-a table.phr tr, .frame.in-a .person, .frame.in-a figure { animation: rise .55s cubic-bezier(.2,.7,.2,1) both; }
-.frame.in-a .pic, .frame.in-a .right, .frame.in-a .gpic, .frame.in-a .postimg { animation: kb 1.2s ease both; }
+.frame.items-a .slide h1, .frame.items-a .slide h2, .frame.items-a .kicker, .frame.items-a .badge, .frame.items-a .chip { animation: rise .6s .12s cubic-bezier(.2,.7,.2,1) both; }
+.frame.items-a li, .frame.items-a .opt, .frame.items-a .stopcard, .frame.items-a .kpi, .frame.items-a table.phr tr, .frame.items-a .person, .frame.items-a figure { animation: rise .55s cubic-bezier(.2,.7,.2,1) both; }
+.frame.items-a .pic, .frame.items-a .right, .frame.items-a .gpic, .frame.items-a .postimg { animation: kb 1.2s ease both; }
 @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
 @keyframes kb { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
 /* B: cinematic — horizontal push with parallax, content slides in from the side */
@@ -328,7 +328,7 @@ body.reader #viewport .frame { position: static; }
 @keyframes bInB { from { transform: translateX(-100%); } to { transform: none; } }
 @keyframes bOutF { to { transform: translateX(-35%); opacity: .2; } }
 @keyframes bOutB { to { transform: translateX(35%); opacity: .2; } }
-.frame.in-b li, .frame.in-b .opt, .frame.in-b .stopcard, .frame.in-b .kpi, .frame.in-b table.phr tr, .frame.in-b .person, .frame.in-b figure { animation: slideL .6s .35s cubic-bezier(.2,.7,.2,1) both; }
+.frame.items-b li, .frame.items-b .opt, .frame.items-b .stopcard, .frame.items-b .kpi, .frame.items-b table.phr tr, .frame.items-b .person, .frame.items-b figure { animation: slideL .6s .35s cubic-bezier(.2,.7,.2,1) both; }
 .frame.in-b .pic, .frame.in-b .right, .frame.in-b .gpic { animation: para .9s cubic-bezier(.65,0,.25,1) both; }
 @keyframes slideL { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: none; } }
 @keyframes para { from { background-position: 30% center; } to { background-position: center; } }
@@ -338,7 +338,7 @@ body.reader #viewport .frame { position: static; }
 .frame li:nth-child(4), .frame .opt:nth-child(4), .frame .stopcard:nth-child(4), .frame tr:nth-child(4) { animation-delay: .42s; }
 .frame li:nth-child(5), .frame tr:nth-child(5) { animation-delay: .52s; }
 .frame tr:nth-child(6) { animation-delay: .6s; } .frame tr:nth-child(7) { animation-delay: .68s; } .frame tr:nth-child(8), .frame tr:nth-child(9) { animation-delay: .76s; }
-.frame.in-b li:nth-child(1), .frame.in-b .opt:nth-child(1), .frame.in-b .stopcard:nth-child(1), .frame.in-b tr:nth-child(1), .frame.in-b figure:nth-child(1) { animation-delay: .35s; }
+.frame.items-b li:nth-child(1), .frame.items-b .opt:nth-child(1), .frame.items-b .stopcard:nth-child(1), .frame.items-b tr:nth-child(1), .frame.items-b figure:nth-child(1) { animation-delay: .35s; }
 @media (prefers-reduced-motion: reduce) { .frame, .frame * { animation: none !important; } }
 
 /* Image skeleton */
@@ -358,3 +358,16 @@ body.reader .stopgrid { grid-template-columns: 1fr 1fr; gap: 10px; }
 body.reader .octa { width: 70px; height: 70px; font-size: 44px; }
 body.reader .stopcard { padding: 14px; gap: 8px; }
 body.reader .stopcard h3 { font-size: 18px; } body.reader .stopcard p { font-size: 14px; } body.reader .stopcard .emo { font-size: 24px; }
+
+/* mix: content waits until the slide has slid in */
+.frame.in-b.items-a li, .frame.in-b.items-a .opt, .frame.in-b.items-a .stopcard, .frame.in-b.items-a .kpi, .frame.in-b.items-a tr, .frame.in-b.items-a .person, .frame.in-b.items-a figure { animation-delay: .45s; }
+.frame.in-b.items-a li:nth-child(2), .frame.in-b.items-a .opt:nth-child(2), .frame.in-b.items-a .stopcard:nth-child(2), .frame.in-b.items-a tr:nth-child(2), .frame.in-b.items-a figure:nth-child(2) { animation-delay: .6s; }
+.frame.in-b.items-a li:nth-child(3), .frame.in-b.items-a .opt:nth-child(3), .frame.in-b.items-a .stopcard:nth-child(3), .frame.in-b.items-a tr:nth-child(3) { animation-delay: .75s; }
+.frame.in-b.items-a li:nth-child(4), .frame.in-b.items-a .opt:nth-child(4), .frame.in-b.items-a .stopcard:nth-child(4), .frame.in-b.items-a tr:nth-child(4) { animation-delay: .9s; }
+.frame.in-b.items-a li:nth-child(5), .frame.in-b.items-a tr:nth-child(5) { animation-delay: 1.05s; }
+.frame.in-b.items-a tr:nth-child(n+6) { animation-delay: 1.15s; }
+.frame.in-b.items-a .slide h2, .frame.in-b.items-a .slide h1 { animation-delay: .35s; }
+.vid { flex: 1.35; display: flex; flex-direction: column; gap: 10px; }
+.vid iframe { flex: 1; width: 100%; border: 0; border-radius: 20px; background: #000; }
+.vid small { font-size: 22px; color: var(--muted); }
+body.reader .vid iframe { min-height: 200px; }

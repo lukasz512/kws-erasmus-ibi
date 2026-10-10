@@ -213,7 +213,7 @@ window.DECKS = [
         T('Google Lens lub aplikacja Google → ikona aparatu', 'Google Lens or the Google app → camera icon', 'Google Lens o la app de Google → icono de cámara'),
         T('Gdzie i co to jest? Podajcie miasto i nazwę', 'Where and what is it? Name the town and the place', '¿Qué es y dónde está? Decid ciudad y nombre')
       ] },
-      { k: 'text', h: T('Deepfake: „Babciu, to ja!”', 'Deepfake: “Grandma, it’s me!”', 'Deepfake: «¡Abuela, soy yo!»'), img: 'img/phone.jpg', li: [
+      { k: 'text', h: T('Deepfake: „Babciu, to ja!”', 'Deepfake: “Grandma, it’s me!”', 'Deepfake: «¡Abuela, soy yo!»'), video: 'Qoruwv2C_Xo', videoSrc: 'Uwaga! TVN · YouTube', li: [
         T('AI potrafi podrobić twarz i głos bliskiej osoby z kilku sekund nagrania', 'AI can fake a loved one’s face and voice from a few seconds of recording', 'La IA puede imitar la cara y la voz de un ser querido con unos segundos de grabación'),
         T('Oszuści biorą nagrania z Facebooka czy TikToka', 'Scammers take recordings from Facebook or TikTok', 'Los estafadores usan grabaciones de Facebook o TikTok'),
         T('Fałszywe reklamy „inwestycji” ze znanymi osobami', 'Fake “investment” ads with famous people', 'Anuncios falsos de «inversión» con famosos')
