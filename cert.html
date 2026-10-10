@@ -2,179 +2,225 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Certyfikat – Kaszëbi w Europie!</title>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; }
-  body { background: #F5F3EC; color: #0B1F3A; font-family: 'Public Sans', Arial, sans-serif; padding: 16px; }
-  .form { max-width: 560px; margin: 0 auto 20px; display: flex; flex-direction: column; gap: 12px; }
-  .langs { display: flex; gap: 8px; }
-  .langs button, .go, .chip { font: inherit; border-radius: 10px; border: 1px solid #D9D5C8; background: #fff; padding: 10px 14px; color: #0B1F3A; }
-  input[type=text], textarea { font: inherit; font-size: 20px; padding: 14px; border-radius: 12px; border: 2px solid #0B1F3A; width: 100%; }
-  textarea { font-size: 17px; min-height: 130px; }
-  .go { background: #0B1F3A; color: #fff; font-size: 19px; font-weight: 700; padding: 16px; border: 0; }
-  .go.fb { background: #1877F2; }
-  .go:disabled { opacity: .5; }
-  h2 { font: 600 24px Georgia, serif; margin-top: 18px; }
+  body { background: #F5F3EC; color: #0B1F3A; font-family: 'Public Sans', Arial, sans-serif; padding: 14px; }
+  .app { max-width: 540px; margin: 0 auto; }
+  .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .top img { height: 40px; }
+  .langs button { border: 1px solid #D9D5C8; background: #fff; border-radius: 8px; padding: 7px 9px; font: 700 14px 'Public Sans'; margin-left: 4px; color: #0B1F3A; }
+  .langs button.on { background: #0B1F3A; color: #fff; }
+  .steps { display: flex; gap: 6px; margin-bottom: 14px; }
+  .steps i { flex: 1; height: 8px; border-radius: 4px; background: #D9D5C8; }
+  .steps i.on { background: #1877F2; }
+  .card { background: #fff; border-radius: 22px; padding: 18px; box-shadow: 0 6px 22px rgba(11,31,58,.1); display: flex; flex-direction: column; gap: 14px; }
+  h1 { font: 600 26px/1.2 'Source Serif 4', Georgia, serif; }
   .hint { font-size: 15px; color: #4A5568; line-height: 1.4; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { font-size: 15px; padding: 8px 12px; border-radius: 99px; background: #fff; }
+  input.name { font: 700 22px 'Public Sans'; padding: 14px; border-radius: 14px; border: 3px solid #0B1F3A; width: 100%; }
+  textarea { font: 17px/1.4 'Public Sans'; padding: 12px; border-radius: 14px; border: 2px solid #D9D5C8; min-height: 110px; width: 100%; }
+  .padwrap { position: relative; border: 3px dashed #0B1F3A; border-radius: 16px; height: 170px; touch-action: none; background: #FCFCFA; }
+  .padwrap canvas { width: 100%; height: 100%; display: block; }
+  .padwrap span { position: absolute; left: 12px; bottom: 8px; color: #9AA3B2; font-size: 14px; pointer-events: none; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 60px; border-radius: 18px; border: 0; font: 900 20px 'Public Sans'; background: #0B1F3A; color: #fff; box-shadow: 0 5px 0 #08172B; text-decoration: none; }
+  .btn.fb { background: #1877F2; box-shadow: 0 5px 0 #0E5BC2; font-size: 22px; min-height: 70px; }
+  .btn.ghost { background: #fff; color: #0B1F3A; border: 2px solid #D9D5C8; box-shadow: none; font-weight: 700; font-size: 17px; min-height: 52px; }
+  .btn:disabled { opacity: .5; }
+  .link { background: none; border: 0; color: #4A5568; font: 700 15px 'Public Sans'; text-decoration: underline; }
   .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .slot { aspect-ratio: 1; border-radius: 14px; border: 2px dashed #9AA3B2; background: #fff center/cover; display: grid; place-items: center; font-size: 30px; color: #9AA3B2; position: relative; overflow: hidden; }
+  .slot { aspect-ratio: 1; border-radius: 14px; border: 2px dashed #9AA3B2; background: #fff center/cover; display: grid; place-items: center; font-size: 34px; color: #9AA3B2; position: relative; overflow: hidden; }
   .slot input { position: absolute; inset: 0; opacity: 0; }
-  .slot.has { border-style: solid; border-color: #0B1F3A; font-size: 0; }
-  label.opt { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
-  #preview { width: 100%; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.15); display: none; }
-  .cert { max-width: 900px; margin: 0 auto; background: #fff; border: 10px solid #0B1F3A; outline: 3px solid #FFCC00; outline-offset: -22px; padding: 48px 40px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; aspect-ratio: 1.414; }
-  .cert img { height: 70px; }
-  .cert h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(26px, 5vw, 46px); }
-  .cert .name { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(28px, 6vw, 54px); border-bottom: 2px solid #0B1F3A; padding: 0 24px 6px; min-width: 60%; min-height: 1.3em; }
-  .cert p { font-size: clamp(13px, 2.2vw, 19px); line-height: 1.45; max-width: 680px; }
-  .cert .eu { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-top: auto; }
-  .cert .eu img { height: 54px; }
-  .cert small { font-size: 11px; color: #4A5568; }
+  .slot.has { border: 3px solid #1877F2; font-size: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font: 14px 'Public Sans'; padding: 8px 12px; border-radius: 99px; background: #fff; border: 1px solid #D9D5C8; color: #0B1F3A; }
+  #preview { width: 100%; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+  .ok { background: #DDF1E4; border-radius: 14px; padding: 14px; font-weight: 700; line-height: 1.4; }
+  /* printable certificate */
+  .cert { display: none; }
   @media print {
-    @page { size: A4 landscape; margin: 10mm; }
-    body { background: #fff; padding: 0; }
-    .form, .share { display: none !important; }
-    .cert { max-width: none; width: 100%; height: 185mm; aspect-ratio: auto; }
+    @page { size: A4 landscape; margin: 8mm; }
+    body { background: #fff; padding: 0; } .app { display: none; }
+    .cert { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; border: 8px solid #0B1F3A; outline: 2px solid #FFCC00; outline-offset: -16px; padding: 22px 40px; height: 192mm; }
+    .cert .logos { display: flex; gap: 24px; align-items: center; } .cert .logos img { height: 48px; }
+    .cert h1 { font-size: 34px; } .cert .nm { font: 600 34px 'Source Serif 4', Georgia, serif; border-bottom: 2px solid #0B1F3A; padding: 0 30px 4px; min-width: 50%; }
+    .cert p { font-size: 13px; line-height: 1.45; max-width: 880px; }
+    .cert ul { text-align: left; font-size: 12.5px; line-height: 1.5; margin: 0 auto; max-width: 820px; }
+    .cert .signs { display: flex; justify-content: space-between; width: 90%; margin-top: auto; align-items: flex-end; }
+    .cert .sg { width: 30%; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; }
+    .cert .sg img { height: 60px; max-width: 100%; object-fit: contain; } .cert .sg .line { width: 100%; border-top: 1px solid #0B1F3A; padding-top: 3px; }
+    .cert .eu { height: 46px; }
   }
 </style>
 </head>
 <body>
-<div class="form">
-  <div class="langs" id="langs"></div>
-  <input type="text" id="name" autocomplete="name">
-  <button class="go" id="save"></button>
+<div class="app">
+  <div class="top"><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></div>
+  <div class="steps" id="steps"></div>
+  <div id="main"></div>
 </div>
-<div class="cert" id="cert">
-  <img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë">
-  <h1 id="title"></h1>
-  <div class="name" id="out"></div>
-  <p id="body"></p>
-  <div class="eu"><img src="img/eu-pl.jpg" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:40px"></div>
-  <small>Fundacja Kaszëbi we swiecë · Associació Educativa i Cultural Blue Beehive (Ibi) · KA122-ADU 2026</small>
-</div>
+<div class="cert" id="cert"></div>
 
-<div class="form share">
-  <h2 id="sTitle"></h2>
-  <p class="hint" id="sHint"></p>
-  <div class="photos" id="photos"></div>
-  <textarea id="txt"></textarea>
-  <div class="chips" id="chips"></div>
-  <label class="opt"><input type="checkbox" id="tag" checked> <span id="tagL"></span></label>
-  <button class="go fb" id="share"></button>
-  <img id="preview" alt="">
-  <p class="hint" id="after"></p>
-</div>
-
-<script src="data.js?v=54"></script>
-<script src="common.js?v=54"></script>
+<script src="data.js?v=55"></script>
+<script src="common.js?v=55"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
-  const FB_PAGE = 'https://www.facebook.com/371013242770908';
-  const S = {
-    title: T('Podziel się na Facebooku', 'Share on Facebook', 'Compártelo en Facebook'),
-    hint: T('Dodaj do 3 zdjęć z wyjazdu i kilka słów od siebie. Powstanie jeden obrazek z Twoim certyfikatem i zdjęciami, gotowy do posta.', 'Add up to 3 photos from the trip and a few words of your own. You will get one picture with your certificate and photos, ready to post.', 'Añade hasta 3 fotos del viaje y unas palabras tuyas. Se creará una imagen con tu certificado y fotos, lista para publicar.'),
-    placeholder: T('Co zapamiętasz z Hiszpanii? (możesz zostawić puste)', 'What will you remember from Spain? (you can leave it empty)', '¿Qué recordarás de España? (puedes dejarlo vacío)'),
-    tag: T('Dodaj podpis projektu: Erasmus+, Unia Europejska i fundacja', 'Add the project credit: Erasmus+, the EU and the foundation', 'Añadir la mención del proyecto: Erasmus+, la UE y la fundación'),
-    share: T('Udostępnij na Facebooku', 'Share on Facebook', 'Compartir en Facebook'),
-    after: T('Tekst jest skopiowany: wklej go w poście. Oznacz stronę fundacji @Kaszëbi we swiecë, a my udostępnimy Twój wpis!', 'The text is copied: paste it into your post. Tag the foundation page @Kaszëbi we swiecë and we will share your post!', 'El texto está copiado: pégalo en tu publicación. ¡Etiqueta a la fundación @Kaszëbi we swiecë y lo compartiremos!'),
-    starters: [
-      T('Najbardziej zaskoczyło mnie… ', 'What surprised me most… ', 'Lo que más me sorprendió… '),
-      T('Nauczyłam/em się, jak… ', 'I learned how to… ', 'Aprendí a… '),
-      T('Z Hiszpanii przywożę… ', 'From Spain I bring home… ', 'De España me llevo… '),
-      T('Polecam taki wyjazd, bo… ', 'I recommend a trip like this because… ', 'Recomiendo un viaje así porque… ')
-    ],
-    sign: T('Mobilność Erasmus+ „KASZËBI W EUROPIE!” · Ibi i Alicante 2026 · Fundacja Kaszëbi we swiecë · Współfinansowane przez Unię Europejską #ErasmusPlus #KaszëbiWEuropie', 'Erasmus+ mobility “KASZËBI IN EUROPE!” · Ibi and Alicante 2026 · Kaszëbi we swiecë Foundation · Co-funded by the European Union #ErasmusPlus #KaszëbiWEuropie', 'Movilidad Erasmus+ «KASZËBI EN EUROPA» · Ibi y Alicante 2026 · Fundación Kaszëbi we swiecë · Cofinanciado por la Unión Europea #ErasmusPlus #KaszëbiWEuropie')
+  const topic = params.get('t'), group = params.get('g');
+  const C = {
+    s1: T('Twój certyfikat', 'Your certificate', 'Tu certificado'),
+    s1h: T('Wpisz imię i nazwisko, a poniżej podpisz się palcem.', 'Type your full name and sign below with your finger.', 'Escribe tu nombre y firma abajo con el dedo.'),
+    sign: T('✍️ Podpisz się palcem', '✍️ Sign with your finger', '✍️ Firma con el dedo'),
+    clear: T('wyczyść', 'clear', 'borrar'),
+    next: T('Dalej', 'Next', 'Siguiente'),
+    s2: T('Dodaj zdjęcia z wyjazdu', 'Add photos from the trip', 'Añade fotos del viaje'),
+    s2h: T('Do 3 zdjęć. Możesz pominąć.', 'Up to 3 photos. You can skip this.', 'Hasta 3 fotos. Puedes saltarlo.'),
+    s3: T('Gotowe! Pochwal się', 'Done! Show it off', '¡Listo! Compártelo'),
+    s3h: T('Możesz zmienić tekst albo zostawić nasz.', 'Change the text or keep ours.', 'Cambia el texto o deja el nuestro.'),
+    defaultText: T('Wróciłam/em z Hiszpanii z nową wiedzą: jak rozpoznać oszustwa w sieci i nie dać się nabrać na fake newsy! 🇵🇱🇪🇸', 'Back from Spain with new skills: how to spot online scams and not fall for fake news! 🇵🇱🇪🇸', '¡Vuelvo de España sabiendo detectar estafas en internet y no caer en bulos! 🇵🇱🇪🇸'),
+    starters: [T('Najbardziej zaskoczyło mnie… ', 'What surprised me most… ', 'Lo que más me sorprendió… '), T('Polecam taki wyjazd, bo… ', 'I recommend a trip like this because… ', 'Recomiendo un viaje así porque… ')],
+    fb: T('Opublikuj na Facebooku', 'Post on Facebook', 'Publicar en Facebook'),
+    pdf: T('Zapisz certyfikat (PDF)', 'Save the certificate (PDF)', 'Guardar el certificado (PDF)'),
+    thanks: T('Dziękujemy! Pamiętaj, aby oznaczyć fundację: @Kaszëbi we swiecë. Tekst jest już skopiowany: wystarczy go wkleić.', 'Thank you! Remember to tag the foundation: @Kaszëbi we swiecë. The text is copied: just paste it.', '¡Gracias! Etiqueta a la fundación: @Kaszëbi we swiecë. El texto está copiado: solo pégalo.'),
+    event: T('📅 Zobacz wydarzenie na Facebooku', '📅 See the event on Facebook', '📅 Ver el evento en Facebook'),
+    sign2: T('Mobilność Erasmus+ „KASZËBI W EUROPIE!” · Ibi i Alicante 2026 · @Kaszëbi we swiecë · Współfinansowane przez Unię Europejską #ErasmusPlus #KaszëbiWEuropie #Cyberbezpieczeństwo', 'Erasmus+ mobility “KASZËBI IN EUROPE!” · Ibi and Alicante 2026 · @Kaszëbi we swiecë · Co-funded by the European Union #ErasmusPlus #KaszëbiWEuropie', 'Movilidad Erasmus+ «KASZËBI EN EUROPA» · Ibi y Alicante 2026 · @Kaszëbi we swiecë · Cofinanciado por la Unión Europea #ErasmusPlus #KaszëbiWEuropie')
   };
-  const name = document.getElementById('name'), txt = document.getElementById('txt');
+  const st = store('kws-cert') || { step: 0, name: '', sig: '', text: '' };
   const photos = [null, null, null];
+  const saveSt = () => store('kws-cert', st);
+  const main = document.getElementById('main');
+
+  function langs() {
+    const el = document.getElementById('langs'); el.innerHTML = '';
+    ['pl', 'en', 'es'].forEach((l) => el.append(h('button', { class: l === LANG ? 'on' : '', onclick: () => { LANG = l; store('kws-lang', l); draw(); } }, l.toUpperCase())));
+    document.getElementById('steps').innerHTML = [0, 1, 2].map((i) => `<i class="${i <= st.step ? 'on' : ''}"></i>`).join('');
+  }
+
+  function pad(container) {
+    const cv = h('canvas'), wrap = h('div', { class: 'padwrap' }, cv, h('span', {}, L(C.sign)));
+    container.append(wrap);
+    const ctx = cv.getContext('2d');
+    requestAnimationFrame(() => {
+      const r = cv.getBoundingClientRect(), k = devicePixelRatio || 1;
+      cv.width = r.width * k; cv.height = r.height * k; ctx.scale(k, k);
+      ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0B1F3A';
+      if (st.sig) { const im = new Image(); im.onload = () => ctx.drawImage(im, 0, 0, r.width, r.height); im.src = st.sig; }
+    });
+    let on = false;
+    const pt = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    cv.addEventListener('pointerdown', (e) => { on = true; cv.setPointerCapture(e.pointerId); const [x, y] = pt(e); ctx.beginPath(); ctx.moveTo(x, y); });
+    cv.addEventListener('pointermove', (e) => { if (!on) return; const [x, y] = pt(e); ctx.lineTo(x, y); ctx.stroke(); });
+    cv.addEventListener('pointerup', () => { on = false; st.sig = cv.toDataURL('image/png'); saveSt(); });
+    return () => { ctx.clearRect(0, 0, cv.width, cv.height); st.sig = ''; saveSt(); };
+  }
 
   function draw() {
-    const el = document.getElementById('langs'); el.innerHTML = '';
-    ['pl', 'en', 'es'].forEach((l) => el.append(h('button', { onclick: () => { LANG = l; draw(); }, style: l === LANG ? 'background:#0B1F3A;color:#fff' : '' }, l.toUpperCase())));
-    name.placeholder = L(UI.certName);
-    document.getElementById('save').textContent = '⬇ ' + L(UI.certSave);
-    document.getElementById('title').textContent = L(UI.certTitle);
-    document.getElementById('body').textContent = L(UI.certBody);
-    document.getElementById('sTitle').textContent = '📣 ' + L(S.title);
-    document.getElementById('sHint').textContent = L(S.hint);
-    txt.placeholder = L(S.placeholder);
-    document.getElementById('tagL').textContent = L(S.tag);
-    document.getElementById('share').textContent = 'f  ' + L(S.share);
-    const ch = document.getElementById('chips'); ch.innerHTML = '';
-    S.starters.forEach((st) => ch.append(h('button', { class: 'chip', onclick: () => { txt.value += (txt.value && !txt.value.endsWith('\n') ? '\n' : '') + L(st); txt.focus(); } }, '+ ' + L(st).trim())));
-    const ph = document.getElementById('photos'); ph.innerHTML = '';
-    photos.forEach((p, i) => {
-      const inp = h('input', { type: 'file', accept: 'image/*' });
-      const slot = h('label', { class: 'slot' + (p ? ' has' : ''), style: p ? `background-image:url('${p.src}')` : '' }, '📷', inp);
-      inp.onchange = () => { const f = inp.files[0]; if (!f) return; const img = new Image(); img.onload = () => { photos[i] = img; draw(); }; img.src = URL.createObjectURL(f); };
-      ph.append(slot);
-    });
+    langs(); main.innerHTML = '';
+    const card = h('div', { class: 'card' }); main.append(card);
+    if (st.step === 0) {
+      const inp = h('input', { class: 'name', value: st.name, placeholder: L(UI.certName), autocomplete: 'name' });
+      inp.oninput = () => { st.name = inp.value; saveSt(); };
+      card.append(h('h1', {}, '🎓 ' + L(C.s1)), h('p', { class: 'hint' }, L(C.s1h)), inp);
+      const clear = pad(card);
+      card.append(h('button', { class: 'link', onclick: () => { clear(); } }, L(C.clear)),
+        h('button', { class: 'btn', onclick: () => { if (!st.name.trim()) { inp.focus(); return; } st.step = 1; saveSt(); draw(); } }, L(C.next) + ' →'));
+    } else if (st.step === 1) {
+      card.append(h('h1', {}, '📷 ' + L(C.s2)), h('p', { class: 'hint' }, L(C.s2h)));
+      const ph = h('div', { class: 'photos' });
+      photos.forEach((p, i) => {
+        const inp = h('input', { type: 'file', accept: 'image/*' });
+        inp.onchange = () => { const f = inp.files[0]; if (!f) return; const im = new Image(); im.onload = () => { photos[i] = im; draw(); }; im.src = URL.createObjectURL(f); };
+        ph.append(h('label', { class: 'slot' + (p ? ' has' : ''), style: p ? `background-image:url('${p.src}')` : '' }, '＋', inp));
+      });
+      card.append(ph, h('button', { class: 'btn', onclick: () => { st.step = 2; saveSt(); draw(); } }, L(C.next) + ' →'),
+        h('button', { class: 'link', onclick: () => { st.step = 0; saveSt(); draw(); } }, '← ' + L(C.s1)));
+    } else {
+      if (!st.text) st.text = L(C.defaultText);
+      const ta = h('textarea', {}); ta.value = st.text; ta.oninput = () => { st.text = ta.value; saveSt(); };
+      const prev = h('img', { id: 'preview', alt: '' });
+      makeImage().then((b) => { prev.src = URL.createObjectURL(b); });
+      const fbBtn = h('button', { class: 'btn fb', onclick: () => share(fbBtn) }, 'f  ' + L(C.fb));
+      card.append(h('h1', {}, '🎉 ' + L(C.s3)), prev, h('p', { class: 'hint' }, L(C.s3h)), ta,
+        h('div', { class: 'chips' }, C.starters.map((s) => h('button', { class: 'chip', onclick: () => { ta.value += '\n' + L(s); st.text = ta.value; saveSt(); ta.focus(); } }, '+ ' + L(s).trim()))),
+        fbBtn, h('div', { id: 'done' }),
+        h('button', { class: 'btn ghost', onclick: printCert }, '⬇ ' + L(C.pdf)),
+        window.FB.event ? h('a', { class: 'btn ghost', href: window.FB.event, target: '_blank' }, L(C.event)) : null,
+        h('button', { class: 'link', onclick: () => { st.step = 1; saveSt(); draw(); } }, '← ' + L(C.s2)));
+    }
   }
-  name.addEventListener('input', () => { document.getElementById('out').textContent = name.value; });
-  document.getElementById('save').onclick = () => { if (!name.value.trim()) { name.focus(); return; } print(); };
 
-  const load = (src) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
-  function cover(ctx, img, x, y, w, hgt, rad) {
-    ctx.save(); ctx.beginPath(); ctx.roundRect(x, y, w, hgt, rad); ctx.clip();
-    const s = Math.max(w / img.width, hgt / img.height);
-    ctx.drawImage(img, x + (w - img.width * s) / 2, y + (hgt - img.height * s) / 2, img.width * s, img.height * s);
-    ctx.restore();
+  const load = (src) => new Promise((r) => { if (!src) return r(null); const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
+  function cover(x, img, a, b, w, hh, rad) {
+    x.save(); x.beginPath(); x.roundRect(a, b, w, hh, rad); x.clip();
+    const s = Math.max(w / img.width, hh / img.height);
+    x.drawImage(img, a + (w - img.width * s) / 2, b + (hh - img.height * s) / 2, img.width * s, img.height * s); x.restore();
   }
-  function wrap(ctx, text, x, y, maxW, lh) {
-    const words = text.split(' '); let line = '';
-    for (const w of words) { const t = line + w + ' '; if (ctx.measureText(t).width > maxW && line) { ctx.fillText(line.trim(), x, y); line = w + ' '; y += lh; } else line = t; }
-    ctx.fillText(line.trim(), x, y); return y;
+  function wrap(x, text, cx, y, maxW, lh) {
+    let line = '';
+    for (const w of text.split(' ')) { const t = line + w + ' '; if (x.measureText(t).width > maxW && line) { x.fillText(line.trim(), cx, y); line = w + ' '; y += lh; } else line = t; }
+    x.fillText(line.trim(), cx, y); return y;
   }
-  // 1080×1350 portrait picture: certificate on top, up to 3 photos below.
+  // 1080×1350 picture for Facebook: certificate with signature on top, photos below.
   async function makeImage() {
     const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
     const x = c.getContext('2d');
     x.fillStyle = '#F5F3EC'; x.fillRect(0, 0, 1080, 1350);
-    x.fillStyle = '#fff'; x.strokeStyle = '#0B1F3A'; x.lineWidth = 12; x.beginPath(); x.roundRect(40, 40, 1000, 700, 24); x.fill(); x.stroke();
-    x.strokeStyle = '#FFCC00'; x.lineWidth = 4; x.beginPath(); x.roundRect(62, 62, 956, 656, 16); x.stroke();
-    const [logo, eu, bb] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg')]);
-    if (logo) x.drawImage(logo, 540 - 120, 90, 240, 240 * logo.height / logo.width);
+    x.fillStyle = '#fff'; x.strokeStyle = '#0B1F3A'; x.lineWidth = 12; x.beginPath(); x.roundRect(40, 40, 1000, 760, 24); x.fill(); x.stroke();
+    x.strokeStyle = '#FFCC00'; x.lineWidth = 4; x.beginPath(); x.roundRect(62, 62, 956, 716, 16); x.stroke();
+    const [logo, eu, bb, sig] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg'), load(st.sig)]);
+    if (logo) x.drawImage(logo, 540 - 110, 84, 220, 220 * logo.height / logo.width);
     x.textAlign = 'center'; x.fillStyle = '#0B1F3A';
-    x.font = '600 52px "Source Serif 4", Georgia, serif'; x.fillText(L(UI.certTitle), 540, 270);
-    x.font = '600 64px "Source Serif 4", Georgia, serif'; x.fillText(name.value.trim() || '…', 540, 370);
-    x.fillRect(240, 392, 600, 3);
-    x.font = '400 24px "Public Sans", Arial'; x.fillStyle = '#26334A';
-    wrap(x, L(UI.certBody), 540, 440, 860, 34);
-    if (eu) x.drawImage(eu, 300, 610, 240, 240 * eu.height / eu.width);
-    if (bb) x.drawImage(bb, 590, 620, 190, 190 * bb.height / bb.width);
+    x.font = '600 48px "Source Serif 4", Georgia, serif'; x.fillText(L(UI.certTitle), 540, 250);
+    x.font = '600 60px "Source Serif 4", Georgia, serif'; x.fillText(st.name.trim() || '…', 540, 340);
+    x.fillRect(240, 360, 600, 3);
+    x.font = '400 21px "Public Sans", Arial'; x.fillStyle = '#26334A';
+    let y = wrap(x, L(UI.certBody), 540, 402, 880, 29) + 40;
+    x.font = '700 21px "Public Sans", Arial'; x.fillStyle = '#003399';
+    ['💻 ' + L(T('Kompetencje cyfrowe i AI', 'Digital skills and AI', 'Competencias digitales e IA')), '🛡️ ' + L(T('Cyberbezpieczeństwo', 'Cybersecurity', 'Ciberseguridad')), '🔍 ' + L(T('Rozpoznawanie dezinformacji', 'Spotting disinformation', 'Detectar desinformación'))].forEach((t, i) => x.fillText(t, 220 + i * 320, y));
+    if (sig) x.drawImage(sig, 380, y + 10, 320, 320 * sig.height / sig.width * 0.6);
+    if (eu) x.drawImage(eu, 90, 700, 200, 200 * eu.height / eu.width);
+    if (bb) x.drawImage(bb, 830, 708, 150, 150 * bb.height / bb.width);
     const list = photos.filter(Boolean);
-    if (list.length) {
-      const gap = 20, w = (1000 - gap * (list.length - 1)) / list.length;
-      list.forEach((p, i) => cover(x, p, 40 + i * (w + gap), 770, w, 540, 22));
-    } else {
-      x.fillStyle = '#003399'; x.beginPath(); x.roundRect(40, 770, 1000, 540, 22); x.fill();
-      x.fillStyle = '#FFCC00'; x.font = '900 70px "Public Sans", Arial'; x.fillText('Ibi · Alicante 2026', 540, 1060);
-    }
+    if (list.length) { const gap = 20, w = (1000 - gap * (list.length - 1)) / list.length; list.forEach((p, i) => cover(x, p, 40 + i * (w + gap), 830, w, 480, 22)); }
+    else { x.fillStyle = '#003399'; x.beginPath(); x.roundRect(40, 830, 1000, 480, 22); x.fill(); x.fillStyle = '#FFCC00'; x.font = '900 70px "Public Sans", Arial'; x.fillText('Ibi · Alicante 2026', 540, 1090); }
     return new Promise((r) => c.toBlob(r, 'image/jpeg', 0.9));
   }
 
-  document.getElementById('share').onclick = async (e) => {
-    if (!name.value.trim()) { name.focus(); scrollTo(0, 0); return; }
-    const btn = e.currentTarget; btn.disabled = true;
+  async function share(btn) {
+    btn.disabled = true;
     const blob = await makeImage();
-    const prev = document.getElementById('preview'); prev.src = URL.createObjectURL(blob); prev.style.display = 'block';
-    const text = [txt.value.trim(), document.getElementById('tag').checked ? L(S.sign) : ''].filter(Boolean).join('\n\n');
-    try { await navigator.clipboard.writeText(text); } catch (err) { /* clipboard may be blocked */ }
+    const text = [st.text.trim(), L(C.sign2), window.FB.event].filter(Boolean).join('\n\n');
+    try { await navigator.clipboard.writeText(text); } catch (e) { /* clipboard blocked */ }
     const file = new File([blob], 'kaszebi-w-europie.jpg', { type: 'image/jpeg' });
-    document.getElementById('after').textContent = L(S.after);
+    let shared = false;
     try {
-      if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text, title: 'KASZËBI W EUROPIE!' });
-      else {
-        const a = h('a', { href: prev.src, download: 'kaszebi-w-europie.jpg' }); document.body.append(a); a.click(); a.remove();
-        window.open(FB_PAGE, '_blank');
-      }
-    } catch (err) { /* user closed the share sheet */ }
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text }); shared = true; }
+      else { const a = h('a', { href: URL.createObjectURL(blob), download: 'kaszebi-w-europie.jpg' }); document.body.append(a); a.click(); a.remove(); window.open(window.FB.page, '_blank'); shared = true; }
+    } catch (e) { /* closed the share sheet */ }
+    if (shared) {
+      // Organiser summary: count shares (no personal data, just device + team).
+      if (topic && !store('kws-fb-sent-' + topic)) { Live.sendSure(topic, { k: 'fb', d: deviceId(), g: group == null ? null : +group }, null, 6).then((ok) => { if (ok) store('kws-fb-sent-' + topic, 1); }); }
+      document.getElementById('done').innerHTML = ''; document.getElementById('done').append(h('p', { class: 'ok' }, '✓ ' + L(C.thanks)));
+    }
     btn.disabled = false;
-  };
+  }
+
+  function printCert() {
+    const c = window.CERT || {};
+    document.getElementById('cert').innerHTML = `
+      <div class="logos"><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:34px"></div>
+      <h1>${L(UI.certTitle)}</h1>
+      <div class="nm">${(st.name || '').replace(/</g, '&lt;')}</div>
+      <p>${L(UI.certBody)}</p>
+      <p><b>${L(UI.certSkillsTitle)}</b></p>
+      <ul>${UI.certSkills.map((s) => `<li>${L(s)}</li>`).join('')}</ul>
+      <div class="signs">
+        <div class="sg">${st.sig ? `<img src="${st.sig}" alt="">` : ''}<div class="line">${L(UI.certSignP)}</div></div>
+        <div class="sg"><img class="eu" src="img/eu-pl.jpg" alt=""><div>${L(UI.certPlace)}</div></div>
+        <div class="sg">${c.stamp ? `<img src="img/${c.stamp}" alt="">` : ''}${c.presidentSignature ? `<img src="img/${c.presidentSignature}" alt="">` : ''}<div class="line">${L(UI.certSignBoss)}</div></div>
+      </div>`;
+    setTimeout(print, 300);
+  }
   draw();
 </script>
 </body>

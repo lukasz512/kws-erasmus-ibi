@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seria postów – Bezpieczni w sieci</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: 'Public Sans', Arial, sans-serif; color: #0B1F3A; background: #F5F3EC; padding: 24px 16px 60px; }
+  .w { max-width: 1180px; margin: 0 auto; }
+  h1 { font: 600 32px 'Source Serif 4', Georgia, serif; } .lead { color: #4A5568; margin: 6px 0 20px; max-width: 75ch; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+  .post { background: #fff; border-radius: 18px; padding: 14px; box-shadow: 0 4px 16px rgba(11,31,58,.08); display: flex; flex-direction: column; gap: 10px; }
+  .post img { width: 100%; border-radius: 12px; }
+  .post pre { white-space: pre-wrap; font: 14px/1.45 'Public Sans'; background: #F7F7F4; border-radius: 10px; padding: 10px; max-height: 180px; overflow: auto; }
+  .row { display: flex; gap: 8px; } .row button { flex: 1; font: 700 14px 'Public Sans'; padding: 10px; border-radius: 10px; border: 0; background: #0B1F3A; color: #fff; cursor: pointer; } .row button.alt { background: #E7E4DA; color: #0B1F3A; }
+  .tag { font: 900 12px 'Public Sans'; color: #C8102E; letter-spacing: .06em; }
+</style>
+</head>
+<body>
+<div class="w">
+  <h1>📣 Seria „Bezpieczni w sieci”: 10 postów na Facebooka fundacji</h1>
+  <p class="lead">Gotowe grafiki (1080×1350, format pionowy FB/Instagram) z opisami. Proponowany rytm: 2 posty w tygodniu, np. wtorek i piątek, od 23.10.2026. Każdy opis zawiera wymaganą informację o współfinansowaniu z UE.</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script src="data.js?v=55"></script>
+<script src="common.js?v=55"></script>
+<script>
+  const FOOT = '\n\nTo część serii „Bezpieczni w sieci” po naszej mobilności Erasmus+ „KASZËBI W EUROPIE!” w Ibi i Alicante. Współfinansowane przez Unię Europejską.\n#BezpieczniWSieci #Cyberbezpieczeństwo #ErasmusPlus #KaszëbiWEuropie #Kaszuby';
+  const POSTS = [
+    { e: '🛑', c: '#C8102E', h: 'STOP, zanim udostępnisz', l: ['Spokój: emocje to sygnał ostrzegawczy', 'Kto to napisał? Autor, data, źródło', 'Inne źródła: czy podaje to radio, TV?', 'Zdjęcie: sprawdź w Google Lens'], t: 'Zanim klikniesz „Udostępnij”, zatrzymaj się na 10 sekund. 🛑\n\nS: spokój, emocje to sygnał ostrzegawczy\nT: kto to napisał? Jest autor, data, źródło?\nO: czy podają to inne, znane media?\nP: pokaż zdjęcie Google Lens: skąd naprawdę pochodzi?\n\nZapisz sobie i podeślij bliskim!' },
+    { e: '📦', c: '#E07A00', h: '„Dopłać 1,99 zł do paczki”', l: ['Firmy kurierskie nie proszą', 'o dopłaty przez link w SMS-ie', 'Nie klikaj, usuń wiadomość'], t: 'Dostałeś SMS „Twoja paczka czeka, dopłać 1,99 zł” z linkiem? 📦\n\nTo jedno z najczęstszych oszustw. Link prowadzi do fałszywej strony płatności, która kradnie dane karty.\n\n✔️ Nie klikaj\n✔️ Sprawdź przesyłkę w oficjalnej aplikacji kuriera\n✔️ Usuń wiadomość' },
+    { e: '👵', c: '#003399', h: '„Babciu, to ja!”', l: ['Dzwoni „wnuczek” i prosi o pieniądze?', 'Rozłącz się', 'Oddzwoń na znany numer'], t: 'Telefon „na wnuczka” to wciąż plaga, a dziś oszuści potrafią podrobić nawet głos bliskiej osoby. 👵📞\n\nJeśli ktoś bliski dzwoni z nieznanego numeru i pilnie prosi o pieniądze:\n✔️ rozłącz się\n✔️ oddzwoń na numer, który znasz\n✔️ zapytaj o Wasze rodzinne słowo-hasło' },
+    { e: '🎙️', c: '#6A1B9A', h: 'Deepfake głosu', l: ['AI potrafi podrobić głos', 'z kilku sekund nagrania', 'np. z filmu na Facebooku'], t: 'Czy wiesz, że sztuczna inteligencja potrafi podrobić czyjś głos z kilku sekund nagrania? 🎙️\n\nOszuści biorą filmiki z mediów społecznościowych i dzwonią „głosem” dziecka albo wnuka.\n\n✔️ Ustalcie w rodzinie słowo-hasło\n✔️ Nie podejmuj decyzji o pieniądzach pod presją czasu' },
+    { e: '🔐', c: '#2E8B57', h: 'Hasło? Zdanie!', l: ['zielony-gryf-pije-kawę', 'łatwo zapamiętać', 'komputer łamałby je latami'], t: 'Najlepsze hasło to… zabawne zdanie! 🔐\n\nZamiast „Kasia1960” wybierz 4 przypadkowe słowa, np. zielony-gryf-pije-kawę.\n✔️ łatwo je zapamiętać\n✔️ trudno je złamać\n✔️ do tego włącz kod SMS (weryfikację dwuetapową)' },
+    { e: '🔢', c: '#0B1F3A', h: 'Kod BLIK tylko dla Ciebie', l: ['Nikt z banku nie poprosi', 'o kod BLIK ani kod z SMS', 'Nikomu go nie podawaj'], t: 'Kod BLIK i kod z SMS-a są tylko dla Ciebie. 🔢\n\nPracownik banku, policjant czy „znajomy z Messengera” nigdy nie poprosi Cię o ich podanie. Jeśli ktoś prosi, to oszust.' },
+    { e: '🤖', c: '#00838F', h: 'Obraz z AI: znajdź błędy', l: ['Dziwne dłonie i palce', 'Rozmyte lub bezsensowne napisy', 'Nienaturalne cienie i tło'], t: 'Coraz więcej zdjęć w sieci tworzy sztuczna inteligencja. Jak je rozpoznać? 🤖\n\n🔍 dłonie i palce (za dużo, za mało, dziwnie zgięte)\n🔍 napisy (rozmyte, bez sensu)\n🔍 cienie i tło (nie pasują do siebie)\n\nNa warsztatach w Alicante sami łapaliśmy AI na błędach!' },
+    { e: '😱', c: '#D81B60', h: '„SZOK! Lekarze to ukrywają!”', l: ['Krzykliwy nagłówek', 'to najczęściej clickbait', 'przynęta na kliknięcia'], t: '„SZOK! Lekarze ukrywają ten prosty sposób!” 😱\n\nTakie nagłówki mają jeden cel: żebyś kliknął. Często prowadzą do reklam, oszustw albo fałszywych porad zdrowotnych.\n\n✔️ Sprawdź, kto to napisał\n✔️ Szukaj informacji na sprawdzonych stronach' },
+    { e: '👆', c: '#5D4037', h: 'Przytrzymaj, nie klikaj', l: ['Przytrzymaj palec na linku', 'zobaczysz prawdziwy adres', 'inpost-doplata.co ≠ inpost.pl'], t: 'Prosty trik na podejrzane linki: przytrzymaj, zamiast klikać! 👆\n\nNa telefonie przytrzymaj palec na linku, a pokaże się pełny adres strony. Porównaj go z prawdziwą stroną firmy. Jeśli się różni, to oszustwo.' },
+    { e: '✅', c: '#1B5E20', h: 'Sprawdzaj fakty', l: ['Demagog.org.pl (Polska)', 'Maldita.es (Hiszpania)', 'Google Lens dla zdjęć'], t: 'Gdzie sprawdzić, czy wiadomość jest prawdziwa? ✅\n\n🇵🇱 Demagog.org.pl\n🇪🇸 Maldita.es (poznaliśmy ją w Hiszpanii!)\n📷 Google Lens: sprawdza, skąd pochodzi zdjęcie\n\nA jeśli udostępniłeś coś fałszywego, usuń post i daj znać znajomym. To nie wstyd, to odpowiedzialność.' }
+  ];
+  const load = (src) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
+  async function card(p, n) {
+    const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+    const x = c.getContext('2d');
+    x.fillStyle = p.c; x.fillRect(0, 0, 1080, 1350);
+    x.fillStyle = 'rgba(255,255,255,.08)'; for (let i = 0; i < 6; i++) { x.beginPath(); x.arc(900 - i * 40, 200 + i * 60, 260 - i * 30, 0, 7); x.fill(); }
+    x.fillStyle = '#fff'; x.beginPath(); x.roundRect(60, 820, 960, 470, 30); x.fill();
+    x.font = '200px serif'; x.textAlign = 'left'; x.fillText(p.e, 70, 300);
+    x.fillStyle = '#FFCC00'; x.font = '900 34px "Public Sans", Arial'; x.fillText(`BEZPIECZNI W SIECI · #${n}`, 80, 400);
+    x.fillStyle = '#fff'; x.font = '600 78px "Source Serif 4", Georgia, serif';
+    let y = 500, line = '';
+    for (const w of p.h.split(' ')) { const t = line + w + ' '; if (x.measureText(t).width > 920 && line) { x.fillText(line.trim(), 80, y); line = w + ' '; y += 88; } else line = t; }
+    x.fillText(line.trim(), 80, y);
+    x.fillStyle = '#0B1F3A'; x.font = '700 40px "Public Sans", Arial';
+    p.l.forEach((t, i) => { x.fillStyle = p.c; x.beginPath(); x.arc(110, 905 + i * 72, 12, 0, 7); x.fill(); x.fillStyle = '#0B1F3A'; x.fillText(t, 140, 920 + i * 72); });
+    const [logo, eu] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg')]);
+    if (logo) x.drawImage(logo, 90, 1150, 260, 260 * logo.height / logo.width);
+    if (eu) x.drawImage(eu, 640, 1160, 340, 340 * eu.height / eu.width);
+    return c.toDataURL('image/jpeg', 0.92);
+  }
+  (async () => {
+    const g = document.getElementById('grid');
+    for (let i = 0; i < POSTS.length; i++) {
+      const p = POSTS[i], src = await card(p, i + 1), text = p.t + FOOT;
+      g.append(h('div', { class: 'post' }, h('span', { class: 'tag' }, `POST ${i + 1} / ${POSTS.length}`), h('img', { src, alt: p.h }), h('pre', {}, text),
+        h('div', { class: 'row' },
+          h('button', { onclick: () => { const a = h('a', { href: src, download: `bezpieczni-w-sieci-${i + 1}.jpg` }); document.body.append(a); a.click(); a.remove(); } }, '⬇ Grafika'),
+          h('button', { class: 'alt', onclick: (e) => navigator.clipboard.writeText(text).then(() => { e.target.textContent = 'Skopiowano ✓'; }) }, '📋 Opis'))));
+    }
+  })();
+</script>
+</body>
+</html>

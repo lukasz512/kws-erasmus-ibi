@@ -30,8 +30,8 @@
 <body>
 <div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
 <div class="page" id="page"></div>
-<script src="data.js?v=54"></script>
-<script src="common.js?v=54"></script>
+<script src="data.js?v=55"></script>
+<script src="common.js?v=55"></script>
 <script>
   LANG = 'pl';
   const SV = store('kws-survey-v1') || {};
@@ -62,6 +62,11 @@
       <div class="kpi">Test PO<b>${postAvg ?? '–'}%</b>n = ${post.length}</div>
       <div class="kpi">Przyrost kompetencji<b>${gain == null ? '–' : (gain > 0 ? '+' : '') + gain + ' pp'}</b>cel: +40 pp</div>
     </div>
+    <h2>Upowszechnianie</h2>
+    <table><tr><th>Działanie</th><th>Liczba</th></tr>
+      <tr><td>Uczestnicy, którzy udostępnili certyfikat na Facebooku (kliknięcie „Opublikuj”)</td><td>${Object.keys(store('kws-fb') || {}).length}</td></tr>
+      <tr><td>Zgody RODO zapisane na tym urządzeniu</td><td>${(store('kws-consents') || []).length}</td></tr>
+    </table>
     <h2>Wskaźniki z wniosku</h2>
     <table><tr><th>Wskaźnik</th><th>Wynik</th><th>Próg</th><th>Osiągnięty</th></tr>
       <tr><td>W1. Wynik testu PO</td><td>${postAvg ?? '–'}%</td><td>≥ 80%</td><td>${yes(postAvg, 80)}</td></tr>

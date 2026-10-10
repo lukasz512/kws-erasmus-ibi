@@ -31,6 +31,7 @@ function ingest(m) {
   if (x.g != null && x.g >= 0) joined[x.d] = x.g;
   if (x.k === 'v' && x.key) (votes[x.key] = votes[x.key] || {})[x.d] = { a: x.a, g: x.g, t: m.time };
   else if ((x.k === 'gs' || x.k === 'pin') && x.key && Array.isArray(x.at)) (geo[x.key] = geo[x.key] || {})[x.d] = { at: x.at, g: x.g };
+  else if (x.k === 'fb') { const fb = store('kws-fb') || {}; fb[x.d] = { g: x.g, t: m.time }; store('kws-fb', fb); }
   else if (x.k === 's' && (x.phase === 'pre' || x.phase === 'post') && Array.isArray(x.ans)) {
     const code = String(x.code || '').trim().toUpperCase();
     SV[x.phase + '|' + (code || 'dev-' + x.d)] = { phase: x.phase, code, g: x.g, ans: x.ans, t: m.time, src: 'phone' };
@@ -408,7 +409,8 @@ const R = {
         h('div', { class: 'stat' }, h('b', {}, String(m)), h('span', {}, '👥 ' + L(GAME_UI.members))),
         h('div', { class: 'stat' }, h('b', {}, `${a1}`), h('span', {}, '📝 ' + L(SURVEY_UI.pre))),
         h('div', { class: 'stat' }, h('b', {}, `${a2}`), h('span', {}, '📝 ' + L(SURVEY_UI.post))),
-        h('div', { class: 'stat' }, h('b', {}, String(guesses)), h('span', {}, '📍 ' + L(MAP_UI.answers))));
+        h('div', { class: 'stat' }, h('b', {}, String(guesses)), h('span', {}, '📍 ' + L(MAP_UI.answers))),
+        h('div', { class: 'stat' }, h('b', {}, String(Object.values(store('kws-fb') || {}).filter((v) => v.g === i).length)), h('span', {}, '📣 ' + L(T('posty na Facebooku', 'Facebook posts', 'publicaciones en Facebook')))));
     });
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(GAME_UI.teamsLive)), h('div', { class: 'tlives' }, cards)));
   },
@@ -649,6 +651,8 @@ function menu(on) {
       h('button', { onclick: exportCsv }, '⬇ CSV ankiety'),
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
       h('a', { href: 'report.html', target: '_blank' }, '📄 Raport wyników (PDF)'),
+      h('a', { href: 'consent.html', target: '_blank' }, '✍️ Zgody RODO (tablet)'),
+      h('a', { href: 'social.html', target: '_blank' }, '📣 Posty na FB (seria)'),
       [['mix', 'Animacja: przejścia B + lista A'], ['a', 'Animacja A'], ['b', 'Animacja B'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
       h('button', { onclick: () => { if (confirm('Nowa sesja głosowania? (wyniki ankiety zostają na tym laptopie)')) { store('kws-topic', null); location.search = ''; } } }, '↺ Nowa sesja')),
     h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`, Sheet.url() ? h('button', { onclick: () => pullSheet(true) }, '↻ pobierz z arkusza') : null),

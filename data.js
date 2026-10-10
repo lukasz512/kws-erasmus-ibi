@@ -1,10 +1,14 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '54'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '55'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
-window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
+window.SHEET_URL = '';
+// Certificate extras: put the files in img/ and fill in the names (empty = a blank line to sign by hand).
+window.CERT = { presidentSignature: '', stamp: '' };
+// Facebook: the foundation page and the event for this mobility (fill in the event link).
+window.FB = { page: 'https://www.facebook.com/371013242770908', event: '' }; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
 window.BASE = 'https://lukasz512.github.io/kws-erasmus-ibi/';
 
 window.GROUPS = [
@@ -67,10 +71,20 @@ window.UI = {
   certName: T('Wpisz imię i nazwisko', 'Type your full name', 'Escribe tu nombre y apellido'),
   certSave: T('Zapisz jako PDF', 'Save as PDF', 'Guardar como PDF'),
   certBody: T(
-    'wziął(-ęła) udział w mobilności edukacyjnej Erasmus+ „KASZËBI W EUROPIE!” w Ibi i Alicante (Hiszpania), 11–21 października 2026, i rozwijał(a) kompetencje: cyfrowe, sztuczna inteligencja, rozpoznawanie dezinformacji, bezpieczeństwo w sieci, język angielski i kompetencje międzykulturowe.',
-    'took part in the Erasmus+ learning mobility “KASZËBI IN EUROPE!” in Ibi and Alicante (Spain), 11–21 October 2026, developing: digital skills, artificial intelligence, recognising disinformation, online safety, English and intercultural skills.',
-    'participó en la movilidad educativa Erasmus+ «KASZËBI EN EUROPA» en Ibi y Alicante (España), del 11 al 21 de octubre de 2026, desarrollando: competencias digitales, inteligencia artificial, detección de desinformación, seguridad en internet, inglés y competencias interculturales.'
-  )
+    'wziął(-ęła) udział w mobilności edukacyjnej Erasmus+ „KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”, zrealizowanej w dniach 11–21 października 2026 r. w Ibi i Alicante (Hiszpania) we współpracy z Associació Educativa i Cultural Blue Beehive.',
+    'took part in the Erasmus+ learning mobility “KASZËBI IN EUROPE! – ensuring access to reliable and modern digital education in rural areas”, held on 11–21 October 2026 in Ibi and Alicante (Spain) in cooperation with Associació Educativa i Cultural Blue Beehive.',
+    'participó en la movilidad educativa Erasmus+ «KASZËBI EN EUROPA: acceso a una educación digital fiable y moderna en zonas rurales», realizada del 11 al 21 de octubre de 2026 en Ibi y Alicante (España) en colaboración con la Associació Educativa i Cultural Blue Beehive.'
+  ),
+  certSkillsTitle: T('W trakcie mobilności uczestnik(-czka) podniósł(-osła) swoje kwalifikacje w zakresie:', 'During the mobility the participant improved their skills in:', 'Durante la movilidad, la persona participante mejoró sus competencias en:'),
+  certSkills: [
+    T('kompetencji cyfrowych: obsługa tabletu, aplikacji i narzędzi sztucznej inteligencji', 'digital skills: using a tablet, apps and artificial intelligence tools', 'competencias digitales: uso de la tableta, aplicaciones y herramientas de inteligencia artificial'),
+    T('cyberbezpieczeństwa: rozpoznawanie oszustw (SMS, telefon, deepfake), bezpieczne hasła i ochrona danych', 'cybersecurity: spotting scams (texts, calls, deepfakes), safe passwords and data protection', 'ciberseguridad: detectar estafas (SMS, llamadas, deepfakes), contraseñas seguras y protección de datos'),
+    T('rozpoznawania dezinformacji i krytycznej analizy źródeł informacji', 'recognising disinformation and critically assessing information sources', 'detección de la desinformación y análisis crítico de las fuentes'),
+    T('języka angielskiego oraz kompetencji międzykulturowych i społecznych', 'English and intercultural and social skills', 'inglés y competencias interculturales y sociales')
+  ],
+  certSignP: T('Podpis uczestnika', "Participant's signature", 'Firma de la persona participante'),
+  certSignBoss: T('Prezes Fundacji Kaszëbi we swiecë', 'President of the Kaszëbi we swiecë Foundation', 'Presidente de la Fundación Kaszëbi we swiecë'),
+  certPlace: T('Nakla, 21 października 2026 r.', 'Nakla, 21 October 2026', 'Nakla, 21 de octubre de 2026')
 };
 
 // Light opinion polls (no correct answer, no points).

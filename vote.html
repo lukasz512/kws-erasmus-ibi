@@ -75,10 +75,10 @@
   <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
   <main id="main"></main>
 </div>
-<script src="data.js?v=54"></script>
+<script src="data.js?v=55"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=54"></script>
-<script src="maps.js?v=54"></script>
+<script src="common.js?v=55"></script>
+<script src="maps.js?v=55"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -164,7 +164,8 @@ function drawList() {
   });
   const pb = pendingBox(); if (pb) main.append(pb);
   if (nDone === acts.length) main.append(h('div', { class: 'card alldone' }, '🏆 ' + L(GAME_UI.allDone)));
-  if (done['survey-post']) main.append(h('a', { class: 'btn main', href: 'cert.html?lang=' + LANG, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle)));
+  if (done['survey-post']) main.append(h('a', { class: 'btn main', href: `cert.html?lang=${LANG}&t=${topic}&g=${group}`, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle) + ' → f'));
+  if (window.FB.event) main.append(h('a', { class: 'task', href: window.FB.event, target: '_blank', style: 'text-decoration:none' }, h('span', { class: 'ti' }, '📅'), h('span', {}, h('b', {}, L(T('Wydarzenie na Facebooku', 'Facebook event', 'Evento en Facebook'))), h('small', {}, L(T('Kliknij „Wezmę udział” i udostępnij', 'Tap “Going” and share it', 'Pulsa «Asistiré» y compártelo'))))));
   main.append(h('button', { class: 'link', style: 'color:#6A7385', onclick: () => { group = null; store(gKey, null); draw(); } }, L(UI.change)));
 }
 
