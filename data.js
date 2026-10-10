@@ -202,11 +202,11 @@ window.DECKS = [
       ] },
       { k: 'post', text: T('PILNE!!! Od jutra UE ZAKAZUJE kiszenia ogórków w domu! Udostępnij, zanim to usuną!!!', 'URGENT!!! From tomorrow the EU BANS home-made pickles! Share before they delete this!!!', '¡¡¡URGENTE!!! ¡Desde mañana la UE PROHÍBE hacer conservas en casa! ¡¡Comparte antes de que lo borren!!'), img: 'img/ogorki.jpg', stamp: T('ZAKAZ UE', 'EU BAN', 'PROHIBIDO UE'), note: T('Przykład wymyślony na potrzeby zajęć', 'A made-up example for this class', 'Ejemplo inventado para la clase') },
       { k: 'q', q: 'dz_signal' },
-      { k: 'text', h: T('STOP: 4 kroki przed udostępnieniem', 'STOP: 4 steps before you share', 'STOP: 4 pasos antes de compartir'), li: [
-        T('S – Spokój: emocje to sygnał ostrzegawczy', 'S – Slow down: strong emotions are a warning sign', 'S – Serenidad: las emociones fuertes son una alerta'),
-        T('T – Kto to napisał? Jest autor, data, źródło?', 'T – Who wrote it? Is there an author, a date, a source?', 'T – ¿Quién lo escribió? ¿Hay autor, fecha, fuente?'),
-        T('O – Inne źródła: czy podają to radio, TV, gazety?', 'O – Other sources: do radio, TV or papers report it?', 'O – Otras fuentes: ¿lo dicen la radio, la tele, la prensa?'),
-        T('P – Pokaż zdjęcie Google Lens: skąd naprawdę pochodzi?', 'P – Put the photo into Google Lens: where is it really from?', 'P – Pasa la foto por Google Lens: ¿de dónde viene?')
+      { k: 'stop', h: T('STOP: 4 kroki przed udostępnieniem', 'STOP: 4 steps before you share', 'STOP: 4 pasos antes de compartir'), items: [
+        { l: 'S', h: T('Spokój', 'Slow down', 'Serenidad'), p: T('Silne emocje to sygnał ostrzegawczy', 'Strong emotions are a warning sign', 'Las emociones fuertes son una alerta'), i: '😮‍💨' },
+        { l: 'T', h: T('Kto to napisał?', 'Who wrote it?', '¿Quién lo escribió?'), p: T('Jest autor, data, źródło?', 'Is there an author, a date, a source?', '¿Hay autor, fecha, fuente?'), i: '🔎' },
+        { l: 'O', h: T('Inne źródła', 'Other sources', 'Otras fuentes'), p: T('Czy podają to radio, TV, gazety?', 'Do radio, TV or papers report it?', '¿Lo dicen la radio, la tele, la prensa?'), i: '📰' },
+        { l: 'P', h: T('Pokaż zdjęcie Google Lens', 'Put the photo into Google Lens', 'Pasa la foto por Google Lens'), p: T('Skąd naprawdę pochodzi?', 'Where is it really from?', '¿De dónde viene de verdad?'), i: '📷' }
       ] },
       { k: 'task', h: T('Detektyw zdjęć', 'Photo detective', 'Detective de fotos'), img: 'img/valor-shop.jpg', li: [
         T('Zróbcie tabletem zdjęcie tego obrazka na ekranie', 'Take a photo of this picture on the screen with the tablet', 'Haced una foto de esta imagen con la tableta'),

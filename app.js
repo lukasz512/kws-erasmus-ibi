@@ -155,6 +155,11 @@ const R = {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
   },
+  stop(s) {
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
+      h('div', { class: 'stopgrid' }, s.items.map((it) => h('div', { class: 'stopcard' },
+        h('div', { class: 'octa' }, it.l), h('div', { class: 'emo' }, it.i), h('h3', {}, L(it.h)), h('p', {}, L(it.p)))))));
+  },
   phrases(s) {
     const head = [['', L(T('Polski', 'English', 'Español'))], [FLAGS.ksz, 'Kaszëbsczi'], [FLAGS.es, 'Español'], [FLAGS.val, 'Valencià']];
     const th = h('tr', {}, head.map(([f, n], i) => { const c = h('th', {}, h('span', { class: 'flag' }), n); if (f) c.querySelector('.flag').innerHTML = f; else c.querySelector('.flag').remove(); return c; }));
@@ -310,10 +315,9 @@ const R = {
 };
 
 function fit() {
-  const el = document.querySelector('#viewport .slide');
-  if (!el || READER) return;
+  if (READER) return;
   const k = Math.min(innerWidth / 1920, innerHeight / 1080);
-  el.style.transform = `translate(-50%, -50%) scale(${k})`;
+  document.querySelectorAll('#viewport .slide').forEach((el) => { el.style.transform = `translate(-50%, -50%) scale(${k})`; });
 }
 
 let lastOpen = null;
@@ -337,13 +341,33 @@ function applyNav(x) {
   render(); scrollTo(0, 0);
 }
 
-function render() {
+let ANIM = params.get('anim') || (!READER && store('kws-anim')) || 'a';
+function skeletons(root) {
+  root.querySelectorAll('[style*="background-image"]').forEach((el) => {
+    const m = /url\(['"]?([^'")]+)/.exec(el.style.backgroundImage);
+    if (!m) return;
+    const img = new Image();
+    img.src = m[1];
+    if (img.complete && img.naturalWidth) return;
+    el.classList.add('sk');
+    const done = () => { el.classList.remove('sk'); el.classList.add('ld'); };
+    img.onload = done; img.onerror = done;
+  });
+}
+function render(dir = 0) {
   if (mapCtl) { mapCtl.destroy(); mapCtl = null; }
   afterFns = [];
   const s = cur();
   const vp = document.getElementById('viewport');
-  vp.innerHTML = '';
-  vp.append(R[s.k](s));
+  const frame = h('div', { class: 'frame' }, R[s.k](s));
+  const old = [...vp.children];
+  const animate = !READER && dir !== 0 && ANIM !== 'none';
+  if (animate) {
+    frame.classList.add('in-' + ANIM, dir > 0 ? 'fwd' : 'back');
+    old.forEach((o) => { o.classList.add('out-' + ANIM, dir > 0 ? 'fwd' : 'back'); setTimeout(() => o.remove(), 900); });
+  } else old.forEach((o) => o.remove());
+  vp.append(frame);
+  skeletons(frame);
   fit();
   afterFns.forEach((f) => f());
   document.getElementById('pos').textContent = `${S.slide + 1}/${deck().slides.length}`;
@@ -382,7 +406,7 @@ function go(d, auto) {
   if (next === S.slide) return;
   S.slide = next;
   S.step = deck().slides[next].k === 'journey' && d < 0 ? window.STOPS.length - 1 : 0;
-  save(); render();
+  save(); render(d);
   if (READER) scrollTo(0, 0);
 }
 function reveal() {
@@ -430,6 +454,7 @@ function menu(on) {
       h('button', { onclick: paperForm }, '✍ Ankieta z kartki'),
       h('button', { onclick: exportCsv }, '⬇ CSV ankiety'),
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
+      [['a', 'Animacja A: płynnie'], ['b', 'Animacja B: kinowo'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
       h('button', { onclick: () => { if (confirm('Nowa sesja głosowania? (wyniki ankiety zostają na tym laptopie)')) { store('kws-topic', null); location.search = ''; } } }, '↺ Nowa sesja')),
     h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`),
     h('p', {}, 'Klawisze: ← → / spacja / pilot (na mapie podróży: kolejne przystanki) · R pokaż odpowiedź w zgadywance · F pełny ekran · M menu. Klik w odpowiedź sondy = +1 głos z sali.'),
