@@ -368,6 +368,7 @@ function render(dir = 0) {
     const move = ANIM === 'a' ? 'a' : 'b', items = ANIM === 'b' ? 'b' : 'a';
     frame.classList.add('in-' + move, 'items-' + items, dir > 0 ? 'fwd' : 'back');
     old.forEach((o) => { o.classList.add('out-' + move, dir > 0 ? 'fwd' : 'back'); setTimeout(() => o.remove(), 900); });
+    setTimeout(() => frame.classList.remove('in-' + move, 'items-' + items, 'fwd', 'back'), 1600);
   } else old.forEach((o) => o.remove());
   vp.append(frame);
   skeletons(frame);
