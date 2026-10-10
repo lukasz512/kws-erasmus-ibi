@@ -275,3 +275,8 @@ body.reader .people { grid-template-columns: 1fr 1fr; }
 .cols.wide > .txt { flex: 0.85; }
 .cols.wide > .pic { flex: 1.35; background-position: center 40%; }
 .cols.wide li { font-size: 34px; }
+#chrome { display: none !important; }
+.footer .ctl { display: flex; gap: 8px; opacity: .35; transition: opacity .2s; }
+.footer .ctl:hover { opacity: 1; }
+.footer .ctl button { width: 52px; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: #fff; font-size: 20px; color: var(--navy); }
+.s-end .footer .ctl button { color: var(--navy); }

@@ -85,6 +85,8 @@ function footer() {
   return h('div', { class: 'footer' },
     h('div', { class: 'mini-score', title: L(SURVEY_UI.teams) }, GROUPS.map((g, i) => h('span', { style: `background:${g.color}` }, (sc[i] > 0 ? '+' : '') + sc[i]))),
     h('span', { class: 'pg' }, `${S.slide + 1} / ${deck().slides.length}`),
+    READER ? null : h('div', { class: 'ctl' }, h('button', { 'data-act': 'prev' }, '◀'), h('button', { 'data-act': 'next' }, '▶'),
+      h('button', { 'data-act': 'reveal' }, 'R'), h('button', { 'data-act': 'full' }, '⛶'), h('button', { 'data-act': 'menu' }, '☰')),
     window.PROJECT_NO ? h('span', { class: 'pno' }, window.PROJECT_NO) : null,
     h('span', { class: 'sp' }),
     h('div', { class: 'logos' },
@@ -420,8 +422,10 @@ addEventListener('keydown', (e) => {
   else if (e.key === 'f' || e.key === 'F') full();
   else if (e.key === 'm' || e.key === 'M') menu(true);
 });
-document.getElementById('chrome').addEventListener('click', (e) => {
-  const a = e.target.dataset.act;
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const a = b.dataset.act;
   if (a === 'prev') go(-1); else if (a === 'next') go(1); else if (a === 'reveal') reveal(); else if (a === 'full') full(); else if (a === 'menu') menu(true);
 });
 document.getElementById('prev').onclick = () => go(-1);
