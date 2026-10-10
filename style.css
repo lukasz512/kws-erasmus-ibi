@@ -583,3 +583,4 @@ body.reader .dicard { padding: 14px; } body.reader .dicard h3 { font-size: 20px;
 body.reader .rules { grid-template-columns: 1fr 1fr; gap: 18px; } body.reader .rv { height: 130px; } body.reader .rule h3 { font-size: 17px; } body.reader .rule p { font-size: 13px; }
 body.reader .rv.call .ph, body.reader .rv.family .fam { font-size: 50px; } body.reader .rv.blik .cd { font-size: 24px; } body.reader .rv.link .ban, body.reader .rv.blik .lock { font-size: 60px; } body.reader .rule .rn { width: 30px; height: 30px; font-size: 16px; top: -14px; }
 body.reader .rv .url, body.reader .rv .num, body.reader .rv .code, body.reader .rv .bub, body.reader .rv .pw { font-size: 11px; }
+.s-title .when { display: inline-block; white-space: nowrap; margin-top: 10px; font-weight: 700; color: var(--eu); }

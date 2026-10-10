@@ -142,7 +142,8 @@ function journeyCard() {
 const R = {
   title(s) {
     return decorate(h('section', { class: 'slide s-title' },
-      h('div', { class: 'left' }, h('div', { class: 'kicker' }, L(s.kicker)), h('h1', {}, L(s.h)), h('p', { class: 'muted' }, L(s.p))),
+      h('div', { class: 'left' }, h('div', { class: 'kicker' }, L(s.kicker)), h('h1', {}, L(s.h)),
+        h('p', { class: 'muted' }, ...L(s.p).split(' · ').map((part, i, all) => (i < all.length - 1 ? [part, h('br')] : h('span', { class: 'when' }, part))).flat())),
       h('div', { class: 'right', style: bg(s.img) })));
   },
   join() {
