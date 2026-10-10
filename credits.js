@@ -138,5 +138,12 @@ window.CREDITS = [
   "author": "F Delventhal",
   "license": "CC BY 2.0",
   "page": "https://commons.wikimedia.org/wiki/File:Chocolater%C3%ADa_Valor_Valencia.jpg"
+ },
+ {
+  "file": "img/ogorki.jpg",
+  "title": "Pickled-cucumbers-1520638.jpg",
+  "author": "WDnet",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Pickled-cucumbers-1520638.jpg"
  }
 ];

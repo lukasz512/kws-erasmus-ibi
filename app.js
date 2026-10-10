@@ -165,6 +165,7 @@ const R = {
     const card = s.sms
       ? h('div', { class: 'post sms' }, h('div', { class: 'who' }, h('i'), '+48 512 *** ***'), h('p', {}, L(s.text)))
       : h('div', { class: 'post' }, h('div', { class: 'who' }, h('i'), L(T('Prawdziwe Wiadomości 24', 'Real News 24', 'Noticias Reales 24'))), h('p', {}, L(s.text)),
+        s.img ? h('div', { class: 'postimg', style: bg(s.img) }, h('span', { class: 'stamp' }, L(s.stamp))) : null,
         h('div', { class: 'acts' }, h('span', {}, '👍 12K'), h('span', {}, '💬 3.4K'), h('span', {}, '↗ 8.9K')));
     return decorate(h('section', { class: 'slide', style: 'justify-content:center' }, card,
       h('p', { class: 'muted', style: 'text-align:center;font-size:28px' }, L(s.note))));

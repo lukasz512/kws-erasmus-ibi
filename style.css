@@ -298,3 +298,10 @@ body.reader table.phr { font-size: 14px; }
 body.reader table.phr th { font-size: 13px; padding: 8px; }
 body.reader table.phr td { padding: 6px 8px; }
 body.reader table.phr th .flag { width: 22px; height: 15px; margin-right: 4px; }
+.post { padding: 32px 44px; gap: 18px; }
+.post p { font-size: 40px; }
+.postimg { height: 380px; border-radius: 14px; background-size: cover; background-position: center; position: relative; overflow: hidden; }
+.postimg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(200,0,0,.08), rgba(200,0,0,.18)); }
+.postimg .stamp { position: absolute; right: 48px; top: 70px; z-index: 1; transform: rotate(-14deg); border: 10px solid #D11; color: #D11; font: 900 72px/1 Impact, 'Arial Black', sans-serif; padding: 10px 28px; border-radius: 14px; background: rgba(255,255,255,.75); letter-spacing: .04em; box-shadow: 0 0 0 4px rgba(255,255,255,.6); }
+body.reader .postimg { height: 200px; }
+body.reader .postimg .stamp { font-size: 30px; border-width: 5px; right: 16px; top: 30px; padding: 4px 12px; }

@@ -200,7 +200,7 @@ window.DECKS = [
         T('Działa, bo budzi emocje: strach, złość, oburzenie', 'It works because it triggers emotions: fear, anger, outrage', 'Funciona porque despierta emociones: miedo, rabia, indignación'),
         T('Najszybciej rozchodzi się przez znajomych i rodzinę', 'It spreads fastest through friends and family', 'Se difunde más rápido a través de amigos y familia')
       ] },
-      { k: 'post', text: T('PILNE!!! Od jutra UE ZAKAZUJE kiszenia ogórków w domu! Udostępnij, zanim to usuną!!!', 'URGENT!!! From tomorrow the EU BANS home-made pickles! Share before they delete this!!!', '¡¡¡URGENTE!!! ¡Desde mañana la UE PROHÍBE hacer conservas en casa! ¡¡Comparte antes de que lo borren!!'), note: T('Przykład wymyślony na potrzeby zajęć', 'A made-up example for this class', 'Ejemplo inventado para la clase') },
+      { k: 'post', text: T('PILNE!!! Od jutra UE ZAKAZUJE kiszenia ogórków w domu! Udostępnij, zanim to usuną!!!', 'URGENT!!! From tomorrow the EU BANS home-made pickles! Share before they delete this!!!', '¡¡¡URGENTE!!! ¡Desde mañana la UE PROHÍBE hacer conservas en casa! ¡¡Comparte antes de que lo borren!!'), img: 'img/ogorki.jpg', stamp: T('ZAKAZ UE', 'EU BAN', 'PROHIBIDO UE'), note: T('Przykład wymyślony na potrzeby zajęć', 'A made-up example for this class', 'Ejemplo inventado para la clase') },
       { k: 'q', q: 'dz_signal' },
       { k: 'text', h: T('STOP: 4 kroki przed udostępnieniem', 'STOP: 4 steps before you share', 'STOP: 4 pasos antes de compartir'), li: [
         T('S – Spokój: emocje to sygnał ostrzegawczy', 'S – Slow down: strong emotions are a warning sign', 'S – Serenidad: las emociones fuertes son una alerta'),
