@@ -96,7 +96,7 @@ function footer() {
     h('div', { class: 'mini-score', title: L(SURVEY_UI.teams) }, GROUPS.map((g, i) => h('span', { style: `background:${g.color}` }, (sc[i] > 0 ? '+' : '') + sc[i]))),
     h('span', { class: 'pg' }, `${S.slide + 1} / ${deck().slides.length}`),
     READER ? null : h('div', { class: 'ctl' }, h('button', { 'data-act': 'prev' }, '◀'), h('button', { 'data-act': 'next' }, '▶'),
-      h('button', { 'data-act': 'reveal' }, 'R'), h('button', { 'data-act': 'full' }, '⛶'), h('button', { 'data-act': 'menu' }, '☰')),
+      h('button', { 'data-act': 'reveal' }, 'R'), h('button', { 'data-act': 'lang', title: 'EN / ES (L)' }, '🌐'), h('button', { 'data-act': 'full' }, '⛶'), h('button', { 'data-act': 'menu' }, '☰')),
     window.PROJECT_NO ? h('span', { class: 'pno' }, window.PROJECT_NO) : null,
     h('span', { class: 'sp' }),
     h('div', { class: 'logos' },
@@ -107,11 +107,6 @@ function footer() {
 
 function decorate(el) {
   el.append(footer());
-  if (!READER) {
-    const box = h('div', { class: 'langqr' }, h('div', {}), h('small', {}, 'EN · ES · PL'));
-    el.append(box);
-    qr(box.firstChild, langUrl(), 128);
-  }
   return el;
 }
 
@@ -248,9 +243,20 @@ const R = {
     return decorate(el);
   },
   task(s) {
+    const steps = h('div', { class: 'tsteps' }, s.li.map((x, k) => h('div', { class: 'tstep' },
+      h('div', { class: 'tn' }, String(k + 1)), h('div', { class: 'ti' }, (s.icons || [])[k] || '👉'), h('p', {}, L(x)))));
+    let scr = null;
+    if (s.screen === 'ai') scr = h('div', { class: 'tscr ai' },
+      h('div', { class: 'prompt' }, h('span', { class: 'type' }, L(s.li[1]).replace(/^[^„“«"]*[„“«"]?/, '').replace(/[”»"]$/, ''))),
+      h('div', { class: 'gen' }, h('div', { class: 'gimg' }, '👵🏼🏖️'), h('i', { class: 'err e1' }), h('i', { class: 'err e2' }), h('i', { class: 'err e3' }), h('div', { class: 'loupe' }, '🔍')));
+    else if (s.screen === 'translate') scr = h('div', { class: 'tscr tr' }, h('div', { class: 'cam' }, h('div', { class: 'menu' }, h('b', {}, 'MENÚ DEL DÍA'), h('span', {}, 'Paella · Horchata · Turrón')),
+      h('div', { class: 'over' }, h('b', {}, L(T('MENU DNIA', 'SET MENU', 'MENÚ DEL DÍA'))), h('span', {}, L(T('Paella · Horchata · Turrón', 'Paella · Horchata · Turrón', 'Paella · Horchata · Turrón'))))), h('div', { class: 'shutter' }));
+    else if (s.screen === 'lens') scr = h('div', { class: 'tscr lens' }, h('div', { class: 'limg', style: bg(s.img) }, h('div', { class: 'scan' })), h('div', { class: 'res' }, '📍 Chocolatería Valor'));
+    else if (s.screen === 'secure') scr = h('div', { class: 'tscr sec' }, [L(T('Blokada ekranu', 'Screen lock', 'Bloqueo de pantalla')), L(T('Lokalizacja', 'Location', 'Localización')), L(T('Aktualizacje', 'Updates', 'Actualizaciones'))].map((t, k) => h('div', { class: 'tg tg' + k }, h('span', {}, t), h('i'))));
     return decorate(h('section', { class: 'slide s-task' }, h('span', { class: 'tag' }, '📲 ' + L(UI.tablet)), h('h2', {}, L(s.h)),
-      h('div', { class: 'cols' }, h('div', { class: 'txt' }, bullets(s.li, true)), s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));
+      h('div', { class: 'tlay' }, steps, scr ? h('div', { class: 'tablet' }, scr) : s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));
   },
+
 
   // ---------- map slides ----------
   journey() {
@@ -460,6 +466,8 @@ function render(dir = 0) {
   afterFns.forEach((f) => f());
   document.getElementById('pos').textContent = `${S.slide + 1}/${deck().slides.length}`;
   broadcast();
+  const lo = document.getElementById('langov');
+  if (lo && lo.classList.contains('on')) qr(lo.querySelector('.q'), langUrl(), 380);
   const key = slideKey(s);
   if (!READER && key && lastOpen !== key) {
     lastOpen = key;
@@ -503,6 +511,17 @@ function reveal() {
   revealed[s.g] = true;
   Live.send(topic, { k: 'r', key: s.g });
   render();
+}
+// Language QR lives in an overlay the presenter opens when needed (🌐 or L), not on every slide.
+function langOverlay(show) {
+  let ov = document.getElementById('langov');
+  if (!ov) {
+    ov = h('div', { id: 'langov', onclick: () => langOverlay(false) }, h('div', { class: 'card' }, h('div', { class: 'q' }), h('p', {}, 'English · Español · Polski'), h('small', {}, L(UI.lang))));
+    document.body.append(ov);
+  }
+  const on = show === undefined ? !ov.classList.contains('on') : show;
+  ov.classList.toggle('on', on);
+  if (on) qr(ov.querySelector('.q'), langUrl(), 380);
 }
 function full() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
 
@@ -583,12 +602,14 @@ addEventListener('keydown', (e) => {
   else if (e.key === 'r' || e.key === 'R') reveal();
   else if (e.key === 'f' || e.key === 'F') full();
   else if (e.key === 'm' || e.key === 'M') menu(true);
+  else if (e.key === 'l' || e.key === 'L') langOverlay();
+  else if (e.key === 'Escape') langOverlay(false);
 });
 document.addEventListener('click', (e) => {
   const b = e.target.closest('[data-act]');
   if (!b) return;
   const a = b.dataset.act;
-  if (a === 'prev') go(-1); else if (a === 'next') go(1); else if (a === 'reveal') reveal(); else if (a === 'full') full(); else if (a === 'menu') menu(true);
+  if (a === 'prev') go(-1); else if (a === 'next') go(1); else if (a === 'reveal') reveal(); else if (a === 'full') full(); else if (a === 'menu') menu(true); else if (a === 'lang') langOverlay();
 });
 document.getElementById('prev').onclick = () => go(-1);
 document.getElementById('next').onclick = () => go(1);

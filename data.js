@@ -197,7 +197,7 @@ window.DECKS = [
         { i: '🤝', h: T('Ludzie razem', 'People together', 'Gente unida'), a: T('koła gospodyń wiejskich', 'rural women’s circles', 'asociaciones de mujeres rurales'), b: T('stowarzyszenia i comparsas', 'associations and comparsas', 'asociaciones y comparsas') },
         { i: '🧵', h: T('Rękodzieło', 'Crafts', 'Artesanía'), a: T('haft kaszubski', 'Kashubian embroidery', 'bordado casubio'), b: T('ceramika i koronka', 'ceramics and lace', 'cerámica y encaje') }
       ], note: T('Ciekawostka: 28 grudnia w Ibi trwa Els Enfarinats – bitwa na mąkę i jajka', 'Fun fact: on 28 December Ibi holds Els Enfarinats – a flour and egg battle', 'Curiosidad: el 28 de diciembre Ibi celebra Els Enfarinats, batalla de harina y huevos') },
-      { k: 'task', h: T('Tłumacz w aparacie', 'Camera translator', 'Traductor con la cámara'), li: [
+      { k: 'task', h: T('Tłumacz w aparacie', 'Camera translator', 'Traductor con la cámara'), screen: 'translate', icons: ['🌐', '📷', '🎙️'], li: [
         T('Otwórzcie Tłumacza Google → „Aparat”', 'Open Google Translate → “Camera”', 'Abrid Google Traductor → «Cámara»'),
         T('Nakierujcie tablet na hiszpańskie menu lub szyld', 'Point the tablet at a Spanish menu or sign', 'Apuntad a un menú o cartel en español'),
         T('Nagrajcie powitanie po kaszubsku dla Hiszpanów', 'Record a Kashubian greeting for our Spanish hosts', 'Grabad un saludo en casubio para los anfitriones')
@@ -222,7 +222,7 @@ window.DECKS = [
         { l: 'O', h: T('Inne źródła', 'Other sources', 'Otras fuentes'), p: T('Czy podają to radio, TV, gazety?', 'Do radio, TV or papers report it?', '¿Lo dicen la radio, la tele, la prensa?'), i: '📰' },
         { l: 'P', h: T('Pokaż zdjęcie Google Lens', 'Put the photo into Google Lens', 'Pasa la foto por Google Lens'), p: T('Skąd naprawdę pochodzi?', 'Where is it really from?', '¿De dónde viene de verdad?'), i: '📷' }
       ] },
-      { k: 'task', h: T('Detektyw zdjęć', 'Photo detective', 'Detective de fotos'), img: 'img/valor-shop.jpg', li: [
+      { k: 'task', h: T('Detektyw zdjęć', 'Photo detective', 'Detective de fotos'), screen: 'lens', icons: ['📸', '🔍', '📍'], img: 'img/valor-shop.jpg', li: [
         T('Zróbcie tabletem zdjęcie tego obrazka na ekranie', 'Take a photo of this picture on the screen with the tablet', 'Haced una foto de esta imagen con la tableta'),
         T('Google Lens lub aplikacja Google → ikona aparatu', 'Google Lens or the Google app → camera icon', 'Google Lens o la app de Google → icono de cámara'),
         T('Gdzie i co to jest? Podajcie miasto i nazwę', 'Where and what is it? Name the town and the place', '¿Qué es y dónde está? Decid ciudad y nombre')
@@ -232,7 +232,7 @@ window.DECKS = [
         T('Oszuści biorą nagrania z Facebooka czy TikToka', 'Scammers take recordings from Facebook or TikTok', 'Los estafadores usan grabaciones de Facebook o TikTok'),
         T('Fałszywe reklamy „inwestycji” ze znanymi osobami', 'Fake “investment” ads with famous people', 'Anuncios falsos de «inversión» con famosos')
       ] },
-      { k: 'task', h: T('Złap AI na błędzie', 'Catch the AI out', 'Pilla a la IA'), li: [
+      { k: 'task', h: T('Złap AI na błędzie', 'Catch the AI out', 'Pilla a la IA'), screen: 'ai', icons: ['🤖', '✍️', '🕵️'], li: [
         T('Otwórzcie na tablecie Copilota lub ChatGPT', 'Open Copilot or ChatGPT on the tablet', 'Abrid Copilot o ChatGPT en la tableta'),
         T('Napiszcie: „kaszubska babcia w hafcie na plaży w Alicante”', 'Type: “Kashubian grandma in embroidery on the beach in Alicante”', 'Escribid: «abuela casubia con bordado en la playa de Alicante»'),
         T('Szukajcie błędów: dłonie, napisy, cienie, tło', 'Look for mistakes: hands, writing, shadows, background', 'Buscad fallos: manos, letras, sombras, fondo')
@@ -259,7 +259,7 @@ window.DECKS = [
         T('Nikomu nie podaję kodów BLIK ani kodów z SMS', 'I never give anyone payment or SMS codes', 'Nunca doy códigos de pago ni de SMS'),
         T('Mamy rodzinne słowo-hasło na „pilne” telefony', 'Our family has a code word for “urgent” calls', 'En familia tenemos una palabra clave para llamadas «urgentes»')
       ] },
-      { k: 'task', h: T('Zabezpieczcie tablet', 'Secure the tablet', 'Proteged la tableta'), li: [
+      { k: 'task', h: T('Zabezpieczcie tablet', 'Secure the tablet', 'Proteged la tableta'), screen: 'secure', icons: ['🔒', '📍', '🔄'], li: [
         T('Ustawienia → Face ID / kod: czy blokada jest włączona?', 'Settings → Face ID / passcode: is the lock on?', 'Ajustes → Face ID / código: ¿está activado el bloqueo?'),
         T('Ustawienia → Prywatność → Lokalizacja: które aplikacje widzą, gdzie jesteś?', 'Settings → Privacy → Location: which apps know where you are?', 'Ajustes → Privacidad → Localización: ¿qué apps saben dónde estás?'),
         T('Sprawdźcie, czy system ma aktualizację', 'Check whether there is a system update', 'Comprobad si hay actualización del sistema')
