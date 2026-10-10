@@ -177,7 +177,7 @@ const R = {
       call: () => h('div', { class: 'rv call' }, h('div', { class: 'ph' }, '📱'), h('div', { class: 'num' }, '📇 Bank · Syn · Gmina'), h('div', { class: 'ok' }, '✓')),
       pass: () => h('div', { class: 'rv pass' }, h('div', { class: 'pw' }, '••••••••••••••••'), h('div', { class: 'meter' }, h('i')), h('div', { class: 'code' }, '2FA · 482 913')),
       blik: () => h('div', { class: 'rv blik' }, h('div', { class: 'cd' }, '123 456'), h('div', { class: 'lock' }, '🔒')),
-      family: () => h('div', { class: 'rv family' }, h('div', { class: 'fam' }, '👨‍👩‍👧'), h('div', { class: 'bub' }, L(T('Hasło? „Gryf”!', 'Code word? “Griffin”!', '¿Clave? «Grifo»!'))))
+      family: () => h('div', { class: 'rv family' }, h('div', { class: 'fam' }, '👪'), h('div', { class: 'bub' }, L(T('Hasło? „Gryf”!', 'Code word? “Griffin”!', '¿Clave? «Grifo»!'))))
     };
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
       h('div', { class: 'rules' }, s.items.map((it, k) => h('div', { class: 'rule' }, h('div', { class: 'rn' }, String(k + 1)), V[it.v](), h('h3', {}, L(it.h)), h('p', {}, L(it.p)))))));
