@@ -236,7 +236,7 @@ window.DECKS = [
       ] },
       { k: 'task', h: T('Złap AI na błędzie', 'Catch the AI out', 'Pilla a la IA'), screen: 'ai', icons: ['🤖', '✍️', '🕵️'], li: [
         T('Otwórzcie na tablecie Copilota lub ChatGPT', 'Open Copilot or ChatGPT on the tablet', 'Abrid Copilot o ChatGPT en la tableta'),
-        T('Napiszcie: „kaszubska babcia w hafcie na plaży w Alicante”', 'Type: “Kashubian grandma in embroidery on the beach in Alicante”', 'Escribid: «abuela casubia con bordado en la playa de Alicante»'),
+        T('Napiszcie: „zespół gra na gitarach na plaży w Alicante, w tle napis KASZËBË”', 'Type: “a band playing guitars on the beach in Alicante, with the sign KASZËBË behind them”', 'Escribid: «un grupo tocando guitarras en la playa de Alicante, con el letrero KASZËBË detrás»'),
         T('Szukajcie błędów: dłonie, napisy, cienie, tło', 'Look for mistakes: hands, writing, shadows, background', 'Buscad fallos: manos, letras, sombras, fondo')
       ] },
       { k: 'results' },

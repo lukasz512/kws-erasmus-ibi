@@ -272,7 +272,7 @@ const R = {
     let scr = null;
     if (s.screen === 'ai') scr = h('div', { class: 'tscr ai' },
       h('div', { class: 'prompt' }, h('span', { class: 'type' }, L(s.li[1]).replace(/^[^„“«"]*[„“«"]?/, '').replace(/[”»"]$/, ''))),
-      h('div', { class: 'gen' }, h('div', { class: 'gimg' }, '👵🏼🏖️'), h('i', { class: 'err e1' }), h('i', { class: 'err e2' }), h('i', { class: 'err e3' }), h('div', { class: 'loupe' }, '🔍')));
+      h('div', { class: 'gen' }, h('div', { class: 'gimg' }, '🎸🎸🏖️'), h('i', { class: 'err e1' }), h('i', { class: 'err e2' }), h('i', { class: 'err e3' }), h('div', { class: 'loupe' }, '🔍')));
     else if (s.screen === 'translate') scr = h('div', { class: 'tscr tr' }, h('div', { class: 'cam' }, h('div', { class: 'menu' }, h('b', {}, 'MENÚ DEL DÍA'), h('span', {}, 'Paella · Horchata · Turrón')),
       h('div', { class: 'over' }, h('b', {}, L(T('MENU DNIA', 'SET MENU', 'MENÚ DEL DÍA'))), h('span', {}, L(T('Paella · Horchata · Turrón', 'Paella · Horchata · Turrón', 'Paella · Horchata · Turrón'))))), h('div', { class: 'shutter' }));
     else if (s.screen === 'lens') scr = h('div', { class: 'tscr lens' }, h('div', { class: 'limg', style: bg(s.img) }, h('div', { class: 'scan' })), h('div', { class: 'res' }, '📍 Chocolatería Valor'));
