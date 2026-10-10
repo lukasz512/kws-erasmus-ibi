@@ -13,7 +13,7 @@ window.UI = {
   join: T('Dołącz telefonem', 'Join with your phone', 'Únete con tu móvil'),
   scan: T('Zeskanuj kod aparatem telefonu', 'Scan the code with your phone camera', 'Escanea el código con la cámara'),
   pickGroup: T('Wybierz swoją drużynę', 'Choose your team', 'Elige tu equipo'),
-  votes: T('głosów', 'votes', 'votos'),
+  votes: T('Głosy', 'Votes', 'Votos'),
   reveal: T('Pokaż odpowiedź (R)', 'Show answer (R)', 'Mostrar respuesta (R)'),
   correct: T('Dobrze!', 'Correct!', '¡Correcto!'),
   wrong: T('Niestety nie', 'Not this time', 'Esta vez no'),

@@ -133,8 +133,8 @@ const R = {
   },
   post(s) {
     return decorate(h('section', { class: 'slide', style: 'justify-content:center' },
-      h('div', { class: 'post' }, h('div', { class: 'who' }, h('i'), 'Prawdziwe Wiadomości 24'), h('p', {}, L(s.text)),
-        h('div', { class: 'acts' }, h('span', {}, '👍 12 tys.'), h('span', {}, '💬 3 400'), h('span', {}, '↗ 8 900'))),
+      h('div', { class: 'post' }, h('div', { class: 'who' }, h('i'), L(T('Prawdziwe Wiadomości 24', 'Real News 24', 'Noticias Reales 24'))), h('p', {}, L(s.text)),
+        h('div', { class: 'acts' }, h('span', {}, '👍 12K'), h('span', {}, '💬 3.4K'), h('span', {}, '↗ 8.9K'))),
       h('p', { class: 'muted', style: 'text-align:center;font-size:28px' }, L(s.note))));
   },
   q(s) {
@@ -155,7 +155,7 @@ const R = {
       h('div', { class: 'qwrap' },
         h('div', { class: 'qleft' }, h('span', { class: 'badge' + (q.ok != null ? ' quiz' : '') }, badge), h('h2', {}, L(q.q)),
           q.img ? h('div', { class: 'qimg', style: bg(q.img) }) : null, opts),
-        h('div', { class: 'qright' }, box, READER ? null : h('div', { class: 'count' }, `${t.total} ${L(UI.votes)}`),
+        h('div', { class: 'qright' }, box, READER ? null : h('div', { class: 'count' }, `${L(UI.votes)}: ${t.total}`),
           READER ? null : h('div', { class: 'muted', style: 'font-size:24px' }, q.ok != null && !shown ? L(UI.reveal) : ''))));
     qr(box, voteUrl(key), 340);
     if (READER) {
@@ -275,6 +275,8 @@ function exportCsv() {
 }
 
 addEventListener('resize', fit);
+new ResizeObserver(fit).observe(document.documentElement);
+setTimeout(fit, 300);
 addEventListener('keydown', (e) => {
   if (document.getElementById('menu').classList.contains('on')) { if (e.key === 'Escape') menu(false); return; }
   if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); go(1); }
