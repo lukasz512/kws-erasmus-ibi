@@ -144,8 +144,8 @@ window.DECKS = [
       { k: 'guess', g: 'g_elche' },
       { k: 'guess', g: 'g_vila' },
       { k: 'guess', g: 'g_ibi' },
-      { k: 'pins' },
       { k: 'q', q: 'j_best' },
+      { k: 'pins' },
       { k: 'end', h: T('Dziękujemy! ¡Gracias!', 'Thank you! ¡Gracias!', '¡Gracias! Dziękujemy!') }
     ]
   },

@@ -212,7 +212,7 @@ body.reader #nav span { color: #fff; align-self: center; font-size: 15px; min-wi
 .dots i { width: 18px; height: 18px; border-radius: 50%; background: #D9D5C8; }
 .dots i.past { background: #9DB1D6; }
 .dots i.on { background: var(--eu); transform: scale(1.3); }
-.s-map .footer { left: 720px; }
+.s-map .footer .pg { background: rgba(255,255,255,.9); border-radius: 10px; padding: 4px 12px; }
 @keyframes cardIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: none; } }
 .pin { width: 34px; height: 34px; border-radius: 50% 50% 50% 0; background: var(--c); transform: rotate(-45deg); border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,.35); }
 .pin.drop { animation: drop .7s cubic-bezier(.3,1.6,.5,1); }
@@ -283,3 +283,6 @@ body.reader .people { grid-template-columns: 1fr 1fr; }
 body.reader #nav #follow { flex: 0 0 auto; background: #B3261E; color: #fff; }
 .logos .lg-bb { margin-left: 32px; }
 .logos .eu-img, .logos .eu-html { margin-left: 12px; }
+
+.footer .pg { white-space: nowrap; }
+.footer .logos { flex: none; }
