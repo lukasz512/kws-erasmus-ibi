@@ -61,22 +61,28 @@ const bg = (url) => `background-image:url('${url}')`;
 const voteUrl = (key) => window.BASE + 'vote.html?t=' + topic + (key ? '&k=' + encodeURIComponent(key) : '');
 const langUrl = () => window.BASE + 'lang.html?d=' + deck().id + '&s=' + S.slide + '&t=' + topic;
 
+function euLogo() {
+  if (LANG === 'pl') return h('img', { class: 'eu-img', src: 'img/eu-pl.jpg', alt: L(UI.cofund) });
+  const box = h('div', { class: 'eu-html' }, h('span', {}, L(UI.cofund)), h('i'));
+  box.querySelector('i').innerHTML = EU_FLAG;
+  return box;
+}
 function footer() {
   const sc = scores();
   return h('div', { class: 'footer' },
-    h('div', { class: 'eu', html: '' }),
-    h('span', {}, L(UI.cofund)),
+    h('div', { class: 'mini-score' }, GROUPS.map((g, i) => h('span', { style: `background:${g.color}` }, String(sc[i])))),
+    h('span', { class: 'pg' }, `${S.slide + 1} / ${deck().slides.length}`),
+    window.PROJECT_NO ? h('span', { class: 'pno' }, window.PROJECT_NO) : null,
     h('span', { class: 'sp' }),
-    h('span', {}, `${S.slide + 1} / ${deck().slides.length}`),
-    h('div', { class: 'mini-score' }, GROUPS.map((g, i) => h('span', { style: `background:${g.color}` }, String(sc[i]))))
-  );
+    h('div', { class: 'logos' },
+      h('img', { src: 'img/kaszebi-logo.png', alt: 'Kaszëbi we swiecë', class: 'lg-kws' }),
+      h('img', { src: 'img/bluebeehive.jpg', alt: 'Blue Beehive', class: 'lg-bb' }),
+      euLogo()));
 }
-function topbar() { return h('div', { class: 'topbar' }, h('img', { src: 'img/kaszebi-logo.png', alt: 'Kaszëbi we swiecë' })); }
+function topbar() { return null; }
 
 function decorate(el, opts = {}) {
-  if (opts.top !== false) el.append(topbar());
   el.append(footer());
-  el.querySelectorAll('.footer .eu').forEach((e) => { e.innerHTML = EU_FLAG; });
   if (!READER) {
     const box = h('div', { class: 'langqr' }, h('div', {}), h('small', {}, 'EN · ES · PL'));
     el.append(box);
