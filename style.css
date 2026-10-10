@@ -280,3 +280,4 @@ body.reader .people { grid-template-columns: 1fr 1fr; }
 .footer .ctl:hover { opacity: 1; }
 .footer .ctl button { width: 52px; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: #fff; font-size: 20px; color: var(--navy); }
 .s-end .footer .ctl button { color: var(--navy); }
+body.reader #nav #follow { flex: 0 0 auto; background: #B3261E; color: #fff; }

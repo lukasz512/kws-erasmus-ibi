@@ -305,6 +305,26 @@ function fit() {
 }
 
 let lastOpen = null;
+let navTimer = null;
+function broadcast() {
+  if (READER) return;
+  clearTimeout(navTimer);
+  navTimer = setTimeout(() => Live.send(topic, { k: 'nav', dk: deck().id, s: S.slide, st: S.step }), 600);
+}
+
+// Reader (EN/ES via QR) follows the presenter until the viewer navigates on their own.
+let follow = READER && !!params.get('t');
+function followBtn() {
+  const b = document.getElementById('follow');
+  if (b) b.style.display = follow ? 'none' : '';
+}
+function applyNav(x) {
+  const i = window.DECKS.findIndex((dd) => dd.id === x.dk);
+  if (i < 0 || !window.DECKS[i].slides[x.s]) return;
+  S.deck = i; S.slide = x.s; S.step = x.st || 0;
+  render(); scrollTo(0, 0);
+}
+
 function render() {
   if (mapCtl) { mapCtl.destroy(); mapCtl = null; }
   afterFns = [];
@@ -315,6 +335,7 @@ function render() {
   fit();
   afterFns.forEach((f) => f());
   document.getElementById('pos').textContent = `${S.slide + 1}/${deck().slides.length}`;
+  broadcast();
   const key = slideKey(s);
   if (!READER && key && lastOpen !== key) {
     lastOpen = key;
@@ -333,13 +354,14 @@ function refresh() {
   } else if (['q', 'join', 'survey', 'results', 'people', 'teams'].includes(s.k)) render();
 }
 
-function go(d) {
+function go(d, auto) {
+  if (READER && !auto && follow) { follow = false; followBtn(); }
   if (cur().k === 'journey') {
     const n = window.STOPS.length;
     if ((d > 0 && S.step < n - 1) || (d < 0 && S.step > 0)) {
       S.step += d; save();
       const card = document.querySelector('.jcard');
-      if (card && mapCtl) { card.replaceWith(journeyCard()); mapCtl.show(S.step); } else render();
+      if (card && mapCtl) { card.replaceWith(journeyCard()); mapCtl.show(S.step); broadcast(); } else render();
       return;
     }
   }
@@ -430,7 +452,16 @@ document.addEventListener('click', (e) => {
 });
 document.getElementById('prev').onclick = () => go(-1);
 document.getElementById('next').onclick = () => go(1);
-if (READER) document.getElementById('chrome').style.display = 'none';
+if (READER) {
+  document.getElementById('chrome').style.display = 'none';
+  if (params.get('t')) {
+    const fb = h('button', { id: 'follow', style: 'display:none' }, '● LIVE');
+    fb.onclick = () => { follow = true; followBtn(); Live.history(topic).then((ms) => { const n = ms.map(Live.parse).filter((x) => x && x.k === 'nav').pop(); if (n) applyNav(n); }); };
+    document.getElementById('nav').append(fb);
+    Live.history(topic).then((ms) => { const n = ms.map(Live.parse).filter((x) => x && x.k === 'nav').pop(); if (n && follow) applyNav(n); });
+    Live.listen(topic, (m) => { const x = Live.parse(m); if (x && x.k === 'nav' && follow) applyNav(x); });
+  }
+}
 
 render();
 if (!READER) {
