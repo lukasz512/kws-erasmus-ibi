@@ -51,10 +51,14 @@ function journeyMap(container, onReady) {
     addKaszuby(map);
     map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [] } } });
     map.addLayer({ id: 'route', type: 'line', source: 'route', paint: { 'line-color': '#003399', 'line-width': 5 }, layout: { 'line-cap': 'round' } });
-    stops.forEach((s, i) => {
-      if (s.fly) return;
-      const el = pinEl(s.id === 'kaszuby' ? '#0B1F3A' : '#003399', 'stop');
-      el.textContent = s.id === 'kaszuby' ? '★' : String(i);
+    const placed = new Set();
+    let n = 0;
+    stops.forEach((s) => {
+      if (s.fly || placed.has(String(s.at))) return;
+      placed.add(String(s.at));
+      const hotel = s.id.startsWith('hotel');
+      const el = pinEl(s.id === 'kaszuby' ? '#0B1F3A' : hotel ? '#B3261E' : '#003399', 'stop');
+      el.textContent = s.id === 'kaszuby' ? '★' : hotel ? 'H' : String(++n);
       new maplibregl.Marker({ element: el }).setLngLat(s.at).addTo(map);
     });
     onReady && onReady();
