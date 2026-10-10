@@ -371,3 +371,27 @@ body.reader .stopcard h3 { font-size: 18px; } body.reader .stopcard p { font-siz
 .vid iframe { flex: 1; width: 100%; border: 0; border-radius: 20px; background: #000; }
 .vid small { font-size: 22px; color: var(--muted); }
 body.reader .vid iframe { min-height: 200px; }
+/* Daily rhythm */
+.timeline { background: #fff; border-radius: 24px; padding: 30px 36px 56px; display: flex; flex-direction: column; gap: 22px; position: relative; box-shadow: 0 4px 20px rgba(11,31,58,.08); }
+.lane { display: grid; grid-template-columns: 250px 1fr; align-items: center; gap: 20px; }
+.lane .who { font-size: 32px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+.flag { display: inline-block; width: 42px; height: 28px; border-radius: 4px; overflow: hidden; flex: none; box-shadow: 0 0 0 1px rgba(0,0,0,.12); }
+.flag svg { width: 100%; height: 100%; display: block; }
+.track { position: relative; height: 92px; background: repeating-linear-gradient(90deg, #F3F1EA 0 calc(100% / 17 - 2px), #fff 0 calc(100% / 17)); border-radius: 14px; }
+.meal { position: absolute; top: 8px; bottom: 8px; border-radius: 12px; color: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 14px; white-space: nowrap; min-width: 170px; }
+.meal.ksz { background: #0B1F3A; }
+.meal.es { background: #C8102E; }
+.meal b { font-size: 26px; } .meal span { font-size: 22px; opacity: .9; }
+.ticks { position: absolute; left: calc(36px + 250px + 20px); right: 36px; bottom: 18px; height: 24px; }
+.ticks span { position: absolute; transform: translateX(-50%); font-size: 20px; color: var(--muted); }
+.rcards { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.rcard { background: #fff; border-radius: 24px; padding: 26px 32px; display: grid; grid-template-columns: 90px 1fr; grid-template-rows: auto auto; column-gap: 20px; row-gap: 12px; box-shadow: 0 4px 20px rgba(11,31,58,.08); }
+.rcard .ic { grid-row: span 2; font-size: 70px; line-height: 1; }
+.rcard h3 { font: 600 40px/1.1 var(--serif); }
+.rcard .cmp { display: flex; flex-direction: column; gap: 10px; font-size: 30px; }
+.rcard .cmp div { display: flex; align-items: center; gap: 14px; }
+body.reader .lane { grid-template-columns: 1fr; gap: 6px; } body.reader .lane .who { font-size: 16px; }
+body.reader .track { height: 56px; } body.reader .meal { min-width: 90px; padding: 0 6px; } body.reader .meal b { font-size: 12px; } body.reader .meal span { font-size: 11px; }
+body.reader .ticks { display: none; } body.reader .rcards { grid-template-columns: 1fr; }
+body.reader .rcard { grid-template-columns: 44px 1fr; padding: 12px; } body.reader .rcard .ic { font-size: 34px; } body.reader .rcard h3 { font-size: 18px; } body.reader .rcard .cmp { font-size: 15px; }
+body.reader .flag { width: 22px; height: 15px; }

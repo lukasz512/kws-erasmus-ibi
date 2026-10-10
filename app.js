@@ -157,6 +157,27 @@ const R = {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
   },
+  rhythm(s) {
+    const H0 = 7, H1 = 24, pos = (t) => (100 * (t - H0)) / (H1 - H0);
+    const lane = (key, flag, name) => {
+      const row = h('div', { class: 'lane' }, h('div', { class: 'who' }, h('span', { class: 'flag' }), name), h('div', { class: 'track' }));
+      row.querySelector('.flag').innerHTML = flag;
+      const tr = row.querySelector('.track');
+      s.meals.forEach((m) => tr.append(h('div', { class: 'meal ' + key, style: `left:${pos(m[key][0])}%;width:${pos(m[key][1]) - pos(m[key][0])}%` },
+        h('b', {}, m.i + ' ' + L(m.l)), h('span', {}, `${fmt(m[key][0])}–${fmt(m[key][1])}`))));
+      return row;
+    };
+    const fmt = (t) => `${Math.floor(t)}:${t % 1 ? '30' : '00'}`;
+    const ticks = h('div', { class: 'ticks' }, [8, 10, 12, 14, 16, 18, 20, 22, 24].map((t) => h('span', { style: `left:${pos(t)}%` }, `${t}:00`)));
+    const cards = h('div', { class: 'rcards' }, s.cards.map((c) => {
+      const el = h('div', { class: 'rcard' }, h('div', { class: 'ic' }, c.i), h('h3', {}, L(c.l)),
+        h('div', { class: 'cmp' }, h('div', {}, h('span', { class: 'flag' }), L(c.ksz)), h('div', {}, h('span', { class: 'flag' }), L(c.es))));
+      const f = el.querySelectorAll('.flag'); f[0].innerHTML = FLAGS.ksz; f[1].innerHTML = FLAGS.es;
+      return el;
+    }));
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
+      h('div', { class: 'timeline' }, lane('ksz', FLAGS.ksz, L(T('Kaszuby', 'Kashubia', 'Casubia'))), lane('es', FLAGS.es, L(T('Hiszpania', 'Spain', 'España'))), ticks), cards));
+  },
   stop(s) {
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
       h('div', { class: 'stopgrid' }, s.items.map((it) => h('div', { class: 'stopcard' },

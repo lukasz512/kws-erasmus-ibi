@@ -167,13 +167,15 @@ window.DECKS = [
         [T('Na zdrowie!', 'Cheers!', '¡Salud!'), 'Na zdrowié!', '¡Salud!', 'Salut!'],
         [T('Do widzenia', 'Goodbye', 'Adiós'), 'Do ùzdrzeniô', 'Adiós', 'Adéu']
       ], note: T('Kaszubski: język regionalny w Polsce (od 2005) · walencki: język współurzędowy w Walencji', 'Kashubian: a regional language in Poland (since 2005) · Valencian: co-official in the Valencian Community', 'Casubio: lengua regional en Polonia (desde 2005) · valenciano: lengua cooficial en la Comunidad Valenciana') },
-      { k: 'table', h: T('Rytm dnia', 'Daily rhythm', 'El ritmo del día'), rows: [
-        [T('', '', ''), T('Kaszuby · Hiszpania', 'Kashubia · Spain', 'Casubia · España')],
-        [T('Obiad', 'Lunch', 'Comida'), T('ok. 13:00 · 14:00–15:30', 'about 1 pm · 2–3:30 pm', 'hacia las 13:00 · 14:00–15:30')],
-        [T('Kolacja', 'Dinner', 'Cena'), T('ok. 18:00 · 21:00–22:00', 'about 6 pm · 9–10 pm', 'hacia las 18:00 · 21:00–22:00')],
-        [T('Sklepy', 'Shops', 'Tiendas'), T('cały dzień · przerwa na sjestę w małych miastach', 'open all day · siesta break in small towns', 'todo el día · cierre a mediodía en pueblos')],
-        [T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), T('ok. 10°C · ok. 23°C', 'about 10°C · about 23°C', 'unos 10°C · unos 23°C')]
-      ] },
+      { k: 'rhythm', h: T('Rytm dnia', 'Daily rhythm', 'El ritmo del día'),
+        meals: [
+          { i: '🍽️', l: T('Obiad', 'Lunch', 'Comida'), ksz: [13, 14], es: [14, 15.5] },
+          { i: '🌙', l: T('Kolacja', 'Dinner', 'Cena'), ksz: [18, 19], es: [21, 22] }
+        ],
+        cards: [
+          { i: '🛒', l: T('Sklepy', 'Shops', 'Tiendas'), ksz: T('otwarte cały dzień', 'open all day', 'abiertas todo el día'), es: T('przerwa na sjestę (ok. 14–17) w małych miastach', 'siesta break (about 2–5 pm) in small towns', 'cierre de siesta (14–17 h aprox.) en pueblos') },
+          { i: '🌡️', l: T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), ksz: T('ok. 10°C', 'about 10°C', 'unos 10°C'), es: T('ok. 23°C', 'about 23°C', 'unos 23°C') }
+        ] },
       { k: 'q', q: 'p3_surprise' },
       { k: 'text', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/dozynki.jpg?v=23', li: [
         T('Duma z regionu i własny język obok języka państwowego', 'Pride in our region and a language of our own', 'Orgullo regional y una lengua propia'),
