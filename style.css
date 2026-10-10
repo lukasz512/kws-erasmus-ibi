@@ -584,3 +584,17 @@ body.reader .rules { grid-template-columns: 1fr 1fr; gap: 18px; } body.reader .r
 body.reader .rv.call .ph, body.reader .rv.family .fam { font-size: 50px; } body.reader .rv.blik .cd { font-size: 24px; } body.reader .rv.link .ban, body.reader .rv.blik .lock { font-size: 60px; } body.reader .rule .rn { width: 30px; height: 30px; font-size: 16px; top: -14px; }
 body.reader .rv .url, body.reader .rv .num, body.reader .rv .code, body.reader .rv .bub, body.reader .rv .pw { font-size: 11px; }
 .s-title .when { display: inline-block; white-space: nowrap; margin-top: 10px; font-weight: 700; color: var(--eu); }
+/* Team summaries */
+.tbars { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+.tbar { display: grid; grid-template-columns: 64px 200px 1fr 120px; align-items: center; gap: 16px; font-size: 30px; }
+.tbar .tic { width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center; font-size: 34px; }
+.track2 { height: 26px; background: #E7E4DA; border-radius: 13px; overflow: hidden; }
+.track2 i { display: block; height: 100%; border-radius: 13px; transition: width .6s; }
+.tbar em { font-style: normal; font-weight: 700; }
+.tlives { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; flex: 1; }
+.tlive { background: #fff; border-radius: 30px; padding: 30px; display: flex; flex-direction: column; gap: 14px; border-top: 16px solid var(--c); box-shadow: 0 8px 26px rgba(11,31,58,.1); }
+.tlive .big { font-size: 90px; animation: float 3s ease-in-out infinite; }
+.tlive h3 { font: 900 48px var(--sans); color: var(--c); }
+.tlive .stat { display: flex; align-items: baseline; gap: 14px; font-size: 28px; border-top: 1px solid var(--line); padding-top: 10px; }
+.tlive .stat b { font: 600 56px var(--serif); min-width: 70px; }
+body.reader .tlives { grid-template-columns: 1fr; } body.reader .tbar { grid-template-columns: 34px 1fr 1fr 60px; font-size: 14px; } body.reader .tbar .tic { width: 32px; height: 32px; font-size: 18px; }

@@ -1,17 +1,44 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '46'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '47'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
 window.BASE = 'https://lukasz512.github.io/kws-erasmus-ibi/';
 
 window.GROUPS = [
-  { id: 0, color: '#1F5FBF', name: T('Niebiescy', 'Blue team', 'Equipo azul') },
-  { id: 1, color: '#E0A800', name: T('Żółci', 'Yellow team', 'Equipo amarillo') },
-  { id: 2, color: '#2E8B57', name: T('Zieloni', 'Green team', 'Equipo verde') }
+  { id: 0, color: '#1F5FBF', dark: '#123E85', icon: '🌊', name: T('Niebiescy', 'Blue team', 'Equipo azul') },
+  { id: 1, color: '#E0A800', dark: '#9C7400', icon: '☀️', name: T('Żółci', 'Yellow team', 'Equipo amarillo') },
+  { id: 2, color: '#2E8B57', dark: '#1D5E3A', icon: '🌲', name: T('Zieloni', 'Green team', 'Equipo verde') }
 ];
+
+// One QR per day: the phone shows that day's whole task list (presenter menu → Dzień).
+window.DAYS = {
+  d1: { name: T('Dzień 1 · start (13.10)', 'Day 1 · kick-off (13 Oct)', 'Día 1 · inicio (13 oct)'), acts: [
+    { type: 'survey', phase: 'pre' },
+    { type: 'guess', key: 'g_elche' }, { type: 'guess', key: 'g_vila' }, { type: 'guess', key: 'g_ibi' }
+  ] },
+  d2: { name: T('Dzień 2 · finał (20.10)', 'Day 2 · finale (20 Oct)', 'Día 2 · final (20 oct)'), acts: [
+    { type: 'survey', phase: 'post' }
+  ] }
+};
+window.GAME_UI = {
+  join: T('Wybierz drużynę', 'Pick your team', 'Elige tu equipo'),
+  members: T('w drużynie', 'in the team', 'en el equipo'),
+  tasks: T('Zadania na dziś', "Today's tasks", 'Tareas de hoy'),
+  todo: T('Do zrobienia', 'To do', 'Pendiente'),
+  done: T('Zrobione', 'Done', 'Hecho'),
+  live: T('Teraz na ekranie', 'On screen now', 'Ahora en pantalla'),
+  open: T('Otwórz', 'Open', 'Abrir'),
+  back: T('Wróć do listy', 'Back to the list', 'Volver a la lista'),
+  progress: T('postęp drużyny', 'team progress', 'progreso del equipo'),
+  allDone: T('Wszystko zrobione! Brawo!', 'All done! Well done!', '¡Todo hecho! ¡Bravo!'),
+  survey: T('Ankieta', 'Survey', 'Encuesta'),
+  guess: T('Zgadnij, gdzie to jest', 'Guess where this is', 'Adivina dónde es'),
+  teamsLive: T('Drużyny na żywo', 'Teams live', 'Equipos en directo'),
+  finished: T('ukończyło ankietę', 'finished the survey', 'terminaron la encuesta')
+};
 
 window.UI = {
   join: T('Dołącz telefonem', 'Join with your phone', 'Únete con tu móvil'),
@@ -277,11 +304,11 @@ window.DECKS = [
     slides: [
       { k: 'title', kicker: T('Ewaluacja projektu', 'Project evaluation', 'Evaluación del proyecto'), h: T('Ankieta: dezinformacja', 'Survey: disinformation', 'Encuesta: desinformación'), p: T('10 pytań · anonimowo · ten sam kod przed i po', '10 questions · anonymous · same code before and after', '10 preguntas · anónima · mismo código antes y después'), img: 'img/phone.jpg' },
       { k: 'survey', phase: 'pre' },
+      { k: 'teamsLive' },
       { k: 'survey', phase: 'post' },
       { k: 'problem' },
       { k: 'results' },
       { k: 'confidence' },
-      { k: 'people' },
       { k: 'evaluation' },
       { k: 'teams' },
       { k: 'cert' }

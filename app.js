@@ -7,7 +7,7 @@ let topic = params.get('t') || store('kws-topic');
 if (!topic) { topic = 'kws-ibi-' + Math.random().toString(36).slice(2, 12); }
 if (!READER) store('kws-topic', topic);
 
-const S = Object.assign({ deck: 0, slide: 0, step: 0, hand: {} }, READER ? {} : store('kws-state-' + topic) || {});
+const S = Object.assign({ deck: 0, slide: 0, step: 0, hand: {}, day: new Date() >= new Date('2026-10-20') ? 'd2' : 'd1' }, READER ? {} : store('kws-state-' + topic) || {});
 const startDeck = window.DECKS.findIndex((d) => d.id === params.get('d'));
 if (startDeck >= 0) { S.deck = startDeck; S.slide = Math.max(0, parseInt(params.get('s') || '0', 10)); S.step = 0; }
 if (!window.DECKS[S.deck]) { S.deck = 0; S.slide = 0; }
@@ -21,7 +21,7 @@ const seen = new Set();
 // Survey answers survive across days on this laptop (the live channel keeps messages only ~12 h).
 const SV = (!READER && store('kws-survey-v1')) || {};
 const saveSV = () => store('kws-survey-v1', SV);
-const save = () => { if (!READER) store('kws-state-' + topic, { deck: S.deck, slide: S.slide, step: S.step, hand: S.hand }); };
+const save = () => { if (!READER) store('kws-state-' + topic, { deck: S.deck, slide: S.slide, step: S.step, hand: S.hand, day: S.day }); };
 
 function ingest(m) {
   if (seen.has(m.id)) return false;
@@ -88,7 +88,8 @@ function tally(key) {
 const deck = () => window.DECKS[S.deck];
 const cur = () => deck().slides[S.slide];
 const bg = (url) => `background-image:url('${url}')`;
-const voteUrl = (mode, key, phase) => window.BASE + 'vote.html?t=' + topic + (mode ? `&m=${mode}&k=${encodeURIComponent(key)}` + (phase ? `&p=${phase}` : '') : '');
+// One QR per day: every slide shows the same join link; the phone lists all of the day's tasks.
+const voteUrl = () => window.BASE + 'vote.html?t=' + topic + '&day=' + S.day;
 const langUrl = () => window.BASE + 'lang.html?d=' + deck().id + '&s=' + S.slide + '&t=' + topic;
 const slideKey = (s) => (s.k === 'q' ? keyOf(s) : s.k === 'guess' ? s.g : s.k === 'pins' ? 'pins-' + deck().id : s.k === 'survey' ? 'survey-' + s.phase : null);
 const grpColor = (g) => (GROUPS[g] || { color: '#8A94A6' }).color;
@@ -318,7 +319,7 @@ const R = {
       h('div', { class: 'gwrap' },
         h('div', { class: 'gleft' }, h('span', { class: 'badge' }, L(T('ZGADNIJ', 'GUESS', 'ADIVINA'))), h('h2', {}, L(MAP_UI.guessQ)),
           h('div', { class: 'gpic', style: bg(G.img) }),
-          result || h('div', { class: 'grow' }, joinBox(200, voteUrl('guess', key)), h('div', {}, h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`), h('p', { class: 'muted' }, READER ? '' : L(UI.reveal))))),
+          result || h('div', { class: 'grow' }, joinBox(200), h('div', {}, h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`), h('p', { class: 'muted' }, READER ? '' : L(UI.reveal))))),
         mapEl)));
     after(() => {
       if (!window.maplibregl) return;
@@ -336,7 +337,7 @@ const R = {
     const mapEl = h('div', { class: 'mapfull' });
     const el = decorate(h('section', { class: 'slide s-map' }, mapEl,
       h('div', { class: 'jcard' }, h('span', { class: 'chip' }, '📍'), h('h2', {}, L(MAP_UI.pinQ)), h('p', {}, L(MAP_UI.pinHelp)),
-        joinBox(220, voteUrl('pin', key)), h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`))));
+        joinBox(220), h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`))));
     after(() => {
       if (!window.maplibregl) return;
       mapCtl = pinsMap(mapEl, { center: [-0.45, 38.42], zoom: 8.8, pitch: 40 }, false);
@@ -352,12 +353,12 @@ const R = {
     return decorate(h('section', { class: 'slide' },
       h('span', { class: 'badge quiz' }, L(SURVEY_UI.title)),
       h('h2', {}, L(SURVEY_UI[s.phase])),
-      h('div', { class: 'join' }, joinBox(440, voteUrl('survey', 'survey-' + s.phase, s.phase)),
+      h('div', { class: 'join' }, joinBox(440),
         h('div', { class: 'groups' },
           h('p', {}, L(UI.scan)),
           h('p', { class: 'muted' }, L(SURVEY_UI.codeHelp)),
           h('div', { class: 'count big' }, `${L(SURVEY_UI.filled)}: ${list.length}`),
-          h('div', { class: 'codes' }, list.map((e) => h('span', { style: `border-color:${grpColor(e.g)}` }, e.code || '–')))))));
+          teamBars(list)))));
   },
   results() {
     const st = surveyStats();
@@ -392,6 +393,20 @@ const R = {
         h('div', { class: 'nm' }, L(g.name)))))));
   },
 
+  teamsLive() {
+    const pre = entries('pre'), post = entries('post');
+    const cards = GROUPS.map((g, i) => {
+      const m = Object.values(joined).filter((x) => x === i).length;
+      const a1 = pre.filter((e) => e.g === i).length, a2 = post.filter((e) => e.g === i).length;
+      const guesses = Object.values(geo).reduce((n, byDev) => n + Object.values(byDev).filter((v) => v.g === i).length, 0);
+      return h('div', { class: 'tlive', style: `--c:${g.color}` }, h('div', { class: 'big' }, g.icon), h('h3', {}, L(g.name)),
+        h('div', { class: 'stat' }, h('b', {}, String(m)), h('span', {}, '👥 ' + L(GAME_UI.members))),
+        h('div', { class: 'stat' }, h('b', {}, `${a1}`), h('span', {}, '📝 ' + L(SURVEY_UI.pre))),
+        h('div', { class: 'stat' }, h('b', {}, `${a2}`), h('span', {}, '📝 ' + L(SURVEY_UI.post))),
+        h('div', { class: 'stat' }, h('b', {}, String(guesses)), h('span', {}, '📍 ' + L(MAP_UI.answers))));
+    });
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(GAME_UI.teamsLive)), h('div', { class: 'tlives' }, cards)));
+  },
   problem() {
     const st = surveyStats();
     const items = window.SURVEY.filter((x) => x.part === 'A');
@@ -434,6 +449,15 @@ const R = {
   }
 };
 
+function teamBars(list) {
+  const members = [0, 1, 2].map((g) => Object.values(joined).filter((x) => x === g).length);
+  const fin = [0, 1, 2].map((g) => list.filter((e) => e.g === g).length);
+  return h('div', { class: 'tbars' }, GROUPS.map((g, i) => {
+    const tot = Math.max(members[i], fin[i], 1);
+    return h('div', { class: 'tbar' }, h('span', { class: 'tic', style: `background:${g.color}` }, g.icon), h('b', {}, L(g.name)),
+      h('div', { class: 'track2' }, h('i', { style: `width:${(100 * fin[i]) / tot}%;background:${g.color}` })), h('em', {}, `${fin[i]} / ${members[i] || '–'}`));
+  }));
+}
 function distCard(it, list) {
   const c = dist(list, it), n = Math.max(1, c.reduce((x, y) => x + y, 0)), mx = Math.max(...c);
   return h('div', { class: 'dcard' }, h('h3', {}, L(it.q)),
@@ -520,7 +544,7 @@ function refresh() {
     const c = document.querySelector('.count');
     if (c) c.textContent = `${L(MAP_UI.answers)}: ${Object.keys(geo[slideKey(s)] || {}).length}`;
     mapCtl.update();
-  } else if (['q', 'join', 'survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(s.k)) render();
+  } else if (['q', 'join', 'survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation', 'teamsLive'].includes(s.k)) render();
 }
 
 function go(d, auto) {
@@ -609,6 +633,7 @@ function menu(on) {
     h('div', { class: 'decks' }, window.DECKS.map((d, i) => h('button', { onclick: () => { S.deck = i; S.slide = 0; S.step = 0; lastOpen = null; save(); menu(false); render(); } }, `${i + 1}. ${L(d.title)} (${d.slides.length})`))),
     h('div', { class: 'row' },
       ['pl', 'en', 'es'].map((l) => h('button', { onclick: () => { LANG = l; menu(false); render(); } }, 'Język: ' + l.toUpperCase())),
+      Object.keys(window.DAYS).map((k) => h('button', { style: S.day === k ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { S.day = k; save(); menu(true); render(); } }, '📅 ' + L(window.DAYS[k].name))),
       h('button', { onclick: paperForm }, '✍ Ankieta z kartki'),
       h('button', { onclick: exportCsv }, '⬇ CSV ankiety'),
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),

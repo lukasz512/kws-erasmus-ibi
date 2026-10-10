@@ -2,213 +2,271 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kaszëbi w Europie! – telefon</title>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B1F3A">
+<title>Kaszëbi w Europie! – drużyny</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
 <style>
-  :root { --cream:#F5F3EC; --navy:#0B1F3A; --eu:#003399; --ok:#1E7B4A; --bad:#B3261E; --line:#D9D5C8; }
-  * { box-sizing: border-box; margin: 0; }
-  body { background: var(--cream); color: var(--navy); font-family: 'Public Sans', Arial, sans-serif; min-height: 100vh; padding: 16px 16px 40px; }
-  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
-  header img { height: 44px; }
-  .langs button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 15px; }
+  :root { --t: #0B1F3A; --td: #08172B; --navy: #0B1F3A; --eu: #003399; --ok: #1E7B4A; --line: #D9D5C8; --cream: #F5F3EC; }
+  * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--cream); color: var(--navy); font-family: 'Public Sans', Arial, sans-serif; min-height: 100vh; }
+  body.team { background: linear-gradient(180deg, var(--t) 0, var(--t) 210px, var(--cream) 210px); }
+  .wrap { padding: 14px 16px 40px; max-width: 520px; margin: 0 auto; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  header img { height: 40px; background: #fff; border-radius: 10px; padding: 3px 6px; }
+  .langs button { border: 0; background: rgba(255,255,255,.85); border-radius: 8px; padding: 7px 9px; font: 700 14px 'Public Sans'; margin-left: 4px; color: var(--navy); }
   .langs button.on { background: var(--navy); color: #fff; }
-  h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: 26px; line-height: 1.2; margin-bottom: 16px; }
-  .btn { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 68px; margin-bottom: 12px; padding: 12px 16px; border-radius: 16px; border: 3px solid var(--line); background: #fff; font: inherit; font-size: 20px; font-weight: 700; color: var(--navy); text-align: left; }
-  .btn b { width: 42px; height: 42px; border-radius: 10px; background: var(--eu); color: #fff; display: grid; place-items: center; flex: none; }
-  .btn.pick { border-color: var(--eu); background: #E6EBF2; }
-  .btn.main { background: var(--navy); color: #fff; border-color: var(--navy); justify-content: center; }
-  .btn:disabled { opacity: .4; }
-  .grp i { width: 42px; height: 42px; border-radius: 50%; flex: none; }
-  .msg { font-size: 20px; padding: 16px; border-radius: 14px; background: #fff; margin-top: 8px; line-height: 1.4; }
+  body.team .langs button.on { background: #fff; color: var(--t); }
+  h1 { font: 600 26px/1.2 'Source Serif 4', Georgia, serif; margin: 18px 0 14px; }
+  .lobby h1 { text-align: center; }
+  .tbtn { display: flex; align-items: center; gap: 16px; width: 100%; padding: 18px; margin-bottom: 14px; border: 0; border-radius: 22px; color: #fff; font: 900 26px 'Public Sans'; text-align: left; box-shadow: 0 6px 0 rgba(0,0,0,.25); transition: transform .1s; }
+  .tbtn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+  .tbtn .ic { font-size: 40px; width: 56px; height: 56px; background: rgba(255,255,255,.2); border-radius: 16px; display: grid; place-items: center; }
+  .tbtn small { display: block; font: 700 15px 'Public Sans'; opacity: .9; }
+  .hero { color: #fff; margin: 16px 0 18px; display: flex; align-items: center; gap: 14px; }
+  .hero .ic { font-size: 44px; width: 70px; height: 70px; background: rgba(255,255,255,.18); border-radius: 22px; display: grid; place-items: center; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-5px) rotate(-4deg); } }
+  .hero b { font: 900 28px 'Public Sans'; display: block; }
+  .hero span { font-size: 15px; opacity: .92; }
+  .ring { margin-left: auto; width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; font: 900 18px 'Public Sans'; color: #fff; background: conic-gradient(#fff var(--p, 0%), rgba(255,255,255,.25) 0); position: relative; flex: none; }
+  .ring::before { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: var(--t); }
+  .ring i { position: relative; font-style: normal; }
+  .card { background: #fff; border-radius: 22px; padding: 16px; box-shadow: 0 6px 22px rgba(11,31,58,.1); }
+  .sec { font: 900 14px 'Public Sans'; letter-spacing: .06em; text-transform: uppercase; color: #6A7385; margin: 6px 4px 10px; }
+  .task { display: flex; align-items: center; gap: 14px; width: 100%; background: #fff; border: 3px solid transparent; border-radius: 20px; padding: 14px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(11,31,58,.08); font: inherit; text-align: left; color: var(--navy); }
+  .task .ti { font-size: 32px; width: 54px; height: 54px; border-radius: 16px; background: #F1EFE8; display: grid; place-items: center; flex: none; }
+  .task b { font-size: 19px; display: block; }
+  .task small { font-size: 14px; color: #6A7385; }
+  .task .st { margin-left: auto; font: 900 13px 'Public Sans'; padding: 7px 10px; border-radius: 99px; background: #F1EFE8; white-space: nowrap; }
+  .task.done { opacity: .7; } .task.done .st { background: #DDF1E4; color: var(--ok); }
+  .task.live { border-color: var(--t); animation: glow 1.4s ease-in-out infinite; } .task.live .st { background: var(--t); color: #fff; }
+  @keyframes glow { 50% { box-shadow: 0 0 0 6px rgba(11,31,58,.15); } }
+  .alldone { text-align: center; font: 900 22px 'Public Sans'; padding: 20px; }
+  .btn { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; margin-bottom: 12px; padding: 12px 16px; border-radius: 18px; border: 3px solid var(--line); background: #fff; font: 700 19px 'Public Sans'; color: var(--navy); text-align: left; }
+  .btn b { width: 40px; height: 40px; border-radius: 12px; background: var(--t); color: #fff; display: grid; place-items: center; flex: none; }
+  .btn.pick { border-color: var(--t); background: #F3F5FA; }
+  .btn.main { background: var(--t); color: #fff; border-color: var(--t); justify-content: center; font-weight: 900; box-shadow: 0 5px 0 var(--td); }
+  .btn:disabled { opacity: .45; }
+  .btn.lk .face { font-size: 30px; width: 40px; text-align: center; }
+  .link { background: none; border: 0; color: #fff; font: 700 16px 'Public Sans'; padding: 10px 0; }
+  .part { font: 900 13px 'Public Sans'; color: #fff; opacity: .9; text-transform: uppercase; letter-spacing: .05em; margin-top: 14px; }
+  .prog { height: 12px; background: rgba(255,255,255,.3); border-radius: 99px; overflow: hidden; margin: 10px 0 4px; }
+  .prog i { display: block; height: 100%; background: #fff; border-radius: 99px; transition: width .3s; }
+  .qhead { color: #fff; min-height: 150px; }
+  .qhead h1 { margin: 10px 0 0; }
+  .help { font-size: 15px; color: #6A7385; line-height: 1.4; margin: 6px 0 12px; }
+  input.code { width: 100%; font: 900 34px 'Public Sans'; letter-spacing: .15em; text-transform: uppercase; text-align: center; padding: 14px; border-radius: 16px; border: 3px solid var(--t); margin: 6px 0 14px; }
+  .img { height: 170px; border-radius: 16px; background-size: cover; background-position: center; margin-bottom: 12px; }
+  #map { height: 46vh; border-radius: 18px; margin-bottom: 12px; overflow: hidden; }
+  .msg { font-size: 18px; padding: 14px; border-radius: 14px; background: #fff; margin-top: 8px; line-height: 1.4; }
   .msg.ok { background: #DDF1E4; }
-  .img { height: 170px; border-radius: 14px; background-size: cover; background-position: center; margin-bottom: 12px; }
-  #map { height: 52vh; border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
-  input.code { width: 100%; font: 700 34px 'Public Sans', Arial; letter-spacing: .15em; text-transform: uppercase; text-align: center; padding: 14px; border-radius: 14px; border: 3px solid var(--navy); margin: 8px 0 14px; }
-  .help { font-size: 17px; color: #4A5568; line-height: 1.4; }
-  .prog { height: 10px; background: #fff; border-radius: 99px; overflow: hidden; margin-bottom: 14px; }
-  .prog i { display: block; height: 100%; background: var(--eu); }
-  .nav { display: flex; gap: 10px; }
-  .nav .btn { justify-content: center; }
-  .me { font-size: 15px; color: #4A5568; margin-top: 22px; display: flex; gap: 8px; align-items: center; }
-  .me button { border: 0; background: none; text-decoration: underline; color: #4A5568; font: inherit; }
-  .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
-  .part { font-size: 15px; font-weight: 700; color: var(--eu); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
-  .btn.lk .face { font-size: 32px; width: 42px; text-align: center; }
   .pin { width: 30px; height: 30px; border-radius: 50% 50% 50% 0; background: var(--c); transform: rotate(-45deg); border: 4px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,.35); }
+  .toast { position: fixed; left: 12px; right: 12px; bottom: 16px; background: var(--navy); color: #fff; border-radius: 18px; padding: 14px 16px; display: flex; gap: 12px; align-items: center; font-weight: 700; z-index: 9; animation: up .35s ease; }
+  .toast button { margin-left: auto; border: 0; border-radius: 12px; padding: 10px 14px; font: 900 15px 'Public Sans'; background: #fff; color: var(--navy); }
+  @keyframes up { from { transform: translateY(120%); } }
+  .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; }
+  .confetti i { position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px; animation: fall 1.8s ease-in forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .6; } }
 </style>
 </head>
 <body>
-<header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
-<main id="main"></main>
-<script src="data.js?v=46"></script>
+<div class="wrap">
+  <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
+  <main id="main"></main>
+</div>
+<script src="data.js?v=47"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=46"></script>
-<script src="maps.js?v=46"></script>
+<script src="common.js?v=47"></script>
+<script src="maps.js?v=47"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
+const day = window.DAYS[params.get('day')] ? params.get('day') : (new Date() >= new Date('2026-10-20') ? 'd2' : 'd1');
+const DAY = window.DAYS[day];
 const gKey = 'kws-group-' + topic;
 let group = store(gKey);
-// A QR on a map/survey slide carries its own screen, so phones open it even if the live signal is late.
-let open = params.get('m') ? { key: params.get('k'), mode: params.get('m'), phase: params.get('p') } : null;
+const done = store('kws-done-' + topic) || {};
 const mine = store('kws-mine-' + topic) || {};
 const revealed = {};
-const main = document.getElementById('main');
+const members = {};      // device → group (join messages)
+const finished = {};     // device → group (survey sent)
+let liveKey = null;      // what the presenter shows right now
+let view = null;         // null = task list, otherwise the open activity
 let phoneMap = null, picked = null;
+const main = document.getElementById('main');
 if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
+if (group != null) members[dev] = group;
 
+const actKey = (a) => (a.type === 'survey' ? 'survey-' + a.phase : a.key);
+const actTitle = (a) => (a.type === 'survey' ? `${L(GAME_UI.survey)}: ${L(SURVEY_UI[a.phase])}` : L(GAME_UI.guess));
+const actIcon = (a) => (a.type === 'survey' ? '📝' : '📍');
+const saveDone = () => store('kws-done-' + topic, done);
+
+function theme() {
+  const g = GROUPS[group];
+  document.body.classList.toggle('team', !!g);
+  document.documentElement.style.setProperty('--t', g ? g.color : '#0B1F3A');
+  document.documentElement.style.setProperty('--td', g ? g.dark : '#08172B');
+  document.querySelector('meta[name=theme-color]').content = g ? g.color : '#0B1F3A';
+}
 function langs() {
   const el = document.getElementById('langs'); el.innerHTML = '';
   ['pl', 'en', 'es'].forEach((l) => el.append(h('button', { class: l === LANG ? 'on' : '', onclick: () => { LANG = l; store('kws-lang', l); draw(); } }, l.toUpperCase())));
 }
-function remember() { store('kws-mine-' + topic, mine); }
-function footerMe() {
-  const g = GROUPS[group];
-  main.append(h('p', { class: 'me' }, h('span', { class: 'dot', style: `background:${g.color}` }), L(g.name), ' · ',
-    h('button', { onclick: () => { group = null; store(gKey, null); draw(); } }, L(UI.change))));
+function confetti() {
+  const c = h('div', { class: 'confetti' });
+  for (let i = 0; i < 70; i++) c.append(h('i', { style: `left:${Math.random() * 100}%;background:${['#FFCC00', '#003399', '#C8102E', '#2E8B57', '#fff'][i % 5]};animation-delay:${Math.random() * .5}s` }));
+  document.body.append(c); setTimeout(() => c.remove(), 2600);
+  if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+}
+function toast(text, btn, fn) {
+  document.querySelectorAll('.toast').forEach((t) => t.remove());
+  const t = h('div', { class: 'toast' }, h('span', {}, text), btn ? h('button', { onclick: () => { t.remove(); fn(); } }, btn) : null);
+  document.body.append(t); setTimeout(() => t.remove(), 7000);
 }
 
 function draw() {
-  langs();
+  langs(); theme();
   if (phoneMap) { phoneMap.destroy(); phoneMap = null; }
   main.innerHTML = '';
   if (!topic) { main.append(h('p', { class: 'msg' }, L(UI.scan))); return; }
-  if (group == null) {
-    main.append(h('h1', {}, L(UI.pickGroup)));
-    GROUPS.forEach((g, i) => main.append(h('button', { class: 'btn grp', onclick: () => { group = i; store(gKey, i); Live.send(topic, { k: 'j', g: i, d: dev }); draw(); } }, h('i', { style: `background:${g.color}` }), L(g.name))));
-    return;
-  }
-  if (!open) main.append(h('h1', {}, '👀 ' + L(UI.wait)));
-  else if (open.mode === 'q') drawPoll();
-  else if (open.mode === 'guess' || open.mode === 'pin') drawMap();
-  else if (open.mode === 'survey') drawSurvey();
-  footerMe();
+  if (group == null) return drawLobby();
+  if (!view) return drawList();
+  if (view.type === 'survey') return drawSurvey(view);
+  return drawMap(view);
 }
 
-function drawPoll() {
-  const q = qOf(open.key);
-  if (!q) return;
-  main.append(h('h1', {}, L(q.q)));
-  q.a.forEach((a, i) => main.append(h('button', { class: 'btn' + (mine[open.key] === i ? ' pick' : ''), onclick: () => {
-    mine[open.key] = i; remember(); Live.send(topic, { k: 'v', key: open.key, a: i, g: group, d: dev }); draw();
-  } }, h('b', {}, 'ABCD'[i]), L(a))));
-  if (mine[open.key] != null) main.append(h('p', { class: 'msg' }, '✓ ' + L(UI.thanks) + ' ' + L(UI.wait)));
+function drawLobby() {
+  const counts = [0, 0, 0]; Object.values(members).forEach((g) => { if (g >= 0 && g < 3) counts[g]++; });
+  main.append(h('div', { class: 'lobby' }, h('h1', {}, L(GAME_UI.join)),
+    GROUPS.map((g, i) => h('button', { class: 'tbtn', style: `background:${g.color}`, onclick: () => {
+      group = i; store(gKey, i); members[dev] = i; Live.send(topic, { k: 'j', g: i, d: dev }); confetti(); draw();
+    } }, h('span', { class: 'ic' }, g.icon), h('span', {}, L(g.name), h('small', {}, `👥 ${counts[i]} ${L(GAME_UI.members)}`))))));
 }
 
-function drawMap() {
-  const isGuess = open.mode === 'guess', G = isGuess ? window.GUESS[open.key] : null;
-  main.append(h('h1', {}, L(isGuess ? MAP_UI.guessQ : MAP_UI.pinQ)));
-  if (G) main.append(h('div', { class: 'img', style: `background-image:url('${G.img}')` }));
-  main.append(h('p', { class: 'help' }, L(isGuess ? MAP_UI.guessHelp : MAP_UI.pinHelp)));
-  const box = h('div', { id: 'map' });
+function drawList() {
+  const g = GROUPS[group], acts = DAY.acts, nDone = acts.filter((a) => done[actKey(a)]).length;
+  const m = Object.values(members).filter((x) => x === group).length || 1;
+  const f = Object.values(finished).filter((x) => x === group).length;
+  const pct = Math.round((100 * nDone) / acts.length);
+  main.append(h('div', { class: 'hero' }, h('div', { class: 'ic' }, g.icon),
+    h('div', {}, h('b', {}, L(g.name)), h('span', {}, `👥 ${m} ${L(GAME_UI.members)} · ✓ ${f} ${L(GAME_UI.finished)}`)),
+    h('div', { class: 'ring', style: `--p:${pct}%` }, h('i', {}, `${nDone}/${acts.length}`))));
+  main.append(h('p', { class: 'sec' }, `${L(GAME_UI.tasks)} · ${L(DAY.name)}`));
+  let gi = 0;
+  acts.forEach((a) => {
+    const k = actKey(a), isDone = !!done[k], isLive = liveKey === k;
+    const sub = a.type === 'guess' ? `#${++gi}` : L(SURVEY_UI.intro);
+    main.append(h('button', { class: 'task' + (isDone ? ' done' : '') + (isLive ? ' live' : ''), onclick: () => { view = a; draw(); scrollTo(0, 0); } },
+      h('span', { class: 'ti' }, actIcon(a)), h('span', {}, h('b', {}, actTitle(a)), h('small', {}, sub)),
+      h('span', { class: 'st' }, isDone ? '✓ ' + L(GAME_UI.done) : isLive ? '● ' + L(GAME_UI.live) : L(GAME_UI.todo))));
+  });
+  if (nDone === acts.length) main.append(h('div', { class: 'card alldone' }, '🏆 ' + L(GAME_UI.allDone)));
+  if (done['survey-post']) main.append(h('a', { class: 'btn main', href: 'cert.html?lang=' + LANG, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle)));
+  main.append(h('button', { class: 'link', style: 'color:#6A7385', onclick: () => { group = null; store(gKey, null); draw(); } }, L(UI.change)));
+}
+
+function backBar(extra) {
+  return h('div', { class: 'qhead' }, h('button', { class: 'link', onclick: () => { view = null; draw(); } }, '← ' + L(GAME_UI.back)), extra);
+}
+function finish(a) { done[actKey(a)] = true; saveDone(); view = null; confetti(); draw(); }
+
+function drawMap(a) {
+  const G = window.GUESS[a.key], k = a.key;
+  main.append(backBar(h('div', {}, h('p', { class: 'part' }, '📍 ' + L(GAME_UI.guess)), h('h1', {}, L(MAP_UI.guessQ)))));
+  const box = h('div', { class: 'card' });
   main.append(box);
-  const sent = mine[open.key];
+  box.append(h('div', { class: 'img', style: `background-image:url('${G.img}')` }), h('p', { class: 'help' }, L(MAP_UI.guessHelp)));
+  const mapEl = h('div', { id: 'map' }); box.append(mapEl);
+  const sent = mine[k];
   const btn = h('button', { class: 'btn main', disabled: true, onclick: () => {
     if (!picked) return;
-    mine[open.key] = picked; remember();
-    Live.send(topic, { k: isGuess ? 'gs' : 'pin', key: open.key, at: picked, g: group, d: dev });
-    draw();
+    mine[k] = picked; store('kws-mine-' + topic, mine);
+    Live.send(topic, { k: 'gs', key: k, at: picked, g: group, d: dev });
+    finish(a);
   } }, '📍 ' + L(MAP_UI.confirm));
-  main.append(btn);
-  if (sent) {
-    const extra = isGuess && revealed[open.key] ? ` ${km(sent, G.at).toFixed(1)} ${L(MAP_UI.km)}` : '';
-    main.append(h('p', { class: 'msg ok' }, '✓ ' + L(UI.thanks) + extra));
-  }
-  picked = sent || null;
-  if (picked) btn.disabled = false;
+  box.append(btn);
+  if (sent && revealed[k]) box.append(h('p', { class: 'msg ok' }, `✓ ${km(sent, G.at).toFixed(1)} ${L(MAP_UI.km)}`));
+  picked = sent || null; if (picked) btn.disabled = false;
   if (!window.maplibregl) return;
-  phoneMap = pinsMap(box, isGuess ? window.REGION_VIEW : { center: [-0.45, 38.42], zoom: 7.6 }, true);
+  phoneMap = pinsMap(mapEl, window.REGION_VIEW, true);
   const color = GROUPS[group].color;
-  phoneMap.map.on('load', () => {
-    if (picked) phoneMap.set('me', picked, color);
-    if (isGuess && revealed[open.key]) phoneMap.reveal(G.at, picked ? [picked] : []);
-  });
+  phoneMap.map.on('load', () => { if (picked) phoneMap.set('me', picked, color); if (revealed[k]) phoneMap.reveal(G.at, picked ? [picked] : []); });
   phoneMap.map.on('click', (e) => {
-    if (isGuess && revealed[open.key]) return;
+    if (revealed[k]) return;
     picked = [Math.round(e.lngLat.lng * 1e5) / 1e5, Math.round(e.lngLat.lat * 1e5) / 1e5];
-    phoneMap.set('me', picked, color);
-    btn.disabled = false;
+    phoneMap.set('me', picked, color); btn.disabled = false;
   });
 }
 
-// Survey: code → items of this phase (parts A–D), one per screen → send once.
-function drawSurvey() {
-  const ph = open.phase, dk = 'kws-survey2-draft-' + ph;
+function drawSurvey(a) {
+  const ph = a.phase, dk = 'kws-survey2-draft-' + ph;
   const items = window.SURVEY.filter((x) => x.ph.includes(ph));
   const d = store(dk) || { code: '', step: -1, ans: {} };
   const saveD = () => store(dk, d);
-  main.append(h('p', { class: 'help' }, L(SURVEY_UI.title) + ' · ' + L(SURVEY_UI[ph])));
-  if (d.sent) {
-    main.append(h('p', { class: 'msg ok' }, '✓ ' + L(SURVEY_UI.done)));
-    if (ph === 'post') main.append(h('a', { class: 'btn main', href: 'cert.html?lang=' + LANG, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle)));
-    return;
-  }
+  if (d.sent) { finish(a); return; }
+  const n = items.length;
   if (d.step < 0) {
     const inp = h('input', { class: 'code', maxlength: '4', value: d.code, placeholder: 'A07', autocomplete: 'off' });
-    main.append(h('h1', {}, L(SURVEY_UI.code)), h('p', { class: 'help' }, L(SURVEY_UI.codeHelp)), inp,
-      h('p', { class: 'help' }, L(SURVEY_UI.intro)),
-      h('button', { class: 'btn main', onclick: () => {
-        const c = inp.value.trim().toUpperCase();
-        if (!/^[A-ZĄĆĘŁŃÓŚŹŻÑ]\d{1,2}$/.test(c)) { inp.focus(); inp.style.borderColor = '#B3261E'; return; }
-        d.code = c; d.step = 0; saveD(); draw();
-      } }, L(SURVEY_UI.start)));
+    main.append(backBar(h('div', {}, h('p', { class: 'part' }, '📝 ' + L(SURVEY_UI[ph])), h('h1', {}, L(SURVEY_UI.code)))),
+      h('div', { class: 'card' }, h('p', { class: 'help' }, L(SURVEY_UI.codeHelp)), inp, h('p', { class: 'help' }, L(SURVEY_UI.intro)),
+        h('button', { class: 'btn main', onclick: () => {
+          const c = inp.value.trim().toUpperCase();
+          if (!/^[A-ZĄĆĘŁŃÓŚŹŻÑ]\d{1,2}$/.test(c)) { inp.focus(); inp.style.borderColor = '#B3261E'; return; }
+          d.code = c; d.step = 0; saveD(); draw();
+        } }, L(SURVEY_UI.start))));
     return;
   }
-  const n = items.length;
   if (d.step >= n) {
-    main.append(h('h1', {}, '✓'),
-      h('button', { class: 'btn main', onclick: (e) => {
-        const btn = e.currentTarget; btn.disabled = true; btn.textContent = '⏳ ' + L(SURVEY_UI.sending);
-        const row = { k: 's', phase: ph, code: d.code, g: group, ans: d.ans, d: dev };
-        const progress = (k) => { btn.textContent = `⏳ ${L(SURVEY_UI.sending)} (${k})`; };
-        // Sheet = the record for the report; the live channel only feeds the presenter's counter.
-        const save = Sheet.url() ? Sheet.postSure(row, progress).then((ok) => { Live.send(topic, row); return ok; }) : Live.sendSure(topic, row, progress);
-        save.then((ok) => {
-          if (ok) { d.sent = true; saveD(); draw(); return; }
-          const str = items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('');
-          main.append(h('p', { class: 'msg' }, L(SURVEY_UI.failed)), h('p', { class: 'msg', style: 'font:700 22px monospace;word-break:break-all' }, `${d.code} · ${str}`));
-          btn.disabled = false; btn.textContent = L(SURVEY_UI.send);
-        });
-      } }, L(SURVEY_UI.send)),
-      h('button', { class: 'btn', onclick: () => { d.step = n - 1; saveD(); draw(); } }, '←'));
+    const btn = h('button', { class: 'btn main', onclick: () => {
+      btn.disabled = true; btn.textContent = '⏳ ' + L(SURVEY_UI.sending);
+      const row = { k: 's', phase: ph, code: d.code, g: group, ans: d.ans, d: dev };
+      const progress = (k) => { btn.textContent = `⏳ ${L(SURVEY_UI.sending)} (${k})`; };
+      const save = Sheet.url() ? Sheet.postSure(row, progress).then((ok) => { Live.send(topic, row); return ok; }) : Live.sendSure(topic, row, progress);
+      save.then((ok) => {
+        if (ok) { d.sent = true; saveD(); finished[dev] = group; finish(a); return; }
+        const str = items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('');
+        main.append(h('p', { class: 'msg' }, L(SURVEY_UI.failed)), h('p', { class: 'msg', style: 'font:700 22px monospace;word-break:break-all' }, `${d.code} · ${str}`));
+        btn.disabled = false; btn.textContent = L(SURVEY_UI.send);
+      });
+    } }, '🚀 ' + L(SURVEY_UI.send));
+    main.append(backBar(h('h1', {}, '✓ ' + d.code)), h('div', { class: 'card' }, btn, h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step = n - 1; saveD(); draw(); } }, '←')));
     return;
   }
   const q = items[d.step];
   const next = (v) => { d.ans[q.id] = v; d.step++; saveD(); draw(); scrollTo(0, 0); };
-  main.append(h('div', { class: 'prog' }, h('i', { style: `width:${(100 * d.step) / n}%` })),
-    h('p', { class: 'part' }, `${q.part}. ${L(PARTS[q.part])}`),
-    h('p', { class: 'help' }, `${d.step + 1} / ${n} · ${d.code}`), h('h1', {}, L(q.q)));
+  main.append(backBar(h('div', {}, h('p', { class: 'part' }, `${q.part}. ${L(PARTS[q.part])} · ${d.step + 1}/${n}`),
+    h('div', { class: 'prog' }, h('i', { style: `width:${(100 * d.step) / n}%` })), h('h1', {}, L(q.q)))));
+  const box = h('div', { class: 'card' }); main.append(box);
   if (q.type === 'likert') {
-    [5, 4, 3, 2, 1].forEach((v) => main.append(h('button', { class: 'btn lk' + (d.ans[q.id] === v ? ' pick' : ''), onclick: () => next(v) },
+    [5, 4, 3, 2, 1].forEach((v) => box.append(h('button', { class: 'btn lk' + (d.ans[q.id] === v ? ' pick' : ''), onclick: () => next(v) },
       h('span', { class: 'face' }, LIKERT_FACE[v - 1]), h('span', {}, `${v} · ${L(LIKERT[v - 1])}`))));
   } else {
-    q.a.forEach((a, i) => main.append(h('button', { class: 'btn' + (d.ans[q.id] === i ? ' pick' : ''), onclick: () => next(i) }, h('b', {}, 'ABCD'[i]), L(a))));
+    q.a.forEach((o, i) => box.append(h('button', { class: 'btn' + (d.ans[q.id] === i ? ' pick' : ''), onclick: () => next(i) }, h('b', {}, 'ABCD'[i]), L(o))));
   }
-  if (d.step > 0) main.append(h('div', { class: 'nav' }, h('button', { class: 'btn', onclick: () => { d.step--; saveD(); draw(); } }, '←')));
+  if (d.step > 0) box.append(h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step--; saveD(); draw(); } }, '←'));
 }
 
-function handle(m) {
-  const x = Live.parse(m); if (!x) return;
+function handle(x, quiet) {
+  if (!x) return;
+  if (x.k === 'j' && x.d != null) { members[x.d] = x.g; if (!view && !quiet) draw(); }
+  if (x.k === 's' && x.d != null) { finished[x.d] = x.g; members[x.d] = x.g; if (!view && !quiet) draw(); }
+  if (x.k === 'r' && x.key) { revealed[x.key] = true; if (view && view.key === x.key) draw(); }
   if (x.k === 'o' && x.key) {
-    if (open && open.key === x.key) return;
-    open = { key: x.key, mode: x.mode || 'q', phase: x.phase };
-    draw(); if (navigator.vibrate) navigator.vibrate(80);
+    const a = DAY.acts.find((t) => actKey(t) === x.key);
+    if (!a || liveKey === x.key) return;
+    liveKey = x.key;
+    if (!view) draw();
+    if (!quiet && group != null && !done[x.key] && (!view || actKey(view) !== x.key)) toast('● ' + L(GAME_UI.live) + ': ' + actTitle(a), L(GAME_UI.open), () => { view = a; draw(); });
+    if (!quiet && navigator.vibrate) navigator.vibrate(80);
   }
-  if (x.k === 'r' && x.key) { revealed[x.key] = true; if (open && x.key === open.key) draw(); }
 }
 
 draw();
 if (topic) {
-  Live.history(topic).then((ms) => {
-    const xs = ms.map(Live.parse).filter(Boolean);
-    xs.forEach((x) => { if (x.k === 'r') revealed[x.key] = true; });
-    const last = xs.filter((x) => x.k === 'o').pop();
-    if (last && !params.get('m')) open = { key: last.key, mode: last.mode || 'q', phase: last.phase };
-    draw();
-  });
-  Live.listen(topic, handle);
+  Live.history(topic).then((ms) => { ms.map(Live.parse).forEach((x) => handle(x, true)); if (!view) draw(); });
+  Live.listen(topic, (m) => handle(Live.parse(m)));
 }
 </script>
 </body>
