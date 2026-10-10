@@ -395,3 +395,16 @@ body.reader .track { height: 56px; } body.reader .meal { min-width: 90px; paddin
 body.reader .ticks { display: none; } body.reader .rcards { grid-template-columns: 1fr; }
 body.reader .rcard { grid-template-columns: 44px 1fr; padding: 12px; } body.reader .rcard .ic { font-size: 34px; } body.reader .rcard h3 { font-size: 18px; } body.reader .rcard .cmp { font-size: 15px; }
 body.reader .flag { width: 22px; height: 15px; }
+/* What we share */
+.cols.unite > .txt { flex: 1.5; justify-content: flex-start; gap: 20px; }
+.cols.unite > .pic.heart { flex: 1; background-size: contain; background-repeat: no-repeat; background-color: transparent; border-radius: 28px; }
+.ugrid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.ucard { background: #fff; border-radius: 22px; padding: 22px 26px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 20px rgba(11,31,58,.08); border-left: 8px solid var(--gold); }
+.ucard .ic { font-size: 46px; line-height: 1; }
+.ucard h3 { font: 600 36px/1.1 var(--serif); }
+.ucard .pair { display: flex; flex-direction: column; gap: 8px; font-size: 26px; }
+.ucard .pair div { display: flex; align-items: center; gap: 12px; }
+.fact { font-size: 26px !important; }
+body.reader .ugrid { grid-template-columns: 1fr; gap: 10px; }
+body.reader .ucard h3 { font-size: 18px; } body.reader .ucard .pair { font-size: 14px; } body.reader .ucard .ic { font-size: 24px; }
+body.reader .cols.unite > .pic.heart { min-height: 240px; }

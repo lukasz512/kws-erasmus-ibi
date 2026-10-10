@@ -177,12 +177,12 @@ window.DECKS = [
           { i: '🌡️', l: T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), ksz: T('ok. 10°C', 'about 10°C', 'unos 10°C'), es: T('ok. 23°C', 'about 23°C', 'unos 23°C') }
         ] },
       { k: 'q', q: 'p3_surprise' },
-      { k: 'text', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/dozynki.jpg?v=23', li: [
-        T('Duma z regionu i własny język obok języka państwowego', 'Pride in our region and a language of our own', 'Orgullo regional y una lengua propia'),
-        T('Święta całej wspólnoty: dożynki ↔ Hogueras, Moros y Cristianos', 'Community festivals: harvest festival ↔ Hogueras, Moros y Cristianos', 'Fiestas de todo el pueblo: dożynki ↔ Hogueras, Moros y Cristianos'),
-        T('Koła gospodyń ↔ stowarzyszenia i bractwa świąteczne', 'Rural women’s circles ↔ local associations and festival groups', 'Asociaciones de mujeres ↔ asociaciones y comparsas'),
-        T('Ibi 28 grudnia: Els Enfarinats – bitwa na mąkę i jajka', 'Ibi on 28 December: Els Enfarinats – a flour and egg battle', 'Ibi el 28 de diciembre: Els Enfarinats, batalla de harina y huevos')
-      ] },
+      { k: 'unite', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/unity.svg', items: [
+        { i: '🗣️', h: T('Własny język', 'A language of our own', 'Una lengua propia'), a: T('kaszubski obok polskiego', 'Kashubian next to Polish', 'casubio junto al polaco'), b: T('walencki obok hiszpańskiego', 'Valencian next to Spanish', 'valenciano junto al castellano') },
+        { i: '🎉', h: T('Święta całej wspólnoty', 'Community festivals', 'Fiestas de todo el pueblo'), a: T('dożynki (òżniwinë)', 'harvest festival (òżniwinë)', 'fiesta de la cosecha'), b: T('Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos') },
+        { i: '🤝', h: T('Ludzie razem', 'People together', 'Gente unida'), a: T('koła gospodyń wiejskich', 'rural women’s circles', 'asociaciones de mujeres rurales'), b: T('stowarzyszenia i comparsas', 'associations and comparsas', 'asociaciones y comparsas') },
+        { i: '🧵', h: T('Rękodzieło', 'Crafts', 'Artesanía'), a: T('haft kaszubski', 'Kashubian embroidery', 'bordado casubio'), b: T('ceramika i koronka', 'ceramics and lace', 'cerámica y encaje') }
+      ], note: T('Ciekawostka: 28 grudnia w Ibi trwa Els Enfarinats – bitwa na mąkę i jajka', 'Fun fact: on 28 December Ibi holds Els Enfarinats – a flour and egg battle', 'Curiosidad: el 28 de diciembre Ibi celebra Els Enfarinats, batalla de harina y huevos') },
       { k: 'task', h: T('Tłumacz w aparacie', 'Camera translator', 'Traductor con la cámara'), li: [
         T('Otwórzcie Tłumacza Google → „Aparat”', 'Open Google Translate → “Camera”', 'Abrid Google Traductor → «Cámara»'),
         T('Nakierujcie tablet na hiszpańskie menu lub szyld', 'Point the tablet at a Spanish menu or sign', 'Apuntad a un menú o cartel en español'),

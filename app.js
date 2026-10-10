@@ -157,6 +157,16 @@ const R = {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
   },
+  unite(s) {
+    const grid = h('div', { class: 'ugrid' }, s.items.map((it) => {
+      const el = h('div', { class: 'ucard' }, h('div', { class: 'ic' }, it.i), h('h3', {}, L(it.h)),
+        h('div', { class: 'pair' }, h('div', {}, h('span', { class: 'flag' }), L(it.a)), h('div', {}, h('span', { class: 'flag' }), L(it.b))));
+      const f = el.querySelectorAll('.flag'); f[0].innerHTML = FLAGS.ksz; f[1].innerHTML = FLAGS.val;
+      return el;
+    }));
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
+      h('div', { class: 'cols wide unite' }, h('div', { class: 'txt' }, grid, h('p', { class: 'muted fact' }, '🥚 ' + L(s.note))), h('div', { class: 'pic heart', style: bg(s.img) }))));
+  },
   rhythm(s) {
     const H0 = 7, H1 = 24, pos = (t) => (100 * (t - H0)) / (H1 - H0);
     const lane = (key, flag, name) => {
