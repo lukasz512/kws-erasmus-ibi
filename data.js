@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '48'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '49'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
@@ -295,7 +295,6 @@ window.DECKS = [
         T('Ustawienia → Prywatność → Lokalizacja: które aplikacje widzą, gdzie jesteś?', 'Settings → Privacy → Location: which apps know where you are?', 'Ajustes → Privacidad → Localización: ¿qué apps saben dónde estás?'),
         T('Sprawdźcie, czy system ma aktualizację', 'Check whether there is a system update', 'Comprobad si hay actualización del sistema')
       ] },
-      { k: 'credits' },
       { k: 'end', h: T('Dziękujemy! Dzãkùjemë! ¡Gracias!', 'Thank you! Dzãkùjemë! ¡Gracias!', '¡Gracias! Dzãkùjemë! Dziękujemy!') }
     ]
   },
@@ -311,7 +310,8 @@ window.DECKS = [
       { k: 'confidence' },
       { k: 'evaluation' },
       { k: 'teams' },
-      { k: 'cert' }
+      { k: 'cert' },
+      { k: 'credits' }
     ]
   }
 ];

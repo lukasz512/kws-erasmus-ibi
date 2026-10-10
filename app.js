@@ -440,7 +440,7 @@ const R = {
     return decorate(el);
   },
   credits() {
-    return decorate(h('section', { class: 'slide' }, h('h2', {}, 'Zdjęcia · Photos · Fotos'),
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(T('Źródła', 'Sources', 'Fuentes'))),
       h('div', { class: 'credits' }, window.CREDITS.map((c) => h('p', {}, `${c.title} — ${c.author}, ${c.license}, Wikimedia Commons`)),
         h('p', {}, 'Mapy / Maps: © OpenStreetMap contributors, OpenFreeMap, MapLibre'))));
   },
