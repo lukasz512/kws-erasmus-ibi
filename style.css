@@ -8,9 +8,9 @@ html, body { height: 100%; background: #0B1F3A; color: var(--navy); font-family:
 button { font: inherit; cursor: pointer; }
 
 /* Fixed 1920×1080 canvas scaled to the window (presenter) */
-#viewport { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+#viewport { position: fixed; inset: 0; overflow: hidden; }
 .slide { width: 1920px; height: 1080px; background: var(--cream); position: relative; overflow: hidden;
-  transform-origin: center center; padding: 120px 128px 150px; display: flex; flex-direction: column; gap: 40px; }
+  position: absolute; left: 50%; top: 50%; transform-origin: center center; padding: 120px 128px 150px; display: flex; flex-direction: column; gap: 40px; }
 .slide h1 { font-family: var(--serif); font-weight: 600; font-size: 120px; line-height: 1.02; }
 .slide h2 { font-family: var(--serif); font-weight: 600; font-size: 76px; line-height: 1.08; }
 .slide p, .slide li { font-size: 40px; line-height: 1.35; }
@@ -87,7 +87,7 @@ table.t.dense td { padding: 9px 20px; }
 .qright { width: 440px; display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; }
 .qbox { background: #fff; padding: 24px; border-radius: 24px; box-shadow: 0 4px 24px rgba(11,31,58,.12); }
 .qright .count { font-size: 44px; font-weight: 700; }
-.badge { display: inline-block; padding: 8px 20px; border-radius: 999px; background: var(--gold); font-size: 26px; font-weight: 700; }
+.badge { align-self: flex-start; display: inline-block; padding: 8px 20px; border-radius: 999px; background: var(--gold); font-size: 26px; font-weight: 700; }
 .badge.quiz { background: var(--eu); color: #fff; }
 
 /* Join */
@@ -152,7 +152,7 @@ table.t.dense td { padding: 9px 20px; }
 /* Flowing reader layout (EN/ES viewer on a phone) */
 body.reader { background: var(--cream); }
 body.reader #viewport { position: static; display: block; overflow: visible; }
-body.reader .slide { width: 100%; height: auto; min-height: 100vh; transform: none !important; padding: 84px 16px 140px; gap: 20px; }
+body.reader .slide { position: relative; left: 0; top: 0; width: 100%; height: auto; min-height: 100vh; transform: none !important; padding: 84px 16px 140px; gap: 20px; }
 body.reader .slide h1 { font-size: 40px; }
 body.reader .slide h2, body.reader .qwrap h2 { font-size: 30px; }
 body.reader .slide p, body.reader .slide li, body.reader .opt { font-size: 19px; }

@@ -1,6 +1,7 @@
 // Presenter (and EN/ES reader) for the five decks.
 const READER = params.get('view') === '1';
 if (READER) document.body.classList.add('reader');
+else if (!params.get('lang')) LANG = 'pl';
 
 let topic = params.get('t') || store('kws-topic');
 if (!topic) { topic = 'kws-ibi-' + Math.random().toString(36).slice(2, 12); }
@@ -210,7 +211,7 @@ function fit() {
   const el = document.querySelector('#viewport .slide');
   if (!el || READER) return;
   const k = Math.min(innerWidth / 1920, innerHeight / 1080);
-  el.style.transform = `scale(${k})`;
+  el.style.transform = `translate(-50%, -50%) scale(${k})`;
 }
 
 let lastOpen = null;
