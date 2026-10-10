@@ -113,10 +113,10 @@ window.CREDITS = [
  },
  {
   "file": "img/valor.jpg",
-  "title": "Chocolates Valor-villaJ.jpg",
-  "author": "Tamorlan",
-  "license": "CC BY-SA 3.0",
-  "page": "https://commons.wikimedia.org/wiki/File:Chocolates_Valor-villaJ.jpg"
+  "title": "VALOR Chocolate (4367962736).jpg",
+  "author": "Yasuhiro Chatani",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:VALOR_Chocolate_(4367962736).jpg"
  },
  {
   "file": "img/tren.jpg",
@@ -131,5 +131,12 @@ window.CREDITS = [
   "author": "Javiertrad",
   "license": "CC BY-SA 4.0",
   "page": "https://commons.wikimedia.org/wiki/File:Museo_Valenciano_del_Juguete_de_Ibi.jpg"
+ },
+ {
+  "file": "img/valor-shop.jpg",
+  "title": "Chocolatería Valor Valencia.jpg",
+  "author": "F Delventhal",
+  "license": "CC BY 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Chocolater%C3%ADa_Valor_Valencia.jpg"
  }
 ];
