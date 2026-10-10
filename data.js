@@ -104,7 +104,7 @@ window.SURVEY_UI = {
   outcomes: T('Efekty uczenia się', 'Learning outcomes', 'Resultados de aprendizaje'),
   target: T('cel z wniosku', 'project target', 'objetivo del proyecto'),
   perPerson: T('Wynik każdej osoby (kod)', 'Each person (code)', 'Cada persona (código)'),
-  teams: T('Drużyny: punkty = wzrost wyniku', 'Teams: points = score gain', 'Equipos: puntos = aumento'),
+  teams: T('Drużyny: przyrost kompetencji', 'Teams: competence gain', 'Equipos: mejora de competencias'),
   paired: T('osób wypełniło przed i po', 'people completed before and after', 'personas completaron antes y después'),
   confidence: T('Pewność siebie w sieci (1–5)', 'Confidence online (1–5)', 'Confianza en internet (1–5)'),
   problem: T('Skala problemu przed wyjazdem', 'The problem before the trip', 'El problema antes del viaje'),
