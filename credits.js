@@ -22,10 +22,10 @@ window.CREDITS = [
  },
  {
   "file": "img/kaszuby.jpg",
-  "title": "Jezioro Ostrzyckie (Kaszuby).jpg",
-  "author": "JKT at Polish Wikipedia",
-  "license": "CC BY 2.5",
-  "page": "https://commons.wikimedia.org/wiki/File:Jezioro_Ostrzyckie_(Kaszuby).jpg"
+  "title": "POL Borsk Jezioro Wdzydze- regaty.jpg",
+  "author": "Wladyslaw Golinski",
+  "license": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:POL_Borsk_Jezioro_Wdzydze-_regaty.jpg"
  },
  {
   "file": "img/haft.jpg",
