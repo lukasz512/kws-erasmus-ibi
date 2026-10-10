@@ -68,6 +68,15 @@ function surveyStats() {
 }
 const scores = () => surveyStats().team;
 
+let sheetAt = 0;
+async function pullSheet(force) {
+  if (READER || !Sheet.url() || (!force && Date.now() - sheetAt < 15000)) return;
+  sheetAt = Date.now();
+  const rows = await Sheet.rows();
+  rows.forEach((r) => { if (r.phase === 'pre' || r.phase === 'post') SV[r.key] = { phase: r.phase, code: r.code, g: r.g, ans: r.ans, t: r.t, src: r.src }; });
+  if (rows.length) { saveSV(); if (['survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(cur().k)) render(); }
+}
+
 function tally(key) {
   const q = qOf(key);
   const counts = q.a.map(() => 0);
@@ -465,6 +474,7 @@ function render(dir = 0) {
   fit();
   afterFns.forEach((f) => f());
   document.getElementById('pos').textContent = `${S.slide + 1}/${deck().slides.length}`;
+  if (['survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(s.k)) pullSheet();
   broadcast();
   const lo = document.getElementById('langov');
   if (lo && lo.classList.contains('on')) qr(lo.querySelector('.q'), langUrl(), 380);
@@ -554,6 +564,7 @@ function paperForm() {
         const cd = code.value.trim().toUpperCase();
         SV[ph.value + '|' + cd] = { phase: ph.value, code: cd, g: +grp.value, ans: out, t: Date.now() / 1000, src: 'paper' };
         saveSV(); code.value = ''; ans.value = ''; code.focus();
+        if (Sheet.url()) Sheet.postSure({ phase: ph.value, code: cd, g: +grp.value, ans: out, src: 'paper', d: 'paper' });
         info.textContent = `Zapisano ${cd}. Zapisanych: przed ${entries('pre').length}, po ${entries('post').length}`;
       } }, 'Zapisz i następna'),
       h('button', { onclick: () => { menu(false); render(); } }, 'Zamknij')),
@@ -576,7 +587,7 @@ function menu(on) {
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
       [['mix', 'Animacja: przejścia B + lista A'], ['a', 'Animacja A'], ['b', 'Animacja B'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
       h('button', { onclick: () => { if (confirm('Nowa sesja głosowania? (wyniki ankiety zostają na tym laptopie)')) { store('kws-topic', null); location.search = ''; } } }, '↺ Nowa sesja')),
-    h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`),
+    h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`, Sheet.url() ? ' · arkusz Google: podłączony ' : ' · arkusz Google: brak (setup-arkusz.html)', Sheet.url() ? h('button', { onclick: () => pullSheet(true) }, '↻ pobierz z arkusza') : null),
     h('p', {}, 'Klawisze: ← → / spacja / pilot (na mapie podróży: kolejne przystanki) · R pokaż odpowiedź w zgadywance · F pełny ekran · M menu. Klik w odpowiedź sondy = +1 głos z sali.'),
     h('button', { onclick: () => menu(false) }, 'Zamknij'));
 }

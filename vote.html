@@ -42,10 +42,10 @@
 <body>
 <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
 <main id="main"></main>
-<script src="data.js?v=33"></script>
+<script src="data.js?v=34"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=33"></script>
-<script src="maps.js?v=33"></script>
+<script src="common.js?v=34"></script>
+<script src="maps.js?v=34"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -157,7 +157,11 @@ function drawSurvey() {
     main.append(h('h1', {}, '✓'),
       h('button', { class: 'btn main', onclick: (e) => {
         const btn = e.currentTarget; btn.disabled = true; btn.textContent = '⏳ ' + L(SURVEY_UI.sending);
-        Live.sendSure(topic, { k: 's', phase: ph, code: d.code, g: group, ans: d.ans, d: dev }, (k) => { btn.textContent = `⏳ ${L(SURVEY_UI.sending)} (${k})`; }).then((ok) => {
+        const row = { k: 's', phase: ph, code: d.code, g: group, ans: d.ans, d: dev };
+        const progress = (k) => { btn.textContent = `⏳ ${L(SURVEY_UI.sending)} (${k})`; };
+        // Sheet = the record for the report; the live channel only feeds the presenter's counter.
+        const save = Sheet.url() ? Sheet.postSure(row, progress).then((ok) => { Live.send(topic, row); return ok; }) : Live.sendSure(topic, row, progress);
+        save.then((ok) => {
           if (ok) { d.sent = true; saveD(); draw(); return; }
           const str = items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('');
           main.append(h('p', { class: 'msg' }, L(SURVEY_UI.failed)), h('p', { class: 'msg', style: 'font:700 22px monospace;word-break:break-all' }, `${d.code} · ${str}`));

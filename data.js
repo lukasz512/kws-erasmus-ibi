@@ -1,7 +1,9 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.PROJECT_NO = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
+window.PROJECT_NO = '';
+// Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
+window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
 window.BASE = 'https://lukasz512.github.io/kws-erasmus-ibi/';
 
 window.GROUPS = [
