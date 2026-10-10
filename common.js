@@ -102,3 +102,14 @@ const EU_FLAG = '<svg viewBox="0 0 60 40" aria-label="EU"><rect width="60" heigh
     const a = (i * Math.PI) / 6, x = 30 + 12 * Math.sin(a), y = 20 - 12 * Math.cos(a);
     return `<text x="${x}" y="${y + 2.2}" font-size="6.5" text-anchor="middle" fill="#FFCC00">★</text>`;
   }).join('') + '</svg>';
+
+// Pages caches HTML for ~10 min: when a newer version is deployed, reload once with a fresh URL.
+fetch('version.txt?' + Date.now(), { cache: 'no-store' }).then((r) => r.text()).then((v) => {
+  v = v.trim();
+  if (v && window.APP_V && v !== window.APP_V) {
+    const u = new URL(location.href);
+    if (u.searchParams.get('_v') === v) return;
+    u.searchParams.set('_v', v);
+    location.replace(u.toString());
+  }
+}).catch(() => {});
