@@ -513,7 +513,7 @@ body.reader .crow { grid-template-columns: 1fr; } body.reader .ct { font-size: 1
 .tscr.lens .limg { flex: 1; border-radius: 16px; background-size: cover; background-position: center; position: relative; overflow: hidden; }
 .tscr.lens .scan { position: absolute; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, transparent, #4285F4, transparent); box-shadow: 0 0 30px #4285F4; animation: scan 3s ease-in-out infinite; }
 @keyframes scan { 0%, 100% { top: 5%; } 50% { top: 92%; } }
-.tscr.lens .res { background: #fff; border-radius: 16px; padding: 14px 20px; font-size: 28px; font-weight: 700; animation: resIn 3s infinite; }
+.tscr.lens .lres { background: #fff; border-radius: 16px; padding: 14px 20px; font-size: 28px; font-weight: 700; animation: resIn 3s infinite; }
 @keyframes resIn { 0%, 45% { opacity: 0; transform: translateY(20px); } 60%, 100% { opacity: 1; transform: none; } }
 .tscr.sec { justify-content: center; gap: 22px; }
 .tg { background: #fff; border-radius: 16px; padding: 22px 26px; display: flex; justify-content: space-between; align-items: center; font-size: 30px; }
@@ -598,3 +598,7 @@ body.reader .rv .url, body.reader .rv .num, body.reader .rv .code, body.reader .
 .tlive .stat { display: flex; align-items: baseline; gap: 14px; font-size: 28px; border-top: 1px solid var(--line); padding-top: 10px; }
 .tlive .stat b { font: 600 56px var(--serif); min-width: 70px; }
 body.reader .tlives { grid-template-columns: 1fr; } body.reader .tbar { grid-template-columns: 34px 1fr 1fr 60px; font-size: 14px; } body.reader .tbar .tic { width: 32px; height: 32px; font-size: 18px; }
+
+.tscr.lens { padding: 16px; gap: 12px; }
+.tscr.lens .limg { flex: 1; min-height: 0; }
+.tscr.lens .lres { flex: none; }
