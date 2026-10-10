@@ -286,3 +286,15 @@ body.reader #nav #follow { flex: 0 0 auto; background: #B3261E; color: #fff; }
 
 .footer .pg { white-space: nowrap; }
 .footer .logos { flex: none; }
+table.phr { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 32px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(11,31,58,.08); }
+table.phr th { background: var(--navy); color: #fff; text-align: left; padding: 16px 22px; font-size: 28px; }
+table.phr th .flag { display: inline-block; width: 42px; height: 28px; margin-right: 12px; vertical-align: -5px; border-radius: 4px; overflow: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,.4); }
+table.phr th .flag svg { width: 100%; height: 100%; display: block; }
+table.phr td { padding: 12px 22px; border-top: 1px solid var(--line); }
+table.phr td:first-child { color: var(--muted); }
+table.phr td.ksz { font-weight: 700; color: var(--eu); }
+table.phr tr:nth-child(even) td { background: #FAF8F2; }
+body.reader table.phr { font-size: 14px; }
+body.reader table.phr th { font-size: 13px; padding: 8px; }
+body.reader table.phr td { padding: 6px 8px; }
+body.reader table.phr th .flag { width: 22px; height: 15px; margin-right: 4px; }

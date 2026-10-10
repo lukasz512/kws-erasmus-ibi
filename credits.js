@@ -50,10 +50,10 @@ window.CREDITS = [
  },
  {
   "file": "img/dozynki.jpg",
-  "title": "JRUK 20070902 NOWYFOLWARK WIENIEC&CHLEB.jpg",
-  "author": "Jrkruk",
-  "license": "CC BY-SA 3.0",
-  "page": "https://commons.wikimedia.org/wiki/File:JRUK_20070902_NOWYFOLWARK_WIENIEC%26CHLEB.jpg"
+  "title": "Òżniwinë – dożynki, gmina Parchowo",
+  "author": "Fundacja Kaszëbi we swiecë",
+  "license": "© fundacja",
+  "page": "https://kaszebiweswiece.pl/"
  },
  {
   "file": "img/hogueras.jpg",

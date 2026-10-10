@@ -156,13 +156,17 @@ window.DECKS = [
       { k: 'join' },
       { k: 'compare', a: { img: 'img/kaszuby.jpg?v=10', h: T('Kaszuby: jeziora i lasy', 'Kashubia: lakes and forests', 'Casubia: lagos y bosques') }, b: { img: 'img/villajoyosa.jpg', h: T('Walencja: góry i morze', 'Valencia: mountains and sea', 'Valencia: montaña y mar') } },
       { k: 'compare', a: { img: 'img/haft.jpg', h: T('Haft kaszubski', 'Kashubian embroidery', 'Bordado casubio') }, b: { img: 'img/paella.jpg', h: T('Paella z Walencji', 'Valencian paella', 'Paella valenciana') } },
-      { k: 'compare', a: { img: 'img/dozynki.jpg', h: T('Dożynki i wieniec', 'Harvest festival and wreath', 'Fiesta de la cosecha y corona') }, b: { img: 'img/hogueras.jpg', h: T('Hogueras: święto ognia', 'Hogueras: the fire festival', 'Hogueras: la fiesta del fuego') } },
-      { k: 'table', h: T('Język', 'Language', 'Lengua'), rows: [
-        [T('', '', ''), T('Kaszuby · Walencja', 'Kashubia · Valencia', 'Casubia · Valencia')],
-        [T('Dzień dobry', 'Good morning', 'Buenos días'), T('Dobri dzéń · Bon dia', 'Dobri dzéń · Bon dia', 'Dobri dzéń · Bon dia')],
-        [T('Dziękuję', 'Thank you', 'Gracias'), T('Dzãkùjã · Gràcies', 'Dzãkùjã · Gràcies', 'Dzãkùjã · Gràcies')],
-        [T('Status', 'Status', 'Estatus'), T('język regionalny (od 2005) · język współurzędowy', 'regional language (since 2005) · co-official language', 'lengua regional (desde 2005) · lengua cooficial')]
-      ] },
+      { k: 'compare', a: { img: 'img/dozynki.jpg?v=23', h: T('Dożynki (òżniwinë) w Parchowie', 'Harvest festival in Parchowo', 'Fiesta de la cosecha en Parchowo') }, b: { img: 'img/hogueras.jpg', h: T('Hogueras: święto ognia', 'Hogueras: the fire festival', 'Hogueras: la fiesta del fuego') } },
+      { k: 'phrases', h: T('Ważne zwroty', 'Useful phrases', 'Frases útiles'), rows: [
+        [T('Witajcie!', 'Welcome!', '¡Bienvenidos!'), 'Witôjtaż!', '¡Bienvenidos!', 'Benvinguts!'],
+        [T('Dzień dobry', 'Good morning', 'Buenos días'), 'Dobri dzéń', 'Buenos días', 'Bon dia'],
+        [T('Dziękuję', 'Thank you', 'Gracias'), 'Dzãkùjã', 'Gracias', 'Gràcies'],
+        [T('Tak / Nie', 'Yes / No', 'Sí / No'), 'Jo / Nié', 'Sí / No', 'Sí / No'],
+        [T('Jak się masz?', 'How are you?', '¿Cómo estás?'), 'Jak sã môsz?', '¿Cómo estás?', 'Com estàs?'],
+        [T('Smacznego!', 'Enjoy your meal!', '¡Buen provecho!'), 'Smacznégò!', '¡Buen provecho!', 'Bon profit!'],
+        [T('Na zdrowie!', 'Cheers!', '¡Salud!'), 'Na zdrowié!', '¡Salud!', 'Salut!'],
+        [T('Do widzenia', 'Goodbye', 'Adiós'), 'Do ùzdrzeniô', 'Adiós', 'Adéu']
+      ], note: T('Kaszubski: język regionalny w Polsce (od 2005) · walencki: język współurzędowy w Walencji', 'Kashubian: a regional language in Poland (since 2005) · Valencian: co-official in the Valencian Community', 'Casubio: lengua regional en Polonia (desde 2005) · valenciano: lengua cooficial en la Comunidad Valenciana') },
       { k: 'table', h: T('Rytm dnia', 'Daily rhythm', 'El ritmo del día'), rows: [
         [T('', '', ''), T('Kaszuby · Hiszpania', 'Kashubia · Spain', 'Casubia · España')],
         [T('Obiad', 'Lunch', 'Comida'), T('ok. 13:00 · 14:00–15:30', 'about 1 pm · 2–3:30 pm', 'hacia las 13:00 · 14:00–15:30')],
@@ -171,7 +175,7 @@ window.DECKS = [
         [T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), T('ok. 10°C · ok. 23°C', 'about 10°C · about 23°C', 'unos 10°C · unos 23°C')]
       ] },
       { k: 'q', q: 'p3_surprise' },
-      { k: 'text', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/dozynki.jpg', li: [
+      { k: 'text', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/dozynki.jpg?v=23', li: [
         T('Duma z regionu i własny język obok języka państwowego', 'Pride in our region and a language of our own', 'Orgullo regional y una lengua propia'),
         T('Święta całej wspólnoty: dożynki ↔ Hogueras, Moros y Cristianos', 'Community festivals: harvest festival ↔ Hogueras, Moros y Cristianos', 'Fiestas de todo el pueblo: dożynki ↔ Hogueras, Moros y Cristianos'),
         T('Koła gospodyń ↔ stowarzyszenia i bractwa świąteczne', 'Rural women’s circles ↔ local associations and festival groups', 'Asociaciones de mujeres ↔ asociaciones y comparsas'),

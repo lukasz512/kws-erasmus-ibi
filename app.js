@@ -108,6 +108,11 @@ function decorate(el) {
 function bullets(li, ordered) { return h(ordered ? 'ol' : 'ul', { class: ordered ? 'steps' : 'big' }, li.map((x) => h('li', {}, L(x)))); }
 function joinBox(size) { const b = h('div', { class: 'qbox' }); qr(b, voteUrl(), size); return b; }
 
+const FLAGS = {
+  ksz: '<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#111"/><rect y="10" width="30" height="10" fill="#FFD700"/></svg>',
+  es: '<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg>',
+  val: '<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#FCDD09"/>' + [0, 1, 2, 3].map((i) => `<rect x="8" y="${2 + i * 4.4}" width="22" height="2.2" fill="#DA121A"/>`).join('') + '<rect width="8" height="20" fill="#0057A5"/></svg>'
+};
 let mapCtl = null; // live map of the current slide
 let afterFns = [];
 const after = (fn) => afterFns.push(fn);
@@ -149,6 +154,12 @@ const R = {
   table(s) {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
+  },
+  phrases(s) {
+    const head = [['', L(T('Polski', 'English', 'Español'))], [FLAGS.ksz, 'Kaszëbsczi'], [FLAGS.es, 'Español'], [FLAGS.val, 'Valencià']];
+    const th = h('tr', {}, head.map(([f, n], i) => { const c = h('th', {}, h('span', { class: 'flag' }), n); if (f) c.querySelector('.flag').innerHTML = f; else c.querySelector('.flag').remove(); return c; }));
+    const t = h('table', { class: 'phr' }, th, s.rows.map((r) => h('tr', {}, h('td', {}, L(r[0])), h('td', { class: 'ksz' }, r[1]), h('td', {}, r[2]), h('td', {}, r[3]))));
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t, h('p', { class: 'muted', style: 'font-size:26px' }, L(s.note))));
   },
   post(s) {
     const card = s.sms
