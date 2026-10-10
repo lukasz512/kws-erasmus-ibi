@@ -30,8 +30,8 @@
 <body>
 <div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
 <div class="page" id="page"></div>
-<script src="data.js?v=37"></script>
-<script src="common.js?v=37"></script>
+<script src="data.js?v=38"></script>
+<script src="common.js?v=38"></script>
 <script>
   LANG = 'pl';
   const SV = store('kws-survey-v1') || {};
@@ -56,16 +56,16 @@
     <header><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:40px"><img class="eu" src="img/eu-pl.jpg" alt=""></header>
     <h1>Raport ankiety przed/po: dezinformacja</h1>
     <div class="meta">Projekt Erasmus+ KA122-ADU „KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”${PROJECT_NO ? ' · nr ' + PROJECT_NO : ''} · Ibi i Alicante, 11–21.10.2026 · wygenerowano ${new Date().toLocaleString('pl-PL')}</div>
-    <h2>Wyniki główne</h2>
+    <h2>Efekty uczenia się</h2>
     <div class="kpis">
       <div class="kpi">Test PRZED<b>${preAvg ?? '–'}%</b>n = ${pre.length}</div>
       <div class="kpi">Test PO<b>${postAvg ?? '–'}%</b>n = ${post.length}</div>
-      <div class="kpi">Przyrost wiedzy<b>${gain == null ? '–' : (gain > 0 ? '+' : '') + gain + ' pp'}</b>cel: +40 pp</div>
+      <div class="kpi">Przyrost kompetencji<b>${gain == null ? '–' : (gain > 0 ? '+' : '') + gain + ' pp'}</b>cel: +40 pp</div>
     </div>
     <h2>Wskaźniki z wniosku</h2>
     <table><tr><th>Wskaźnik</th><th>Wynik</th><th>Próg</th><th>Osiągnięty</th></tr>
       <tr><td>W1. Wynik testu PO</td><td>${postAvg ?? '–'}%</td><td>≥ 80%</td><td>${yes(postAvg, 80)}</td></tr>
-      <tr><td>W2. Przyrost wiedzy grupy</td><td>${gain ?? '–'} pp</td><td>≥ +40 pp</td><td>${yes(gain, 40)}</td></tr>
+      <tr><td>W2. Przyrost kompetencji grupy</td><td>${gain ?? '–'} pp</td><td>≥ +40 pp</td><td>${yes(gain, 40)}</td></tr>
       <tr><td>W3. Osoby z przyrostem ≥ 40 pp</td><td>${reached} z ${people.length}</td><td>≥ 80% osób</td><td>${people.length ? yes(Math.round((100 * reached) / people.length), 80) : '–'}</td></tr>
       <tr><td>W6. Zamiar sprawdzania źródła (D1 „tak, zawsze”)</td><td>${d1 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d1, 70)}</td></tr>
       <tr><td>W6. Słowo-hasło w rodzinie (D2 „tak” lub „już mamy”)</td><td>${d2 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d2, 70)}</td></tr>

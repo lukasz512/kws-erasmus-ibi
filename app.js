@@ -356,7 +356,7 @@ const R = {
       h('div', { class: 'qbars' }, h('i', { class: 'b-pre', style: `width:${st.preQ[i] || 0}%` }), h('i', { class: 'b-post', style: `width:${st.postQ[i] || 0}%` })),
       h('span', { class: 'qv' }, `${st.preQ[i] ?? '–'} → ${st.postQ[i] ?? '–'}%`)));
     return decorate(h('section', { class: 'slide' },
-      h('h2', {}, L(SURVEY_UI.growth)),
+      h('h2', {}, L(SURVEY_UI.outcomes)),
       h('div', { class: 'res' },
         h('div', { class: 'kpis' },
           big(L(UI.before), st.preAvg == null ? '–' : st.preAvg + '%', `n = ${st.pre.length}`),
