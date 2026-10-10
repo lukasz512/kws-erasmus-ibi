@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '51'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '52'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
@@ -268,7 +268,6 @@ window.DECKS = [
         T('Napiszcie: „zespół gra na gitarach na plaży w Alicante, w tle napis KASZËBË”', 'Type: “a band playing guitars on the beach in Alicante, with the sign KASZËBË behind them”', 'Escribid: «un grupo tocando guitarras en la playa de Alicante, con el letrero KASZËBË detrás»'),
         T('Szukajcie błędów: dłonie, napisy, cienie, tło', 'Look for mistakes: hands, writing, shadows, background', 'Buscad fallos: manos, letras, sombras, fondo')
       ] },
-      { k: 'results' },
       { k: 'end', h: T('Zatrzymaj się, zanim udostępnisz!', 'Stop before you share!', '¡Para antes de compartir!') }
     ]
   },
