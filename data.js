@@ -78,7 +78,6 @@ window.Q = {
 };
 
 // Slide kinds: title, join, text, img, compare, map, table, q (question), task, score, prepost, cert, end, credits.
-const footer = true;
 window.DECKS = [
   {
     id: 'p1', title: T('Kaszëbi w Europie! Wprowadzenie', 'Kashubians in Europe! Introduction', '¡Casubios en Europa! Introducción'),
