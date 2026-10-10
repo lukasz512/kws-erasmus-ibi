@@ -602,3 +602,24 @@ body.reader .tlives { grid-template-columns: 1fr; } body.reader .tbar { grid-tem
 .tscr.lens { padding: 16px; gap: 12px; }
 .tscr.lens .limg { flex: 1; min-height: 0; }
 .tscr.lens .lres { flex: none; }
+/* Link detective */
+.tscr.lnk { background: #F2F2F7; justify-content: center; position: relative; }
+.tscr.lnk .top { text-align: center; color: #666; font-weight: 700; font-size: 20px; }
+.tscr.lnk .bub { background: #E5E5EA; border-radius: 24px 24px 24px 6px; padding: 18px 22px; font-size: 28px; max-width: 90%; }
+.tscr.lnk .bub u { color: #1A73E8; }
+.tscr.lnk .finger { position: absolute; left: 52%; top: 52%; font-size: 70px; animation: press 5s infinite; }
+@keyframes press { 0%, 10% { transform: translate(60px, 80px); opacity: 0; } 25% { transform: none; opacity: 1; } 30%, 60% { transform: scale(.9); } 75%, 100% { opacity: 0; } }
+.tscr.lnk .pop { position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); background: #fff; border-radius: 18px; padding: 18px 22px; box-shadow: 0 10px 30px rgba(0,0,0,.25); display: flex; flex-direction: column; gap: 6px; font-size: 24px; min-width: 70%; animation: popIn 5s infinite; }
+.tscr.lnk .pop .vs { color: #4A5568; } .tscr.lnk .pop .bad { color: #E5322D; font-weight: 900; font-size: 28px; }
+@keyframes popIn { 0%, 35% { opacity: 0; transform: translate(-50%, 30px); } 45%, 92% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+/* Password phrase */
+.tscr.pwd { justify-content: center; align-items: center; gap: 28px; background: linear-gradient(160deg, #EEF2F8, #FFFFFF); }
+.tscr.pwd .words { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.tscr.pwd .w { background: #0B1F3A; color: #fff; font: 900 36px 'Public Sans', Arial; padding: 12px 18px; border-radius: 14px; opacity: 0; animation: wordIn 6s infinite; }
+.tscr.pwd .w1 { animation-delay: .5s; background: #003399; } .tscr.pwd .w2 { animation-delay: 1s; background: #2E8B57; } .tscr.pwd .w3 { animation-delay: 1.5s; background: #C8102E; }
+@keyframes wordIn { 0% { opacity: 0; transform: translateY(-30px) rotate(-6deg); } 10%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.tscr.pwd .meter { width: 80%; height: 22px; background: #E4E7EC; border-radius: 11px; overflow: hidden; }
+.tscr.pwd .meter i { display: block; height: 100%; border-radius: 11px; background: linear-gradient(90deg, #E5322D, #FFB300, #34C759); animation: fillM 6s ease-in-out infinite; transform-origin: left; }
+.tscr.pwd .crack { font: 900 30px 'Public Sans', Arial; color: #1E7B4A; animation: resIn 6s infinite; }
+body.reader .tscr.lnk .bub { font-size: 13px; } body.reader .tscr.lnk .pop { font-size: 12px; } body.reader .tscr.lnk .finger { font-size: 30px; }
+body.reader .tscr.pwd .w { font-size: 15px; padding: 6px 8px; } body.reader .tscr.pwd .crack { font-size: 14px; }

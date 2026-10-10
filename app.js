@@ -289,6 +289,11 @@ const R = {
     else if (s.screen === 'translate') scr = h('div', { class: 'tscr tr' }, h('div', { class: 'cam' }, h('div', { class: 'menu' }, h('b', {}, 'MENÚ DEL DÍA'), h('span', {}, 'Paella · Horchata · Turrón')),
       h('div', { class: 'over' }, h('b', {}, L(T('MENU DNIA', 'SET MENU', 'MENÚ DEL DÍA'))), h('span', {}, L(T('Paella · Horchata · Turrón', 'Paella · Horchata · Turrón', 'Paella · Horchata · Turrón'))))), h('div', { class: 'shutter' }));
     else if (s.screen === 'lens') scr = h('div', { class: 'tscr lens' }, h('div', { class: 'limg', style: bg(s.img) }, h('div', { class: 'scan' })), h('div', { class: 'lres' }, '📍 Chocolatería Valor'));
+    else if (s.screen === 'link') scr = h('div', { class: 'tscr lnk' }, h('div', { class: 'top' }, '+48 731 *** ***'),
+      h('div', { class: 'bub' }, L(T('Twoja paczka czeka. Dopłać 1,99 zł: ', 'Your parcel is waiting. Pay €0.99: ', 'Tu paquete te espera. Paga 0,99 €: ')), h('u', {}, 'paczka-doplata.co')),
+      h('div', { class: 'finger' }, '👆'), h('div', { class: 'pop' }, h('b', {}, 'https://paczka-doplata.co/pay'), h('span', { class: 'vs' }, '≠ inpost.pl'), h('span', { class: 'bad' }, '⚠️ ' + L(T('OSZUSTWO', 'SCAM', 'ESTAFA')))));
+    else if (s.screen === 'password') scr = h('div', { class: 'tscr pwd' }, h('div', { class: 'words' }, ['zielony', 'gryf', 'pije', 'kawę'].map((w, k) => h('span', { class: 'w w' + k }, w))),
+      h('div', { class: 'meter' }, h('i')), h('div', { class: 'crack' }, '🛡️ ' + L(T('Złamanie: ponad 100 lat', 'Cracking time: over 100 years', 'Tiempo para descifrarla: más de 100 años'))));
     else if (s.screen === 'secure') scr = h('div', { class: 'tscr sec' }, [L(T('Blokada ekranu', 'Screen lock', 'Bloqueo de pantalla')), L(T('Lokalizacja', 'Location', 'Localización')), L(T('Aktualizacje', 'Updates', 'Actualizaciones'))].map((t, k) => h('div', { class: 'tg tg' + k }, h('span', {}, t), h('i'))));
     return decorate(h('section', { class: 'slide s-task' }, h('span', { class: 'tag' }, '📲 ' + L(UI.tablet)), h('h2', {}, L(s.h)),
       h('div', { class: 'tlay' }, steps, scr ? h('div', { class: 'tablet' }, scr) : s.img ? h('div', { class: 'pic', style: bg(s.img) }) : null)));

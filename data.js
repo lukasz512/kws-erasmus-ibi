@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '52'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '53'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = ''; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
@@ -282,12 +282,22 @@ window.DECKS = [
         { kind: 'ad', head: T('Zarabiaj 5000 zł dziennie!', 'Earn €1,000 a day!', '¡Gana 1.000 € al día!'), btn: T('INWESTUJ TERAZ', 'INVEST NOW', 'INVIERTE YA'), l: T('Reklamy „pewnych inwestycji” z deepfake', '“Sure investment” deepfake ads', 'Anuncios de «inversión segura» con deepfakes') }
       ] },
       { k: 'post', text: T('Twoja paczka czeka. Dopłać 1,99 zł: paczka-doplata.co', 'Your parcel is waiting. Pay €0.99: parcel-fee.co', 'Tu paquete te espera. Paga 0,99 €: paquete-pago.co'), note: T('Przykład wymyślony na potrzeby zajęć: nie klikamy!', 'A made-up example: never click!', 'Ejemplo inventado: ¡no pinches!'), sms: true },
+      { k: 'task', h: T('Detektyw linków', 'Link detective', 'Detective de enlaces'), screen: 'link', icons: ['📩', '👆', '🕵️'], li: [
+        T('Otwórzcie na tablecie przykładowy SMS z linkiem (prowadzący pokaże)', 'Open the sample text with a link on the tablet (the presenter will show it)', 'Abrid en la tableta el SMS de ejemplo con un enlace (lo enseña quien presenta)'),
+        T('NIE klikajcie: przytrzymajcie palec na linku, aż pokaże się pełny adres', "DON'T tap: press and hold the link until the full address appears", 'NO pinchéis: mantened pulsado el enlace hasta ver la dirección completa'),
+        T('Porównajcie z prawdziwą stroną firmy. Pasuje czy to oszustwo?', "Compare it with the company's real website. Does it match or is it a scam?", 'Comparadlo con la web real de la empresa. ¿Coincide o es una estafa?')
+      ] },
       { k: 'rules', h: T('5 zasad do zapamiętania', '5 rules to remember', '5 reglas para recordar'), items: [
         { v: 'link', h: T('Nie klikam', "Don't click", 'No pincho'), p: T('linków z SMS-ów i maili', 'links in texts and emails', 'enlaces de SMS ni correos') },
         { v: 'call', h: T('Sam oddzwaniam', 'I call back myself', 'Llamo yo'), p: T('na znany numer: banku, dziecka, urzędu', 'on a number I know: bank, child, office', 'a un número conocido: banco, hijo, oficina') },
         { v: 'pass', h: T('Długie hasło + kod', 'Long password + code', 'Contraseña larga + código'), p: T('hasło to zdanie, a do tego kod z SMS-a (2FA)', 'a sentence as password, plus an SMS code (2FA)', 'una frase como contraseña y un código SMS (2FA)') },
         { v: 'blik', h: T('Kod tylko dla mnie', 'Codes are mine only', 'Códigos solo para mí'), p: T('nikomu nie podaję kodów BLIK ani z SMS', 'I never give anyone payment or SMS codes', 'nunca doy códigos de pago ni de SMS') },
         { v: 'family', h: T('Rodzinne słowo-hasło', 'Family code word', 'Palabra clave familiar'), p: T('na „pilne” telefony od bliskich', 'for “urgent” calls from loved ones', 'para llamadas «urgentes» de familiares') }
+      ] },
+      { k: 'task', h: T('Hasło nie do złamania', 'An unbreakable password', 'Una contraseña irrompible'), screen: 'password', icons: ['🎲', '🔗', '🛡️'], li: [
+        T('Każda osoba w drużynie wymyśla jedno słowo, np. gryf, kawa, morze, rower', 'Everyone in the team thinks of one word, e.g. griffin, coffee, sea, bike', 'Cada persona del equipo piensa una palabra, p. ej. grifo, café, mar, bici'),
+        T('Połączcie 4 słowa w zabawne zdanie: zielony-gryf-pije-kawę', 'Join 4 words into a funny phrase: green-griffin-drinks-coffee', 'Unid 4 palabras en una frase divertida: grifo-verde-toma-café'),
+        T('Takie hasło łatwo zapamiętać, a komputer łamałby je setki lat. Nie wpisujcie go nigdzie!', 'Easy to remember, and a computer would need centuries to crack it. Don’t type it anywhere!', 'Fácil de recordar y un ordenador tardaría siglos en descifrarla. ¡No la escribáis en ningún sitio!')
       ] },
       { k: 'task', h: T('Zabezpieczcie tablet', 'Secure the tablet', 'Proteged la tableta'), screen: 'secure', icons: ['🔒', '📍', '🔄'], li: [
         T('Ustawienia → Face ID / kod: czy blokada jest włączona?', 'Settings → Face ID / passcode: is the lock on?', 'Ajustes → Face ID / código: ¿está activado el bloqueo?'),
