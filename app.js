@@ -410,7 +410,8 @@ let navTimer = null;
 function broadcast() {
   if (READER) return;
   clearTimeout(navTimer);
-  navTimer = setTimeout(() => Live.send(topic, { k: 'nav', dk: deck().id, s: S.slide, st: S.step }), 600);
+  // Throttled: the free live channel rate-limits per IP, so the presenter sends at most one position update per 4 s.
+  navTimer = setTimeout(() => Live.send(topic, { k: 'nav', dk: deck().id, s: S.slide, st: S.step }), 4000);
 }
 
 // Reader (EN/ES via QR) follows the presenter until the viewer navigates on their own.

@@ -30,7 +30,16 @@ const qOf = (key) => window.Q[key.split(':')[0]];
 const NTFY = 'https://ntfy.sh/';
 const Live = {
   send(topic, msg) {
-    return fetch(NTFY + topic, { method: 'POST', body: JSON.stringify(msg) }).catch(() => null);
+    return fetch(NTFY + topic, { method: 'POST', body: JSON.stringify(msg) }).then((r) => r.ok).catch(() => false);
+  },
+  // Important messages (survey answers): retry with back-off until the service accepts them (it rate-limits per IP).
+  async sendSure(topic, msg, onTry, tries = 24) {
+    for (let k = 0; k < tries; k++) {
+      if (await Live.send(topic, msg)) return true;
+      if (onTry) onTry(k + 1);
+      await new Promise((r) => setTimeout(r, 4000 + Math.random() * 4000));
+    }
+    return false;
   },
   async history(topic) {
     try {

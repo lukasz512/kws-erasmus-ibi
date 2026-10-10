@@ -106,6 +106,8 @@ window.SURVEY_UI = {
   confidence: T('Pewność siebie w sieci (1–5)', 'Confidence online (1–5)', 'Confianza en internet (1–5)'),
   problem: T('Skala problemu przed wyjazdem', 'The problem before the trip', 'El problema antes del viaje'),
   evaluation: T('Ocena wyjazdu', 'About the trip', 'Sobre el viaje'),
+  sending: T('Wysyłanie…', 'Sending…', 'Enviando…'),
+  failed: T('Brak połączenia. Pokaż ten kod prowadzącemu – wpisze Twoje odpowiedzi:', 'No connection. Show this code to the presenter, who will enter your answers:', 'Sin conexión. Enseña este código a la persona que presenta:'),
   intro: T('Ankieta jest anonimowa i zajmuje ok. 12 minut.', 'The survey is anonymous and takes about 12 minutes.', 'La encuesta es anónima y dura unos 12 minutos.')
 };
 
