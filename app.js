@@ -250,7 +250,7 @@ const R = {
     const big = (label, v, sub, cls) => h('div', { class: 'kpi ' + (cls || '') }, h('div', { class: 'v' }, v), h('div', { class: 'l' }, label), sub ? h('div', { class: 's' }, sub) : null);
     const rows = window.SURVEY.map((q, i) => h('div', { class: 'qrow' },
       h('span', { class: 'qn' }, String(i + 1)),
-      h('div', { class: 'qbars' }, h('i', { class: 'pre', style: `width:${st.preQ[i] || 0}%` }), h('i', { class: 'post', style: `width:${st.postQ[i] || 0}%` })),
+      h('div', { class: 'qbars' }, h('i', { class: 'b-pre', style: `width:${st.preQ[i] || 0}%` }), h('i', { class: 'b-post', style: `width:${st.postQ[i] || 0}%` })),
       h('span', { class: 'qv' }, `${st.preQ[i] ?? '–'} → ${st.postQ[i] ?? '–'}%`)));
     return decorate(h('section', { class: 'slide' },
       h('h2', {}, L(SURVEY_UI.growth)),
@@ -259,7 +259,7 @@ const R = {
           big(L(UI.before), st.preAvg == null ? '–' : st.preAvg + '%', `n = ${st.pre.length}`),
           big(L(UI.after), st.postAvg == null ? '–' : st.postAvg + '%', `n = ${st.post.length} · ${L(SURVEY_UI.target)}: 80%`, st.postAvg >= 80 ? 'ok' : ''),
           big(L(SURVEY_UI.growth), gain == null ? '–' : (gain > 0 ? '+' : '') + gain + ' pp', `${L(SURVEY_UI.target)}: +40 pp`, gain >= 40 ? 'ok' : 'accent')),
-        h('div', { class: 'qlist' }, h('div', { class: 'legend' }, h('i', { class: 'pre' }), L(UI.before), h('i', { class: 'post' }), L(UI.after)), rows))));
+        h('div', { class: 'qlist' }, h('div', { class: 'legend' }, h('i', { class: 'b-pre' }), L(UI.before), h('i', { class: 'b-post' }), L(UI.after)), rows))));
   },
   people() {
     const st = surveyStats();

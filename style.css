@@ -247,8 +247,8 @@ body.reader #nav span { color: #fff; align-self: center; font-size: 15px; min-wi
 .qlist { flex: 1; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
 .legend { display: flex; gap: 14px; align-items: center; font-size: 24px; margin-bottom: 6px; }
 .legend i { width: 28px; height: 18px; border-radius: 4px; display: inline-block; }
-.legend i.post, .qbars i.post { background: var(--ok); }
-.legend i.pre, .qbars i.pre { background: #8A94A6; }
+.legend i.b-post, .qbars i.b-post { background: var(--ok); }
+.legend i.b-pre, .qbars i.b-pre { background: #8A94A6; }
 .qrow { display: grid; grid-template-columns: 44px 1fr 180px; gap: 14px; align-items: center; font-size: 24px; }
 .qn { font-weight: 700; color: var(--eu); text-align: right; }
 .qbars { display: flex; flex-direction: column; gap: 4px; background: #fff; border-radius: 8px; padding: 5px; }
