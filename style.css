@@ -268,3 +268,6 @@ body.reader .gwrap, body.reader .res { flex-direction: column; }
 body.reader .gleft, body.reader .kpis { width: 100%; }
 body.reader .mapbox { min-height: 320px; }
 body.reader .people { grid-template-columns: 1fr 1fr; }
+.qrow { height: 50px; }
+.qbars { height: 42px; justify-content: center; flex: none; }
+.qlist { justify-content: flex-start; gap: 8px; }
