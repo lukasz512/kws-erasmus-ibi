@@ -132,7 +132,7 @@ window.DECKS = [
         T('Wcześniej: Teneryfa 2024, „Kaszëbi w Europie” 2025, partnerstwo ze Słowacją', 'Before: Tenerife 2024, “Kaszëbi w Europie” 2025, partnership with Slovakia', 'Antes: Tenerife 2024, «Kaszëbi w Europie» 2025, asociación con Eslovaquia')
       ] },
       { k: 'text', h: T('Nasz projekt', 'Our project', 'Nuestro proyecto'), img: 'img/tablet.jpg', li: [
-        T('28 słuchaczy z terenów wiejskich + 3 opiekunów', '28 learners from rural areas + 3 companions', '28 alumnos de zonas rurales + 3 acompañantes'),
+        T('„KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”', '“KASZËBI IN EUROPE! – ensuring access to reliable and modern digital education in rural areas”', '«¡CASUBIOS EN EUROPA! – garantizar el acceso a una educación digital fiable y moderna en zonas rurales»'),
         T('Partner: Associació Educativa i Cultural Blue Beehive z Ibi', 'Host: Associació Educativa i Cultural Blue Beehive, Ibi', 'Socio: Associació Educativa i Cultural Blue Beehive, Ibi'),
         T('Uczymy się: tablety i AI, rozpoznawanie fake newsów, bezpieczeństwo w sieci, angielski', 'We learn: tablets and AI, spotting fake news, online safety, English', 'Aprendemos: tabletas e IA, detectar bulos, seguridad en internet, inglés'),
         T('Finansuje Unia Europejska – program Erasmus+', 'Funded by the European Union – Erasmus+', 'Financiado por la Unión Europea – Erasmus+')
