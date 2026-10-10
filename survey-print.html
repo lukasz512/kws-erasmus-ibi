@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ankieta – dezinformacja (do druku)</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font: 15px/1.4 Arial, sans-serif; color: #0B1F3A; margin: 0; padding: 16px; background: #fff; }
+  .bar { display: flex; gap: 8px; margin-bottom: 14px; }
+  .bar button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid #bbb; background: #fff; }
+  .sheet { max-width: 800px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #0B1F3A; padding-bottom: 10px; margin-bottom: 12px; }
+  header img { height: 46px; }
+  header .eu { height: 46px; margin-left: auto; }
+  h1 { font-size: 20px; margin: 0; }
+  .fields { display: flex; gap: 18px; margin: 10px 0 14px; flex-wrap: wrap; }
+  .fields div { border: 2px solid #0B1F3A; border-radius: 6px; padding: 6px 10px; min-width: 200px; }
+  .fields small { display: block; color: #4A5568; }
+  ol { padding-left: 22px; margin: 0; }
+  li { margin-bottom: 10px; break-inside: avoid; }
+  li p { margin: 0 0 4px; font-weight: 700; }
+  .opt { display: block; margin-left: 4px; }
+  .opt::before { content: '☐ '; font-size: 17px; }
+  @media print { .bar { display: none; } body { padding: 0; } @page { size: A4; margin: 12mm; } }
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="sheet">
+  <header><img src="img/kaszebi-logo.png" alt=""><h1 id="t"></h1><img class="eu" src="img/eu-pl.jpg" alt=""></header>
+  <div class="fields">
+    <div><small id="lc"></small>&nbsp;</div>
+    <div><small>☐ PRZED / BEFORE / ANTES &nbsp; ☐ PO / AFTER / DESPUÉS</small>&nbsp;</div>
+    <div><small>☐ Niebiescy ☐ Żółci ☐ Zieloni</small>&nbsp;</div>
+  </div>
+  <p id="help"></p>
+  <ol id="qs"></ol>
+</div>
+<script src="data.js?v=7"></script>
+<script src="common.js?v=7"></script>
+<script>
+  function draw() {
+    const bar = document.getElementById('bar'); bar.innerHTML = '';
+    ['pl', 'en', 'es'].forEach((l) => bar.append(h('button', { onclick: () => { LANG = l; draw(); }, style: l === LANG ? 'background:#0B1F3A;color:#fff' : '' }, l.toUpperCase())));
+    bar.append(h('button', { onclick: () => print() }, '🖨'));
+    document.getElementById('t').textContent = L(SURVEY_UI.title);
+    document.getElementById('lc').textContent = L(SURVEY_UI.code);
+    document.getElementById('help').textContent = L(SURVEY_UI.codeHelp);
+    const qs = document.getElementById('qs'); qs.innerHTML = '';
+    window.SURVEY.forEach((q) => qs.append(h('li', {}, h('p', {}, L(q.q)), q.a.map((a, i) => h('span', { class: 'opt' }, 'ABC'[i] + '. ' + L(a))))));
+  }
+  if (!params.get('lang')) LANG = 'pl';
+  draw();
+</script>
+</body>
+</html>
