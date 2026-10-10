@@ -79,7 +79,7 @@ function tally(key) {
 const deck = () => window.DECKS[S.deck];
 const cur = () => deck().slides[S.slide];
 const bg = (url) => `background-image:url('${url}')`;
-const voteUrl = () => window.BASE + 'vote.html?t=' + topic;
+const voteUrl = (mode, key, phase) => window.BASE + 'vote.html?t=' + topic + (mode ? `&m=${mode}&k=${encodeURIComponent(key)}` + (phase ? `&p=${phase}` : '') : '');
 const langUrl = () => window.BASE + 'lang.html?d=' + deck().id + '&s=' + S.slide + '&t=' + topic;
 const slideKey = (s) => (s.k === 'q' ? keyOf(s) : s.k === 'guess' ? s.g : s.k === 'pins' ? 'pins-' + deck().id : s.k === 'survey' ? 'survey-' + s.phase : null);
 const grpColor = (g) => (GROUPS[g] || { color: '#8A94A6' }).color;
@@ -116,7 +116,7 @@ function decorate(el) {
 }
 
 function bullets(li, ordered) { return h(ordered ? 'ol' : 'ul', { class: ordered ? 'steps' : 'big' }, li.map((x) => h('li', {}, L(x)))); }
-function joinBox(size) { const b = h('div', { class: 'qbox' }); qr(b, voteUrl(), size); return b; }
+function joinBox(size, url) { const b = h('div', { class: 'qbox' }); qr(b, url || voteUrl(), size); return b; }
 
 const FLAGS = {
   ksz: '<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#111"/><rect y="10" width="30" height="10" fill="#FFD700"/></svg>',
@@ -276,7 +276,7 @@ const R = {
       h('div', { class: 'gwrap' },
         h('div', { class: 'gleft' }, h('span', { class: 'badge' }, L(T('ZGADNIJ', 'GUESS', 'ADIVINA'))), h('h2', {}, L(MAP_UI.guessQ)),
           h('div', { class: 'gpic', style: bg(G.img) }),
-          result || h('div', { class: 'grow' }, joinBox(200), h('div', {}, h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`), h('p', { class: 'muted' }, READER ? '' : L(UI.reveal))))),
+          result || h('div', { class: 'grow' }, joinBox(200, voteUrl('guess', key)), h('div', {}, h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`), h('p', { class: 'muted' }, READER ? '' : L(UI.reveal))))),
         mapEl)));
     after(() => {
       if (!window.maplibregl) return;
@@ -294,7 +294,7 @@ const R = {
     const mapEl = h('div', { class: 'mapfull' });
     const el = decorate(h('section', { class: 'slide s-map' }, mapEl,
       h('div', { class: 'jcard' }, h('span', { class: 'chip' }, '📍'), h('h2', {}, L(MAP_UI.pinQ)), h('p', {}, L(MAP_UI.pinHelp)),
-        joinBox(220), h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`))));
+        joinBox(220, voteUrl('pin', key)), h('div', { class: 'count' }, `${L(MAP_UI.answers)}: ${n}`))));
     after(() => {
       if (!window.maplibregl) return;
       mapCtl = pinsMap(mapEl, { center: [-0.45, 38.42], zoom: 8.8, pitch: 40 }, false);
@@ -310,7 +310,7 @@ const R = {
     return decorate(h('section', { class: 'slide' },
       h('span', { class: 'badge quiz' }, L(SURVEY_UI.title)),
       h('h2', {}, L(SURVEY_UI[s.phase])),
-      h('div', { class: 'join' }, joinBox(440),
+      h('div', { class: 'join' }, joinBox(440, voteUrl('survey', 'survey-' + s.phase, s.phase)),
         h('div', { class: 'groups' },
           h('p', {}, L(UI.scan)),
           h('p', { class: 'muted' }, L(SURVEY_UI.codeHelp)),
@@ -464,7 +464,7 @@ function render(dir = 0) {
   if (!READER && key && lastOpen !== key) {
     lastOpen = key;
     const mode = s.k === 'q' ? 'q' : s.k === 'guess' ? 'guess' : s.k === 'pins' ? 'pin' : 'survey';
-    Live.send(topic, { k: 'o', key, mode, phase: s.phase });
+    Live.sendSure(topic, { k: 'o', key, mode, phase: s.phase }, null, 6);
   }
 }
 

@@ -42,16 +42,17 @@
 <body>
 <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
 <main id="main"></main>
-<script src="data.js?v=31"></script>
+<script src="data.js?v=32"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=31"></script>
-<script src="maps.js?v=31"></script>
+<script src="common.js?v=32"></script>
+<script src="maps.js?v=32"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
 const gKey = 'kws-group-' + topic;
 let group = store(gKey);
-let open = null;               // {key, mode, phase}
+// A QR on a map/survey slide carries its own screen, so phones open it even if the live signal is late.
+let open = params.get('m') ? { key: params.get('k'), mode: params.get('m'), phase: params.get('p') } : null;
 const mine = store('kws-mine-' + topic) || {};
 const revealed = {};
 const main = document.getElementById('main');
@@ -196,7 +197,7 @@ if (topic) {
     const xs = ms.map(Live.parse).filter(Boolean);
     xs.forEach((x) => { if (x.k === 'r') revealed[x.key] = true; });
     const last = xs.filter((x) => x.k === 'o').pop();
-    if (last) open = { key: last.key, mode: last.mode || 'q', phase: last.phase };
+    if (last && !params.get('m')) open = { key: last.key, mode: last.mode || 'q', phase: last.phase };
     draw();
   });
   Live.listen(topic, handle);
