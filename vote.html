@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kaszëbi w Europie! – głosowanie</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#F5F3EC; --navy:#0B1F3A; --eu:#003399; --ok:#1E7B4A; --bad:#B3261E; --line:#D9D5C8; }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--cream); color: var(--navy); font-family: 'Public Sans', Arial, sans-serif; min-height: 100vh; padding: 16px 16px 40px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+  header img { height: 44px; }
+  .langs button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 15px; }
+  .langs button.on { background: var(--navy); color: #fff; }
+  h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: 28px; line-height: 1.2; margin-bottom: 20px; }
+  .btn { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 72px; margin-bottom: 14px; padding: 14px 18px; border-radius: 16px; border: 3px solid var(--line); background: #fff; font: inherit; font-size: 22px; font-weight: 700; color: var(--navy); text-align: left; }
+  .btn b { width: 44px; height: 44px; border-radius: 10px; background: var(--eu); color: #fff; display: grid; place-items: center; flex: none; }
+  .btn.pick { border-color: var(--eu); background: #E6EBF2; }
+  .btn.ok { border-color: var(--ok); background: #DDF1E4; }
+  .btn.bad { border-color: var(--bad); }
+  .grp i { width: 44px; height: 44px; border-radius: 50%; flex: none; }
+  .msg { font-size: 22px; padding: 18px; border-radius: 14px; background: #fff; margin-top: 8px; }
+  .msg.ok { background: #DDF1E4; } .msg.bad { background: #FBE3E1; }
+  .img { height: 180px; border-radius: 14px; background-size: cover; background-position: center; margin-bottom: 16px; }
+  .me { font-size: 15px; color: #4A5568; margin-top: 24px; display: flex; gap: 8px; align-items: center; }
+  .me button { border: 0; background: none; text-decoration: underline; color: #4A5568; font: inherit; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+<header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
+<main id="main"></main>
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+const topic = params.get('t');
+const dev = deviceId();
+const gKey = 'kws-group-' + topic;
+let group = store(gKey);
+let current = params.get('k');
+const mine = store('kws-mine-' + topic) || {};
+const revealed = {};
+const main = document.getElementById('main');
+
+function langs() {
+  const el = document.getElementById('langs'); el.innerHTML = '';
+  ['pl', 'en', 'es'].forEach((l) => el.append(h('button', { class: l === LANG ? 'on' : '', onclick: () => { LANG = l; store('kws-lang', l); draw(); } }, l.toUpperCase())));
+}
+if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
+
+function draw() {
+  langs();
+  main.innerHTML = '';
+  if (!topic) { main.append(h('p', { class: 'msg' }, 'Zeskanuj kod QR z ekranu.')); return; }
+  if (group == null) {
+    main.append(h('h1', {}, L(UI.pickGroup)));
+    GROUPS.forEach((g, i) => main.append(h('button', { class: 'btn grp', onclick: () => { group = i; store(gKey, i); Live.send(topic, { k: 'j', g: i, d: dev }); draw(); } }, h('i', { style: `background:${g.color}` }), L(g.name))));
+    return;
+  }
+  const q = current && qOf(current);
+  if (!q) {
+    main.append(h('h1', {}, '👀 ' + L(UI.wait)));
+  } else {
+    main.append(h('h1', {}, L(q.q)));
+    if (q.img) main.append(h('div', { class: 'img', style: `background-image:url('${q.img}')` }));
+    const chosen = mine[current];
+    const shown = revealed[current] && q.ok != null;
+    q.a.forEach((a, i) => {
+      let cls = 'btn';
+      if (chosen === i) cls += ' pick';
+      if (shown && i === q.ok) cls += ' ok';
+      else if (shown && chosen === i) cls += ' bad';
+      main.append(h('button', { class: cls, onclick: () => vote(i) }, h('b', {}, 'ABCD'[i]), L(a)));
+    });
+    if (shown && chosen != null) main.append(h('p', { class: 'msg ' + (chosen === q.ok ? 'ok' : 'bad') }, chosen === q.ok ? '🎉 ' + L(UI.correct) : L(UI.wrong)));
+    else if (chosen != null) main.append(h('p', { class: 'msg' }, '✓ ' + L(UI.thanks) + ' ' + L(UI.wait)));
+  }
+  const g = GROUPS[group];
+  main.append(h('p', { class: 'me' }, h('span', { class: 'dot', style: `background:${g.color}` }), L(g.name), ' · ',
+    h('button', { onclick: () => { group = null; store(gKey, null); draw(); } }, L(UI.change))));
+}
+
+function vote(i) {
+  if (revealed[current]) return;
+  mine[current] = i; store('kws-mine-' + topic, mine);
+  Live.send(topic, { k: 'v', key: current, a: i, g: group, d: dev });
+  draw();
+}
+
+function handle(m) {
+  const x = Live.parse(m); if (!x) return;
+  if (x.k === 'o' && x.key && qOf(x.key)) { current = x.key; draw(); if (navigator.vibrate) navigator.vibrate(80); }
+  if (x.k === 'r' && x.key) { revealed[x.key] = true; if (x.key === current) draw(); }
+}
+
+draw();
+if (topic) {
+  Live.history(topic).then((ms) => {
+    ms.forEach((m) => { const x = Live.parse(m); if (x && x.k === 'r') revealed[x.key] = true; });
+    if (!params.get('k')) { const last = ms.map(Live.parse).filter((x) => x && x.k === 'o').pop(); if (last) current = last.key; }
+    draw();
+  });
+  Live.listen(topic, handle);
+}
+</script>
+</body>
+</html>
