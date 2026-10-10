@@ -318,7 +318,7 @@ body.reader #viewport .frame { position: static; }
 .frame.items-a li, .frame.items-a .opt, .frame.items-a .stopcard, .frame.items-a .kpi, .frame.items-a table.phr tr, .frame.items-a .person, .frame.items-a figure { animation: rise .55s cubic-bezier(.2,.7,.2,1) both; }
 .frame.items-a .pic, .frame.items-a .right, .frame.items-a .gpic, .frame.items-a .postimg { animation: kb 1.2s ease both; }
 @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
-@keyframes kb { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+@keyframes kb { from { transform: scale(1.04); } to { transform: none; } }
 /* B: cinematic — horizontal push with parallax, content slides in from the side */
 .frame.in-b.fwd { animation: bInF .75s cubic-bezier(.65,0,.25,1) both; }
 .frame.in-b.back { animation: bInB .75s cubic-bezier(.65,0,.25,1) both; }

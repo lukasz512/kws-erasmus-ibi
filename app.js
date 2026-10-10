@@ -494,16 +494,22 @@ function applyNav(x) {
 }
 
 let ANIM = params.get('anim') || (!READER && store('kws-anim')) || 'mix';
+// Preload every picture once; a loaded picture is never faded or skeleton-ed again.
+const LOADED = new Set();
+const preload = (src) => new Promise((res) => {
+  if (LOADED.has(src)) return res();
+  const im = new Image();
+  im.onload = im.onerror = () => { LOADED.add(src); res(); };
+  im.src = src;
+});
+(JSON.stringify([window.DECKS, window.STOPS, window.GUESS]).match(/img\/[^"'\s)]+\.(?:jpg|png|svg)(?:\?v=\d+)?/g) || [])
+  .filter((v, i, all) => all.indexOf(v) === i).forEach((src) => preload(src));
 function skeletons(root) {
   root.querySelectorAll('[style*="background-image"]').forEach((el) => {
     const m = /url\(['"]?([^'")]+)/.exec(el.style.backgroundImage);
-    if (!m) return;
-    const img = new Image();
-    img.src = m[1];
-    if (img.complete && img.naturalWidth) return;
+    if (!m || LOADED.has(m[1])) return;
     el.classList.add('sk');
-    const done = () => { el.classList.remove('sk'); el.classList.add('ld'); };
-    img.onload = done; img.onerror = done;
+    preload(m[1]).then(() => { el.classList.remove('sk'); el.classList.add('ld'); });
   });
 }
 function render(dir = 0) {
