@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raport ankiety – Kaszëbi w Europie!</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font: 15px/1.45 Arial, sans-serif; color: #0B1F3A; margin: 0; padding: 24px 16px; background: #F5F3EC; }
+  .page { max-width: 900px; margin: 0 auto; background: #fff; padding: 36px 40px; border-radius: 12px; }
+  header { display: flex; align-items: center; gap: 16px; border-bottom: 3px solid #0B1F3A; padding-bottom: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  header img { height: 50px; } header .eu { margin-left: auto; height: 50px; }
+  h1 { font: 600 26px Georgia, serif; margin: 0 0 4px; } h2 { font: 600 19px Georgia, serif; margin: 26px 0 8px; }
+  .meta { color: #4A5568; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { border-bottom: 1px solid #D9D5C8; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #0B1F3A; color: #fff; font-weight: 700; }
+  .ok { color: #1E7B4A; font-weight: 700; } .no { color: #B3261E; font-weight: 700; }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .kpi { border: 1px solid #D9D5C8; border-radius: 10px; padding: 12px; } .kpi b { display: block; font: 600 30px Georgia, serif; }
+  .bar { display: inline-block; height: 10px; background: #1E7B4A; border-radius: 3px; vertical-align: middle; }
+  .bar.pre { background: #8A94A6; }
+  .tools { max-width: 900px; margin: 0 auto 12px; display: flex; gap: 8px; }
+  .tools button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 0; background: #0B1F3A; color: #fff; cursor: pointer; }
+  .sign { display: flex; justify-content: space-between; margin-top: 48px; font-size: 13px; }
+  .sign div { border-top: 1px solid #0B1F3A; width: 40%; padding-top: 6px; text-align: center; }
+  @media print { body { background: #fff; padding: 0; } .tools { display: none; } .page { padding: 0; border-radius: 0; } @page { size: A4; margin: 14mm; } h2 { break-after: avoid; } tr { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
+<div class="page" id="page"></div>
+<script src="data.js?v=35"></script>
+<script src="common.js?v=35"></script>
+<script>
+  LANG = 'pl';
+  const SV = store('kws-survey-v1') || {};
+  const TESTS = SURVEY.filter((x) => x.type === 'test');
+  const entries = (ph) => Object.values(SV).filter((e) => e.phase === ph && e.ans && !Array.isArray(e.ans));
+  const pct = (ans) => Math.round((100 * TESTS.filter((x) => ans[x.id] === x.ok).length) / TESTS.length);
+  const avg = (xs, d = 0) => (xs.length ? Math.round((10 ** d * xs.reduce((a, b) => a + b, 0)) / xs.length) / 10 ** d : null);
+  const pre = entries('pre'), post = entries('post');
+  const preAvg = avg(pre.map((e) => pct(e.ans))), postAvg = avg(post.map((e) => pct(e.ans)));
+  const gain = preAvg != null && postAvg != null ? postAvg - preAvg : null;
+  const by = (list) => Object.fromEntries(list.filter((e) => e.code).map((e) => [e.code, e]));
+  const P = by(pre), Q = by(post);
+  const people = Object.keys(P).filter((c) => Q[c]).map((c) => ({ code: c, a: pct(P[c].ans), b: pct(Q[c].ans) })).sort((x, y) => (y.b - y.a) - (x.b - x.a));
+  const reached = people.filter((p) => p.b - p.a >= 40).length;
+  const yes = (v, t) => (v == null ? '–' : v >= t ? '<span class="ok">TAK</span>' : '<span class="no">NIE</span>');
+  const dist = (list, it) => { const c = it.a.map(() => 0); list.forEach((e) => { const v = e.ans[it.id]; if (v >= 0 && v < c.length) c[v]++; }); const n = c.reduce((a, b) => a + b, 0) || 1; return it.a.map((o, i) => `${L(o)}: <b>${Math.round((100 * c[i]) / n)}%</b> (${c[i]})`).join('<br>'); };
+  const lk = (list, id) => avg(list.map((e) => e.ans[id]).filter((v) => v >= 1 && v <= 5), 1);
+  const d1 = post.length ? Math.round((100 * post.filter((e) => e.ans.D1 === 0).length) / post.length) : null;
+  const d2 = post.length ? Math.round((100 * post.filter((e) => e.ans.D2 === 0 || e.ans.D2 === 2).length) / post.length) : null;
+
+  document.getElementById('page').innerHTML = `
+    <header><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:40px"><img class="eu" src="img/eu-pl.jpg" alt=""></header>
+    <h1>Raport ankiety przed/po: dezinformacja</h1>
+    <div class="meta">Projekt Erasmus+ KA122-ADU „KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”${PROJECT_NO ? ' · nr ' + PROJECT_NO : ''} · Ibi i Alicante, 11–21.10.2026 · wygenerowano ${new Date().toLocaleString('pl-PL')}</div>
+    <h2>Wyniki główne</h2>
+    <div class="kpis">
+      <div class="kpi">Test PRZED<b>${preAvg ?? '–'}%</b>n = ${pre.length}</div>
+      <div class="kpi">Test PO<b>${postAvg ?? '–'}%</b>n = ${post.length}</div>
+      <div class="kpi">Przyrost wiedzy<b>${gain == null ? '–' : (gain > 0 ? '+' : '') + gain + ' pp'}</b>cel: +40 pp</div>
+    </div>
+    <h2>Wskaźniki z wniosku</h2>
+    <table><tr><th>Wskaźnik</th><th>Wynik</th><th>Próg</th><th>Osiągnięty</th></tr>
+      <tr><td>W1. Wynik testu PO</td><td>${postAvg ?? '–'}%</td><td>≥ 80%</td><td>${yes(postAvg, 80)}</td></tr>
+      <tr><td>W2. Przyrost wiedzy grupy</td><td>${gain ?? '–'} pp</td><td>≥ +40 pp</td><td>${yes(gain, 40)}</td></tr>
+      <tr><td>W3. Osoby z przyrostem ≥ 40 pp</td><td>${reached} z ${people.length}</td><td>≥ 80% osób</td><td>${people.length ? yes(Math.round((100 * reached) / people.length), 80) : '–'}</td></tr>
+      <tr><td>W6. Zamiar sprawdzania źródła (D1 „tak, zawsze”)</td><td>${d1 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d1, 70)}</td></tr>
+      <tr><td>W6. Słowo-hasło w rodzinie (D2 „tak” lub „już mamy”)</td><td>${d2 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d2, 70)}</td></tr>
+    </table>
+    <h2>Test wiedzy: odsetek poprawnych odpowiedzi</h2>
+    <table><tr><th>Pytanie</th><th>PRZED</th><th>PO</th></tr>
+      ${TESTS.map((q) => { const f = (l) => (l.length ? Math.round((100 * l.filter((e) => e.ans[q.id] === q.ok).length) / l.length) : null); const a = f(pre), b = f(post);
+        return `<tr><td>${q.id}. ${L(q.q)}</td><td><span class="bar pre" style="width:${a || 0}px"></span> ${a ?? '–'}%</td><td><span class="bar" style="width:${b || 0}px"></span> ${b ?? '–'}%</td></tr>`; }).join('')}
+    </table>
+    <h2>W4. Samoocena (skala 1–5)</h2>
+    <table><tr><th>Twierdzenie</th><th>PRZED</th><th>PO</th><th>Zmiana</th></tr>
+      ${SURVEY.filter((x) => x.type === 'likert').map((x) => { const a = lk(pre, x.id), b = lk(post, x.id); return `<tr><td>${L(x.q)}</td><td>${a ?? '–'}</td><td>${b ?? '–'}</td><td>${a != null && b != null ? (b - a >= 0 ? '+' : '') + Math.round((b - a) * 10) / 10 : '–'}</td></tr>`; }).join('')}
+    </table>
+    <h2>W3. Wynik każdej osoby (anonimowy kod)</h2>
+    <table><tr><th>Kod</th><th>PRZED</th><th>PO</th><th>Przyrost</th></tr>
+      ${people.map((p) => `<tr><td>${p.code}</td><td>${p.a}%</td><td>${p.b}%</td><td class="${p.b - p.a >= 40 ? 'ok' : ''}">${p.b - p.a > 0 ? '+' : ''}${p.b - p.a} pp</td></tr>`).join('') || '<tr><td colspan="4">brak par przed/po</td></tr>'}
+    </table>
+    <h2>W5. Skala problemu przed wyjazdem</h2>
+    <table><tr><th>Pytanie</th><th>Odpowiedzi (n = ${pre.length})</th></tr>
+      ${SURVEY.filter((x) => x.part === 'A').map((x) => `<tr><td>${L(x.q)}</td><td>${dist(pre, x)}</td></tr>`).join('')}
+    </table>
+    <h2>Ocena wyjazdu</h2>
+    <table><tr><th>Pytanie</th><th>Odpowiedzi (n = ${post.length})</th></tr>
+      ${SURVEY.filter((x) => x.part === 'D').map((x) => `<tr><td>${L(x.q)}</td><td>${dist(post, x)}</td></tr>`).join('')}
+    </table>
+    <div class="sign"><div>Koordynator projektu</div><div>Data i podpis</div></div>`;
+</script>
+</body>
+</html>

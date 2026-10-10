@@ -585,9 +585,10 @@ function menu(on) {
       h('button', { onclick: paperForm }, '✍ Ankieta z kartki'),
       h('button', { onclick: exportCsv }, '⬇ CSV ankiety'),
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
+      h('a', { href: 'report.html', target: '_blank' }, '📄 Raport wyników (PDF)'),
       [['mix', 'Animacja: przejścia B + lista A'], ['a', 'Animacja A'], ['b', 'Animacja B'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
       h('button', { onclick: () => { if (confirm('Nowa sesja głosowania? (wyniki ankiety zostają na tym laptopie)')) { store('kws-topic', null); location.search = ''; } } }, '↺ Nowa sesja')),
-    h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`, Sheet.url() ? ' · arkusz Google: podłączony ' : ' · arkusz Google: brak (setup-arkusz.html)', Sheet.url() ? h('button', { onclick: () => pullSheet(true) }, '↻ pobierz z arkusza') : null),
+    h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`, Sheet.url() ? h('button', { onclick: () => pullSheet(true) }, '↻ pobierz z arkusza') : null),
     h('p', {}, 'Klawisze: ← → / spacja / pilot (na mapie podróży: kolejne przystanki) · R pokaż odpowiedź w zgadywance · F pełny ekran · M menu. Klik w odpowiedź sondy = +1 głos z sali.'),
     h('button', { onclick: () => menu(false) }, 'Zamknij'));
 }
