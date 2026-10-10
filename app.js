@@ -40,21 +40,31 @@ function ingest(m) {
 }
 
 // ---------- survey statistics ----------
-const pct = (ans) => Math.round((100 * ans.filter((a, i) => a === window.SURVEY[i].ok).length) / window.SURVEY.length);
-const entries = (phase) => Object.values(SV).filter((e) => e.phase === phase);
+const TESTS = window.SURVEY.filter((x) => x.type === 'test');
+const itemsFor = (phase) => window.SURVEY.filter((x) => x.ph.includes(phase));
+const pct = (ans) => Math.round((100 * TESTS.filter((x) => ans[x.id] === x.ok).length) / TESTS.length);
+const entries = (phase) => Object.values(SV).filter((e) => e.phase === phase && e.ans && !Array.isArray(e.ans));
 const avg = (xs) => (xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
+const avg1 = (xs) => (xs.length ? Math.round((10 * xs.reduce((a, b) => a + b, 0)) / xs.length) / 10 : null);
+function dist(list, item) {
+  const c = item.a.map(() => 0);
+  list.forEach((e) => { const v = e.ans[item.id]; if (v >= 0 && v < c.length) c[v]++; });
+  return c;
+}
 function surveyStats() {
   const pre = entries('pre'), post = entries('post');
-  const perQ = (list) => window.SURVEY.map((q, i) => (list.length ? Math.round((100 * list.filter((e) => e.ans[i] === q.ok).length) / list.length) : null));
+  const perQ = (list) => TESTS.map((q) => (list.length ? Math.round((100 * list.filter((e) => e.ans[q.id] === q.ok).length) / list.length) : null));
+  const likert = (list, id) => avg1(list.map((e) => e.ans[id]).filter((v) => v >= 1 && v <= 5));
   const preBy = {}, postBy = {};
   pre.forEach((e) => { if (e.code) preBy[e.code] = e; });
   post.forEach((e) => { if (e.code) postBy[e.code] = e; });
-  const people = Object.keys(preBy).filter((c) => postBy[c]).map((c) => ({ code: c, pre: pct(preBy[c].ans), post: pct(postBy[c].ans) })).sort((a, b) => (b.post - b.pre) - (a.post - a.pre));
+  const people = Object.keys(preBy).filter((c) => postBy[c]).map((c) => ({ code: c, pre: pct(preBy[c].ans), post: pct(postBy[c].ans) })).sort((x, y) => (y.post - y.pre) - (x.post - x.pre));
   const team = [0, 1, 2].map((g) => {
-    const a = avg(pre.filter((e) => e.g === g).map((e) => pct(e.ans))), b = avg(post.filter((e) => e.g === g).map((e) => pct(e.ans)));
-    return a == null || b == null ? 0 : b - a;
+    const x = avg(pre.filter((e) => e.g === g).map((e) => pct(e.ans))), y = avg(post.filter((e) => e.g === g).map((e) => pct(e.ans)));
+    return x == null || y == null ? 0 : y - x;
   });
-  return { pre, post, preAvg: avg(pre.map((e) => pct(e.ans))), postAvg: avg(post.map((e) => pct(e.ans))), preQ: perQ(pre), postQ: perQ(post), people, team };
+  const B = window.SURVEY.filter((x) => x.type === 'likert').map((x) => ({ item: x, pre: likert(pre, x.id), post: likert(post, x.id) }));
+  return { pre, post, preAvg: avg(pre.map((e) => pct(e.ans))), postAvg: avg(post.map((e) => pct(e.ans))), preQ: perQ(pre), postQ: perQ(post), people, team, B };
 }
 const scores = () => surveyStats().team;
 
@@ -156,6 +166,17 @@ const R = {
   table(s) {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
+  },
+  scams(s) {
+    const phone = (it) => {
+      let screen;
+      if (it.kind === 'sms') screen = h('div', { class: 'scr sms' }, h('div', { class: 'top' }, it.from), h('div', { class: 'typing' }, h('i'), h('i'), h('i')), h('div', { class: 'bub in' }, L(it.msg)));
+      else if (it.kind === 'call') screen = h('div', { class: 'scr call' }, h('div', { class: 'ring' }, h('span'), h('span'), h('div', { class: 'av' }, '👵')), h('div', { class: 'who' }, L(it.from)), h('div', { class: 'cbtns' }, h('i', { class: 'no' }, '✕'), h('i', { class: 'yes' }, '✆')));
+      else if (it.kind === 'chat') screen = h('div', { class: 'scr chat' }, h('div', { class: 'top' }, '+48 6** *** ***'), it.msgs.map((m, k) => h('div', { class: 'bub in m' + k }, L(m))));
+      else screen = h('div', { class: 'scr ad' }, h('div', { class: 'star' }, '🤵'), h('div', { class: 'headline' }, L(it.head)), h('div', { class: 'chart' }, h('i'), h('i'), h('i'), h('i'), h('i')), h('div', { class: 'cta' }, L(it.btn)));
+      return h('div', { class: 'scam' }, h('div', { class: 'phone ' + it.kind }, screen), h('p', {}, L(it.l)));
+    };
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), h('div', { class: 'scams' }, s.items.map(phone))));
   },
   unite(s) {
     const grid = h('div', { class: 'ugrid' }, s.items.map((it) => {
@@ -300,7 +321,7 @@ const R = {
     const st = surveyStats();
     const gain = st.preAvg != null && st.postAvg != null ? st.postAvg - st.preAvg : null;
     const big = (label, v, sub, cls) => h('div', { class: 'kpi ' + (cls || '') }, h('div', { class: 'v' }, v), h('div', { class: 'l' }, label), sub ? h('div', { class: 's' }, sub) : null);
-    const rows = window.SURVEY.map((q, i) => h('div', { class: 'qrow' },
+    const rows = TESTS.map((q, i) => h('div', { class: 'qrow' },
       h('span', { class: 'qn' }, String(i + 1)),
       h('div', { class: 'qbars' }, h('i', { class: 'b-pre', style: `width:${st.preQ[i] || 0}%` }), h('i', { class: 'b-post', style: `width:${st.postQ[i] || 0}%` })),
       h('span', { class: 'qv' }, `${st.preQ[i] ?? '–'} → ${st.postQ[i] ?? '–'}%`)));
@@ -329,6 +350,30 @@ const R = {
         h('div', { class: 'nm' }, L(g.name)))))));
   },
 
+  problem() {
+    const st = surveyStats();
+    const items = window.SURVEY.filter((x) => x.part === 'A');
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(SURVEY_UI.problem)),
+      h('p', { class: 'muted', style: 'font-size:26px' }, `n = ${st.pre.length}`),
+      h('div', { class: 'dgrid' }, items.map((it) => distCard(it, st.pre)))));
+  },
+  confidence() {
+    const st = surveyStats();
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(SURVEY_UI.confidence)),
+      h('div', { class: 'conf' }, h('div', { class: 'legend' }, h('i', { class: 'b-pre' }), L(UI.before), h('i', { class: 'b-post' }), L(UI.after)),
+        st.B.map((b) => h('div', { class: 'crow' }, h('div', { class: 'ct' }, L(b.item.q)),
+          h('div', { class: 'cbars' },
+            h('div', { class: 'cb pre', style: `width:${((b.pre || 0) / 5) * 100}%` }, b.pre == null ? '–' : String(b.pre)),
+            h('div', { class: 'cb post', style: `width:${((b.post || 0) / 5) * 100}%` }, b.post == null ? '–' : String(b.post))),
+          h('div', { class: 'cd' }, b.pre != null && b.post != null ? (b.post - b.pre >= 0 ? '+' : '') + (Math.round((b.post - b.pre) * 10) / 10) : ''))))));
+  },
+  evaluation() {
+    const st = surveyStats();
+    const items = window.SURVEY.filter((x) => x.part === 'D');
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(SURVEY_UI.evaluation)),
+      h('p', { class: 'muted', style: 'font-size:26px' }, `n = ${st.post.length}`),
+      h('div', { class: 'dgrid five' }, items.map((it) => distCard(it, st.post)))));
+  },
   cert() {
     const box = h('div', { class: 'qbox' });
     const url = window.BASE + 'cert.html';
@@ -346,6 +391,13 @@ const R = {
     return decorate(h('section', { class: 'slide s-end' }, h('h1', {}, L(s.h)), h('p', { class: 'disc' }, L(UI.disclaimer))));
   }
 };
+
+function distCard(it, list) {
+  const c = dist(list, it), n = Math.max(1, c.reduce((x, y) => x + y, 0)), mx = Math.max(...c);
+  return h('div', { class: 'dcard' }, h('h3', {}, L(it.q)),
+    it.a.map((o, i) => h('div', { class: 'drow' + (c[i] === mx && mx > 0 ? ' top' : '') },
+      h('span', { class: 'dl' }, L(o)), h('div', { class: 'dbar' }, h('i', { style: `width:${(100 * c[i]) / n}%` })), h('b', {}, Math.round((100 * c[i]) / n) + '%'))));
+}
 
 function fit() {
   if (READER) return;
@@ -422,7 +474,7 @@ function refresh() {
     const c = document.querySelector('.count');
     if (c) c.textContent = `${L(MAP_UI.answers)}: ${Object.keys(geo[slideKey(s)] || {}).length}`;
     mapCtl.update();
-  } else if (['q', 'join', 'survey', 'results', 'people', 'teams'].includes(s.k)) render();
+  } else if (['q', 'join', 'survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(s.k)) render();
 }
 
 function go(d, auto) {
@@ -459,15 +511,28 @@ function paperForm() {
   const ph = h('select', {}, h('option', { value: 'pre' }, 'PRZED'), h('option', { value: 'post' }, 'PO'));
   const code = h('input', { placeholder: 'Kod, np. A07' });
   const grp = h('select', {}, GROUPS.map((g, i) => h('option', { value: i }, L(g.name))));
-  const ans = h('input', { placeholder: 'Odpowiedzi: 10 liter A/B/C, np. BAABAACBCC' });
+  const ans = h('input', {});
+  const hint = h('p', { class: 'hint' });
+  const setHint = () => {
+    const it = itemsFor(ph.value);
+    ans.placeholder = `${it.length} znaków`;
+    hint.textContent = 'Kolejno: ' + it.map((x) => x.id + (x.type === 'likert' ? '(1-5)' : '(' + 'ABCD'.slice(0, x.a.length) + ')')).join(' ');
+  };
+  ph.onchange = setHint; setHint();
   const info = h('p', {}, `Zapisanych: przed ${entries('pre').length}, po ${entries('post').length}`);
-  c.append(h('h3', {}, 'Ankieta z kartki'), ph, code, grp, ans,
+  c.append(h('h3', {}, 'Ankieta z kartki'), ph, code, grp, ans, hint,
     h('div', { class: 'row' },
       h('button', { onclick: () => {
-        const a = ans.value.toUpperCase().replace(/[^ABC]/g, '');
-        if (a.length !== window.SURVEY.length || !code.value.trim()) { alert('Potrzebny kod i 10 odpowiedzi (A/B/C).'); return; }
+        const it = itemsFor(ph.value), raw = ans.value.toUpperCase().replace(/[^A-D1-5]/g, '');
+        if (raw.length !== it.length || !code.value.trim()) { alert(`Potrzebny kod i ${it.length} odpowiedzi.`); return; }
+        const out = {};
+        for (let k = 0; k < it.length; k++) {
+          const x = it[k], ch = raw[k];
+          if (x.type === 'likert') { if (!/[1-5]/.test(ch)) { alert(`${x.id}: cyfra 1–5`); return; } out[x.id] = +ch; }
+          else { const v = 'ABCD'.indexOf(ch); if (v < 0 || v >= x.a.length) { alert(`${x.id}: litera ${'ABCD'.slice(0, x.a.length)}`); return; } out[x.id] = v; }
+        }
         const cd = code.value.trim().toUpperCase();
-        SV[ph.value + '|' + cd] = { phase: ph.value, code: cd, g: +grp.value, ans: [...a].map((x) => 'ABC'.indexOf(x)), t: Date.now() / 1000, src: 'paper' };
+        SV[ph.value + '|' + cd] = { phase: ph.value, code: cd, g: +grp.value, ans: out, t: Date.now() / 1000, src: 'paper' };
         saveSV(); code.value = ''; ans.value = ''; code.focus();
         info.textContent = `Zapisano ${cd}. Zapisanych: przed ${entries('pre').length}, po ${entries('post').length}`;
       } }, 'Zapisz i następna'),
@@ -497,11 +562,13 @@ function menu(on) {
 }
 
 function exportCsv() {
-  const head = ['faza', 'kod', 'druzyna', 'zrodlo', 'czas', 'wynik_%', ...window.SURVEY.map((_, i) => 'p' + (i + 1))];
-  const rows = [head, ...Object.values(SV).map((e) => [e.phase, e.code, GROUPS[e.g] ? L(GROUPS[e.g].name) : '', e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...e.ans.map((a, i) => 'ABC'[a] + (a === window.SURVEY[i].ok ? ' ✓' : ''))])];
+  const ids = window.SURVEY.map((x) => x.id);
+  const head = ['faza', 'kod', 'druzyna', 'zrodlo', 'czas', 'test_%', ...ids];
+  const cell = (x, v) => (v == null ? '' : x.type === 'likert' ? v : 'ABCD'[v] + (x.type === 'test' && v === x.ok ? ' ✓' : ''));
+  const rows = [head, ...Object.values(SV).filter((e) => e.ans && !Array.isArray(e.ans)).map((e) => [e.phase, e.code, GROUPS[e.g] ? L(GROUPS[e.g].name) : '', e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...window.SURVEY.map((x) => cell(x, e.ans[x.id]))])];
   const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
-  const a = h('a', { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: 'kws-ankieta-dezinformacja.csv' });
-  document.body.append(a); a.click(); a.remove();
+  const el = h('a', { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: 'kws-ankieta-dezinformacja.csv' });
+  document.body.append(el); el.click(); el.remove();
 }
 
 addEventListener('resize', fit);

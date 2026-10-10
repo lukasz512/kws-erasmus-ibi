@@ -55,18 +55,37 @@ window.Q = {
 };
 
 // Disinformation survey: the same 10 questions before (pre) and after (post) the mobility.
+// Disinformation survey (plan: Claude Doc "Ankieta przed/po"). Parts: A problem (pre), B self-assessment 1–5 (pre+post),
+// C knowledge test (pre+post, scored), D evaluation (post). B and C are identical in both rounds.
 window.SURVEY = [
-  { q: T('W internecie widzisz szokujące zdjęcie „z wczoraj”. Co robisz najpierw?', 'You see a shocking photo “from yesterday” online. What do you do first?', 'Ves en internet una foto impactante «de ayer». ¿Qué haces primero?'), a: [T('Udostępniam, żeby ostrzec innych', 'Share it to warn others', 'La comparto para avisar a otros'), T('Sprawdzam w Google Lens, skąd i z kiedy jest zdjęcie', 'Check in Google Lens where and when it was taken', 'Compruebo con Google Lens de dónde y cuándo es'), T('Czytam komentarze', 'Read the comments', 'Leo los comentarios')], ok: 1 },
-  { q: T('Najpewniejszy sposób sprawdzenia wiadomości to…', 'The surest way to check a news story is…', 'La forma más segura de comprobar una noticia es…'), a: [T('znaleźć ją w kilku niezależnych, znanych źródłach', 'find it in several independent, known sources', 'encontrarla en varias fuentes conocidas e independientes'), T('liczba udostępnień', 'the number of shares', 'el número de veces compartida'), T('czy napisał ją ktoś znajomy', 'whether someone I know wrote it', 'si la escribió alguien conocido')], ok: 0 },
-  { q: T('Deepfake to…', 'A deepfake is…', 'Un deepfake es…'), a: [T('fałszywe nagranie lub zdjęcie zrobione przez AI', 'a fake video or photo made by AI', 'un vídeo o foto falsa hecha con IA'), T('program antywirusowy', 'an antivirus program', 'un antivirus'), T('rodzaj reklamy', 'a kind of advert', 'un tipo de anuncio')], ok: 0 },
-  { q: T('Dzwoni „wnuczek” – to jego głos – i pilnie prosi o pieniądze. Co robisz?', 'Your “grandchild” calls – it is their voice – urgently asking for money. What do you do?', 'Llama tu «nieto» – es su voz – y pide dinero urgente. ¿Qué haces?'), a: [T('Przelewam, bo to jego głos', 'Send it, it is their voice', 'Hago la transferencia, es su voz'), T('Rozłączam się i oddzwaniam na znany numer', 'Hang up and call back on a known number', 'Cuelgo y llamo a un número conocido'), T('Podaję kod z SMS-a', 'Give the SMS code', 'Doy el código del SMS')], ok: 1 },
-  { q: T('Po czym często poznać obraz wygenerowany przez AI?', 'What often gives away an AI-generated image?', '¿Qué suele delatar una imagen hecha con IA?'), a: [T('Dziwne dłonie i palce, rozmyte napisy', 'Odd hands and fingers, blurry writing', 'Manos y dedos raros, letras borrosas'), T('Zawsze jest czarno-biały', 'It is always black and white', 'Siempre es en blanco y negro'), T('Ma podpis autora', "It has the author's signature", 'Lleva la firma del autor')], ok: 0 },
-  { q: T('Nagłówek „SZOK! Lekarze ukrywają ten prosty sposób!” to najczęściej…', 'The headline “SHOCK! Doctors hide this simple trick!” is usually…', 'El titular «¡IMPACTANTE! ¡Los médicos ocultan este truco!» suele ser…'), a: [T('przynęta na kliknięcia (clickbait)', 'clickbait', 'un cebo para clics (clickbait)'), T('komunikat ministerstwa', 'a ministry announcement', 'un comunicado del ministerio'), T('artykuł naukowy', 'a scientific article', 'un artículo científico')], ok: 0 },
-  { q: T('Konto bez zdjęcia, założone tydzień temu, pisze setki komentarzy dziennie. To prawdopodobnie…', 'An account with no photo, created a week ago, posts hundreds of comments a day. It is probably…', 'Una cuenta sin foto, creada hace una semana, publica cientos de comentarios al día. Probablemente es…'), a: [T('dziennikarz', 'a journalist', 'un periodista'), T('urząd gminy', 'the town hall', 'el ayuntamiento'), T('bot lub fałszywe konto', 'a bot or fake account', 'un bot o una cuenta falsa')], ok: 2 },
-  { q: T('Do czego służą strony Demagog.org.pl i Maldita.es?', 'What are Demagog.org.pl and Maldita.es for?', '¿Para qué sirven Demagog.org.pl y Maldita.es?'), a: [T('Do zakupów', 'Shopping', 'Para comprar'), T('Do sprawdzania faktów (fact-checking)', 'Fact-checking', 'Para verificar datos (fact-checking)'), T('Do gier', 'Games', 'Para jugar')], ok: 1 },
-  { q: T('Post kończy się słowami „Udostępnij, zanim usuną!”. To…', 'A post ends with “Share before they delete it!”. That is…', 'Una publicación termina con «¡Comparte antes de que lo borren!». Eso es…'), a: [T('dowód, że to prawda', 'proof that it is true', 'una prueba de que es verdad'), T('prośba administratora', 'a request from the admin', 'una petición del administrador'), T('typowy sygnał manipulacji', 'a typical sign of manipulation', 'una señal típica de manipulación')], ok: 2 },
-  { q: T('Udostępniłem fałszywą informację. Co teraz?', 'I shared false information. What now?', 'He compartido información falsa. ¿Y ahora?'), a: [T('Nic, i tak się rozejdzie', 'Nothing, it will spread anyway', 'Nada, se difundirá igual'), T('Udostępniam jeszcze raz', 'Share it again', 'La comparto otra vez'), T('Usuwam post i mówię znajomym, że to był fałsz', 'Delete the post and tell friends it was false', 'Borro la publicación y aviso de que era falso')], ok: 2 }
+  { id: 'A1', part: 'A', ph: ['pre'], type: 'choice', q: T('Skąd najczęściej dowiadujesz się, co dzieje się na świecie?', 'Where do you usually get your news?', '¿Dónde sueles informarte de lo que pasa?'), a: [T('Facebook i inne media społecznościowe', 'Facebook and other social media', 'Facebook y otras redes sociales'), T('Telewizja', 'Television', 'Televisión'), T('Radio lub gazety', 'Radio or newspapers', 'Radio o periódicos'), T('Rodzina i znajomi', 'Family and friends', 'Familia y amigos')] },
+  { id: 'A2', part: 'A', ph: ['pre'], type: 'choice', q: T('Jak często widzisz w internecie wiadomości, co do których masz wątpliwości, czy są prawdziwe?', 'How often do you see news online that you doubt is true?', '¿Con qué frecuencia ves en internet noticias de las que dudas?'), a: [T('Codziennie', 'Every day', 'Cada día'), T('Kilka razy w tygodniu', 'A few times a week', 'Varias veces por semana'), T('Rzadko', 'Rarely', 'Rara vez'), T('Nigdy, nie korzystam z internetu', "Never, I don't use the internet", 'Nunca, no uso internet')] },
+  { id: 'A3', part: 'A', ph: ['pre'], type: 'choice', q: T('Czy w ostatnich 3 miesiącach dostałeś(-aś) podejrzany SMS, e-mail lub telefon?', 'In the last 3 months, have you had a suspicious text, email or call?', 'En los últimos 3 meses, ¿has recibido un SMS, correo o llamada sospechosa?'), a: [T('Tak, SMS lub e-mail', 'Yes, a text or email', 'Sí, un SMS o correo'), T('Tak, telefon', 'Yes, a call', 'Sí, una llamada'), T('Jedno i drugie', 'Both', 'Las dos cosas'), T('Nie', 'No', 'No')] },
+  { id: 'A4', part: 'A', ph: ['pre'], type: 'choice', q: T('Czy zdarzyło Ci się przekazać dalej informację, która okazała się nieprawdą?', 'Have you ever passed on information that turned out to be false?', '¿Alguna vez has compartido información que resultó ser falsa?'), a: [T('Tak', 'Yes', 'Sí'), T('Nie', 'No', 'No'), T('Nie wiem', "I don't know", 'No lo sé')] },
+  { id: 'B1', part: 'B', ph: ['pre', 'post'], type: 'likert', q: T('Potrafię odróżnić prawdziwą wiadomość od fałszywej.', 'I can tell real news from fake news.', 'Sé distinguir una noticia verdadera de una falsa.') },
+  { id: 'B2', part: 'B', ph: ['pre', 'post'], type: 'likert', q: T('Zanim udostępnię wiadomość, sprawdzam, skąd pochodzi.', 'Before I share news, I check where it comes from.', 'Antes de compartir una noticia, compruebo de dónde viene.') },
+  { id: 'B3', part: 'B', ph: ['pre', 'post'], type: 'likert', q: T('Wiem, jak sprawdzić, skąd pochodzi zdjęcie.', 'I know how to check where a photo comes from.', 'Sé cómo comprobar de dónde viene una foto.') },
+  { id: 'B4', part: 'B', ph: ['pre', 'post'], type: 'likert', q: T('Rozumiem, czym jest sztuczna inteligencja i jak może podrobić głos lub zdjęcie.', 'I understand what AI is and how it can fake a voice or a photo.', 'Entiendo qué es la IA y cómo puede falsificar una voz o una foto.') },
+  { id: 'B5', part: 'B', ph: ['pre', 'post'], type: 'likert', q: T('Czuję się bezpiecznie, korzystając z internetu i telefonu.', 'I feel safe using the internet and my phone.', 'Me siento seguro/a usando internet y el móvil.') },
+  { id: 'C1', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('W internecie widzisz szokujące zdjęcie „z wczoraj”. Co robisz najpierw?', 'You see a shocking photo “from yesterday” online. What do you do first?', 'Ves en internet una foto impactante «de ayer». ¿Qué haces primero?'), a: [T('Udostępniam, żeby ostrzec innych', 'Share it to warn others', 'La comparto para avisar a otros'), T('Sprawdzam w Google Lens, skąd i z kiedy jest zdjęcie', 'Check in Google Lens where and when it was taken', 'Compruebo con Google Lens de dónde y cuándo es'), T('Czytam komentarze', 'Read the comments', 'Leo los comentarios')], ok: 1 },
+  { id: 'C2', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Najpewniejszy sposób sprawdzenia wiadomości to…', 'The surest way to check a news story is…', 'La forma más segura de comprobar una noticia es…'), a: [T('znaleźć ją w kilku niezależnych, znanych źródłach', 'find it in several independent, known sources', 'encontrarla en varias fuentes conocidas e independientes'), T('liczba udostępnień', 'the number of shares', 'el número de veces compartida'), T('czy napisał ją ktoś znajomy', 'whether someone I know wrote it', 'si la escribió alguien conocido')], ok: 0 },
+  { id: 'C3', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Deepfake to…', 'A deepfake is…', 'Un deepfake es…'), a: [T('fałszywe nagranie lub zdjęcie zrobione przez AI', 'a fake video or photo made by AI', 'un vídeo o foto falsa hecha con IA'), T('program antywirusowy', 'an antivirus program', 'un antivirus'), T('rodzaj reklamy', 'a kind of advert', 'un tipo de anuncio')], ok: 0 },
+  { id: 'C4', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Dzwoni „wnuczek” – to jego głos – i pilnie prosi o pieniądze. Co robisz?', 'Your “grandchild” calls – it is their voice – urgently asking for money. What do you do?', 'Llama tu «nieto» – es su voz – y pide dinero urgente. ¿Qué haces?'), a: [T('Przelewam, bo to jego głos', 'Send it, it is their voice', 'Hago la transferencia, es su voz'), T('Rozłączam się i oddzwaniam na znany numer', 'Hang up and call back on a known number', 'Cuelgo y llamo a un número conocido'), T('Podaję kod z SMS-a', 'Give the SMS code', 'Doy el código del SMS')], ok: 1 },
+  { id: 'C5', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Po czym często poznać obraz wygenerowany przez AI?', 'What often gives away an AI-generated image?', '¿Qué suele delatar una imagen hecha con IA?'), a: [T('Dziwne dłonie i palce, rozmyte napisy', 'Odd hands and fingers, blurry writing', 'Manos y dedos raros, letras borrosas'), T('Zawsze jest czarno-biały', 'It is always black and white', 'Siempre es en blanco y negro'), T('Ma podpis autora', "It has the author's signature", 'Lleva la firma del autor')], ok: 0 },
+  { id: 'C6', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Nagłówek „SZOK! Lekarze ukrywają ten prosty sposób!” to najczęściej…', 'The headline “SHOCK! Doctors hide this simple trick!” is usually…', 'El titular «¡IMPACTANTE! ¡Los médicos ocultan este truco!» suele ser…'), a: [T('przynęta na kliknięcia (clickbait)', 'clickbait', 'un cebo para clics (clickbait)'), T('komunikat ministerstwa', 'a ministry announcement', 'un comunicado del ministerio'), T('artykuł naukowy', 'a scientific article', 'un artículo científico')], ok: 0 },
+  { id: 'C7', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Konto bez zdjęcia, założone tydzień temu, pisze setki komentarzy dziennie. To prawdopodobnie…', 'An account with no photo, created a week ago, posts hundreds of comments a day. It is probably…', 'Una cuenta sin foto, creada hace una semana, publica cientos de comentarios al día. Probablemente es…'), a: [T('dziennikarz', 'a journalist', 'un periodista'), T('urząd gminy', 'the town hall', 'el ayuntamiento'), T('bot lub fałszywe konto', 'a bot or fake account', 'un bot o una cuenta falsa')], ok: 2 },
+  { id: 'C8', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Do czego służą strony Demagog.org.pl i Maldita.es?', 'What are Demagog.org.pl and Maldita.es for?', '¿Para qué sirven Demagog.org.pl y Maldita.es?'), a: [T('Do zakupów', 'Shopping', 'Para comprar'), T('Do sprawdzania faktów (fact-checking)', 'Fact-checking', 'Para verificar datos (fact-checking)'), T('Do gier', 'Games', 'Para jugar')], ok: 1 },
+  { id: 'C9', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Post kończy się słowami „Udostępnij, zanim usuną!”. To…', 'A post ends with “Share before they delete it!”. That is…', 'Una publicación termina con «¡Comparte antes de que lo borren!». Eso es…'), a: [T('dowód, że to prawda', 'proof that it is true', 'una prueba de que es verdad'), T('prośba administratora', 'a request from the admin', 'una petición del administrador'), T('typowy sygnał manipulacji', 'a typical sign of manipulation', 'una señal típica de manipulación')], ok: 2 },
+  { id: 'C10', part: 'C', ph: ['pre', 'post'], type: 'test', q: T('Udostępniłem fałszywą informację. Co teraz?', 'I shared false information. What now?', 'He compartido información falsa. ¿Y ahora?'), a: [T('Nic, i tak się rozejdzie', 'Nothing, it will spread anyway', 'Nada, se difundirá igual'), T('Udostępniam jeszcze raz', 'Share it again', 'La comparto otra vez'), T('Usuwam post i mówię znajomym, że to był fałsz', 'Delete the post and tell friends it was false', 'Borro la publicación y aviso de que era falso')], ok: 2 },
+  { id: 'D1', part: 'D', ph: ['post'], type: 'choice', q: T('Czy po tym wyjeździe będziesz sprawdzać źródło przed udostępnieniem?', 'After this trip, will you check the source before sharing?', 'Después de este viaje, ¿comprobarás la fuente antes de compartir?'), a: [T('Tak, zawsze', 'Yes, always', 'Sí, siempre'), T('Czasami', 'Sometimes', 'A veces'), T('Nie', 'No', 'No')] },
+  { id: 'D2', part: 'D', ph: ['post'], type: 'choice', q: T('Czy ustalicie z rodziną słowo-hasło na wypadek fałszywego telefonu?', 'Will you agree a family code word against fake calls?', '¿Acordaréis una palabra clave familiar contra llamadas falsas?'), a: [T('Tak', 'Yes', 'Sí'), T('Nie', 'No', 'No'), T('Już mamy', 'We already have one', 'Ya tenemos una')] },
+  { id: 'D3', part: 'D', ph: ['post'], type: 'choice', q: T('Które miejsce podobało się Wam najbardziej?', 'Which place did you like most?', '¿Qué lugar os gustó más?'), a: [T('Alicante z przewodnikiem', 'Alicante guided tour', 'Alicante con guía'), T('Villajoyosa i Valor', 'Villajoyosa and Valor', 'Villajoyosa y Valor'), T('Elche – Park Palmowy', 'Elche – Palm Grove', 'Elche – Palmeral'), T('Gra miejska', 'City game', 'Juego urbano')] },
+  { id: 'D4', part: 'D', ph: ['post'], type: 'choice', q: T('Co przenieślibyście z Hiszpanii na Kaszuby?', 'What would you bring from Spain to Kashubia?', '¿Qué llevaríais de España a Casubia?'), a: [T('Sjestę', 'The siesta', 'La siesta'), T('Życie na ulicy wieczorem', 'Evening street life', 'La vida en la calle por la noche'), T('Święta z ogniem', 'Fire festivals', 'Fiestas con fuego'), T('Kuchnię', 'The food', 'La cocina')] },
+  { id: 'D5', part: 'D', ph: ['post'], type: 'choice', q: T('Czy poleciłbyś(-abyś) udział w takim projekcie innym?', 'Would you recommend a project like this to others?', '¿Recomendarías un proyecto así a otras personas?'), a: [T('Tak', 'Yes', 'Sí'), T('Raczej tak', 'Probably yes', 'Probablemente sí'), T('Nie', 'No', 'No')] }
 ];
+window.LIKERT = [T('zupełnie się nie zgadzam', 'strongly disagree', 'muy en desacuerdo'), T('raczej nie', 'disagree', 'en desacuerdo'), T('trudno powiedzieć', 'not sure', 'no sé'), T('raczej tak', 'agree', 'de acuerdo'), T('całkowicie się zgadzam', 'strongly agree', 'muy de acuerdo')];
+window.LIKERT_FACE = ['😟', '🙁', '😐', '🙂', '😀'];
+window.PARTS = { A: T('Twoje doświadczenia', 'Your experience', 'Tu experiencia'), B: T('Jak się czujesz w sieci', 'How you feel online', 'Cómo te sientes en internet'), C: T('Sprawdź swoją wiedzę', 'Test your knowledge', 'Pon a prueba tus conocimientos'), D: T('Ocena wyjazdu', 'About the trip', 'Sobre el viaje') };
 
 window.SURVEY_UI = {
   title: T('Ankieta: dezinformacja', 'Survey: disinformation', 'Encuesta: desinformación'),
@@ -83,7 +102,11 @@ window.SURVEY_UI = {
   target: T('cel z wniosku', 'project target', 'objetivo del proyecto'),
   perPerson: T('Wynik każdej osoby (kod)', 'Each person (code)', 'Cada persona (código)'),
   teams: T('Drużyny: punkty = wzrost wyniku', 'Teams: points = score gain', 'Equipos: puntos = aumento'),
-  paired: T('osób wypełniło przed i po', 'people completed before and after', 'personas completaron antes y después')
+  paired: T('osób wypełniło przed i po', 'people completed before and after', 'personas completaron antes y después'),
+  confidence: T('Pewność siebie w sieci (1–5)', 'Confidence online (1–5)', 'Confianza en internet (1–5)'),
+  problem: T('Skala problemu przed wyjazdem', 'The problem before the trip', 'El problema antes del viaje'),
+  evaluation: T('Ocena wyjazdu', 'About the trip', 'Sobre el viaje'),
+  intro: T('Ankieta jest anonimowa i zajmuje ok. 12 minut.', 'The survey is anonymous and takes about 12 minutes.', 'La encuesta es anónima y dura unos 12 minutos.')
 };
 
 // Journey: map stops (lng, lat), shown step by step on one 3D map slide.
@@ -124,7 +147,7 @@ window.MAP_UI = {
 
 window.DECKS = [
   {
-    id: 'p1', title: T('Podróż: z Kaszub do Alicante', 'The journey: from Kashubia to Alicante', 'El viaje: de Casubia a Alicante'),
+    id: 'p1', title: T('Podróż: z Kaszub do Alicante – i co nas łączy', 'The journey: from Kashubia to Alicante – and what we share', 'El viaje: de Casubia a Alicante – y lo que compartimos'),
     slides: [
       { k: 'title', kicker: T('Erasmus+ · Edukacja dorosłych', 'Erasmus+ · Adult education', 'Erasmus+ · Educación de adultos'), h: T('KASZËBI W EUROPIE!', 'KASZËBI IN EUROPE!', '¡CASUBIOS EN EUROPA!'), p: T('Rzetelna i nowoczesna edukacja cyfrowa na terenach wiejskich · Ibi i Alicante, 11–21.10.2026', 'Reliable, modern digital education in rural areas · Ibi and Alicante, 11–21 Oct 2026', 'Educación digital fiable y moderna en zonas rurales · Ibi y Alicante, 11–21 oct 2026'), img: 'img/alicante.jpg' },
       { k: 'join' },
@@ -144,16 +167,6 @@ window.DECKS = [
       { k: 'guess', g: 'g_elche' },
       { k: 'guess', g: 'g_vila' },
       { k: 'guess', g: 'g_ibi' },
-      { k: 'q', q: 'j_best' },
-      { k: 'pins' },
-      { k: 'end', h: T('Dziękujemy! ¡Gracias!', 'Thank you! ¡Gracias!', '¡Gracias! Dziękujemy!') }
-    ]
-  },
-  {
-    id: 'p3', title: T('Kaszuby i Walencja: różnice i podobieństwa', 'Kashubia and Valencia: differences and similarities', 'Casubia y Valencia: diferencias y semejanzas'),
-    slides: [
-      { k: 'title', kicker: T('Prezentacja 2', 'Presentation 2', 'Presentación 2'), h: T('Kaszuby i Walencja', 'Kashubia and Valencia', 'Casubia y Valencia'), p: T('Co nas różni, a co łączy?', 'What makes us different, what do we share?', '¿Qué nos diferencia y qué compartimos?'), img: 'img/kaszuby.jpg?v=10' },
-      { k: 'join' },
       { k: 'compare', a: { img: 'img/kaszuby.jpg?v=10', h: T('Kaszuby: jeziora i lasy', 'Kashubia: lakes and forests', 'Casubia: lagos y bosques') }, b: { img: 'img/villajoyosa.jpg', h: T('Walencja: góry i morze', 'Valencia: mountains and sea', 'Valencia: montaña y mar') } },
       { k: 'compare', a: { img: 'img/haft.jpg', h: T('Haft kaszubski', 'Kashubian embroidery', 'Bordado casubio') }, b: { img: 'img/paella.jpg', h: T('Paella z Walencji', 'Valencian paella', 'Paella valenciana') } },
       { k: 'compare', a: { img: 'img/dozynki.jpg?v=23', h: T('Dożynki (òżniwinë) w Parchowie', 'Harvest festival in Parchowo', 'Fiesta de la cosecha en Parchowo') }, b: { img: 'img/hogueras.jpg', h: T('Hogueras: święto ognia', 'Hogueras: the fire festival', 'Hogueras: la fiesta del fuego') } },
@@ -176,7 +189,6 @@ window.DECKS = [
           { i: '🛒', l: T('Sklepy', 'Shops', 'Tiendas'), ksz: T('otwarte cały dzień', 'open all day', 'abiertas todo el día'), es: T('przerwa na sjestę (ok. 14–17) w małych miastach', 'siesta break (about 2–5 pm) in small towns', 'cierre de siesta (14–17 h aprox.) en pueblos') },
           { i: '🌡️', l: T('Pogoda w październiku', 'October weather', 'Tiempo en octubre'), ksz: T('ok. 10°C', 'about 10°C', 'unos 10°C'), es: T('ok. 23°C', 'about 23°C', 'unos 23°C') }
         ] },
-      { k: 'q', q: 'p3_surprise' },
       { k: 'unite', h: T('Co nas łączy', 'What we share', 'Lo que compartimos'), img: 'img/unity.svg', items: [
         { i: '🗣️', h: T('Własny język', 'A language of our own', 'Una lengua propia'), a: T('kaszubski obok polskiego', 'Kashubian next to Polish', 'casubio junto al polaco'), b: T('walencki obok hiszpańskiego', 'Valencian next to Spanish', 'valenciano junto al castellano') },
         { i: '🎉', h: T('Święta całej wspólnoty', 'Community festivals', 'Fiestas de todo el pueblo'), a: T('dożynki (òżniwinë)', 'harvest festival (òżniwinë)', 'fiesta de la cosecha'), b: T('Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos', 'Hogueras, Moros y Cristianos') },
@@ -188,22 +200,20 @@ window.DECKS = [
         T('Nakierujcie tablet na hiszpańskie menu lub szyld', 'Point the tablet at a Spanish menu or sign', 'Apuntad a un menú o cartel en español'),
         T('Nagrajcie powitanie po kaszubsku dla Hiszpanów', 'Record a Kashubian greeting for our Spanish hosts', 'Grabad un saludo en casubio para los anfitriones')
       ] },
-      { k: 'q', q: 'p3_bring' },
-      { k: 'end', h: T('Dzãkùjemë! ¡Gracias! Dziękujemy!', 'Dzãkùjemë! ¡Gracias! Thank you!', 'Dzãkùjemë! ¡Gracias! Dziękujemy!') }
+      { k: 'pins' },
+      { k: 'end', h: T('Dziękujemy! ¡Gracias!', 'Thank you! ¡Gracias!', '¡Gracias! Dziękujemy!') }
     ]
   },
   {
     id: 'p4', title: T('Dezinformacja: jak nie dać się nabrać', 'Disinformation: how not to be fooled', 'Desinformación: cómo no dejarse engañar'),
     slides: [
-      { k: 'title', kicker: T('Prezentacja 3', 'Presentation 3', 'Presentación 3'), h: T('Nie daj się nabrać!', "Don't get fooled!", '¡Que no te engañen!'), p: T('Fake newsy, deepfake i sztuczna inteligencja', 'Fake news, deepfakes and artificial intelligence', 'Bulos, deepfakes e inteligencia artificial'), img: 'img/phone.jpg' },
-      { k: 'join' },
+      { k: 'title', kicker: T('Prezentacja 2', 'Presentation 2', 'Presentación 2'), h: T('Nie daj się nabrać!', "Don't get fooled!", '¡Que no te engañen!'), p: T('Fake newsy, deepfake i sztuczna inteligencja', 'Fake news, deepfakes and artificial intelligence', 'Bulos, deepfakes e inteligencia artificial'), img: 'img/phone.jpg' },
       { k: 'text', h: T('Czym jest dezinformacja?', 'What is disinformation?', '¿Qué es la desinformación?'), li: [
         T('Fałszywa informacja szerzona celowo: dla pieniędzy, polityki albo kliknięć', 'False information spread on purpose: for money, politics or clicks', 'Información falsa difundida a propósito: por dinero, política o clics'),
         T('Działa, bo budzi emocje: strach, złość, oburzenie', 'It works because it triggers emotions: fear, anger, outrage', 'Funciona porque despierta emociones: miedo, rabia, indignación'),
         T('Najszybciej rozchodzi się przez znajomych i rodzinę', 'It spreads fastest through friends and family', 'Se difunde más rápido a través de amigos y familia')
       ] },
       { k: 'post', text: T('PILNE!!! Od jutra UE ZAKAZUJE kiszenia ogórków w domu! Udostępnij, zanim to usuną!!!', 'URGENT!!! From tomorrow the EU BANS home-made pickles! Share before they delete this!!!', '¡¡¡URGENTE!!! ¡Desde mañana la UE PROHÍBE hacer conservas en casa! ¡¡Comparte antes de que lo borren!!'), img: 'img/ogorki.jpg', stamp: T('ZAKAZ UE', 'EU BAN', 'PROHIBIDO UE'), note: T('Przykład wymyślony na potrzeby zajęć', 'A made-up example for this class', 'Ejemplo inventado para la clase') },
-      { k: 'q', q: 'dz_signal' },
       { k: 'stop', h: T('STOP: 4 kroki przed udostępnieniem', 'STOP: 4 steps before you share', 'STOP: 4 pasos antes de compartir'), items: [
         { l: 'S', h: T('Spokój', 'Slow down', 'Serenidad'), p: T('Silne emocje to sygnał ostrzegawczy', 'Strong emotions are a warning sign', 'Las emociones fuertes son una alerta'), i: '😮‍💨' },
         { l: 'T', h: T('Kto to napisał?', 'Who wrote it?', '¿Quién lo escribió?'), p: T('Jest autor, data, źródło?', 'Is there an author, a date, a source?', '¿Hay autor, fecha, fuente?'), i: '🔎' },
@@ -225,7 +235,6 @@ window.DECKS = [
         T('Napiszcie: „kaszubska babcia w hafcie na plaży w Alicante”', 'Type: “Kashubian grandma in embroidery on the beach in Alicante”', 'Escribid: «abuela casubia con bordado en la playa de Alicante»'),
         T('Szukajcie błędów: dłonie, napisy, cienie, tło', 'Look for mistakes: hands, writing, shadows, background', 'Buscad fallos: manos, letras, sombras, fondo')
       ] },
-      { k: 'q', q: 'dz_share' },
       { k: 'results' },
       { k: 'end', h: T('Myśl, zanim udostępnisz!', 'Think before you share!', '¡Piensa antes de compartir!') }
     ]
@@ -233,14 +242,12 @@ window.DECKS = [
   {
     id: 'p5', title: T('Bezpieczeństwo w sieci', 'Staying safe online', 'Seguridad en internet'),
     slides: [
-      { k: 'title', kicker: T('Prezentacja 4', 'Presentation 4', 'Presentación 4'), h: T('Bezpieczni w sieci', 'Safe online', 'Seguros en internet'), p: T('Oszustwa, hasła i jak się bronić', 'Scams, passwords and how to protect yourself', 'Estafas, contraseñas y cómo protegerse'), img: 'img/laptop.jpg' },
-      { k: 'join' },
-      { k: 'q', q: 'bz_sms' },
-      { k: 'text', h: T('Najczęstsze oszustwa', 'The most common scams', 'Las estafas más comunes'), li: [
-        T('SMS „dopłata do paczki”, „niezapłacony rachunek”', 'Texts about a “parcel fee” or an “unpaid bill”', 'SMS de «pago de paquete» o «factura impagada»'),
-        T('Telefon „na wnuczka”, „na policjanta”, „z banku”', 'Calls “from your grandchild”, “the police”, “the bank”', 'Llamadas «del nieto», «de la policía», «del banco»'),
-        T('„Mamo, to mój nowy numer” na WhatsAppie', '“Mum, this is my new number” on WhatsApp', '«Mamá, este es mi nuevo número» por WhatsApp'),
-        T('Reklamy „pewnych inwestycji” z deepfake celebrytów', '“Sure investment” ads with deepfaked celebrities', 'Anuncios de «inversión segura» con famosos falsos')
+      { k: 'title', kicker: T('Prezentacja 3', 'Presentation 3', 'Presentación 3'), h: T('Bezpieczni w sieci', 'Safe online', 'Seguros en internet'), p: T('Oszustwa, hasła i jak się bronić', 'Scams, passwords and how to protect yourself', 'Estafas, contraseñas y cómo protegerse'), img: 'img/laptop.jpg' },
+      { k: 'scams', h: T('Najczęstsze oszustwa', 'The most common scams', 'Las estafas más comunes'), items: [
+        { kind: 'sms', from: '+48 731 *** ***', msg: T('Twoja paczka czeka. Dopłać 1,99 zł: paczka-doplata.co', 'Your parcel is waiting. Pay €0.99: parcel-fee.co', 'Tu paquete te espera. Paga 0,99 €: paquete-pago.co'), l: T('SMS „dopłata do paczki”', 'Text: “parcel fee”', 'SMS: «pago de paquete»') },
+        { kind: 'call', from: T('Wnuczek ❤️', 'Grandson ❤️', 'Nieto ❤️'), l: T('Telefon „na wnuczka” lub „z banku”', 'Call “from your grandchild” or “the bank”', 'Llamada «del nieto» o «del banco»') },
+        { kind: 'chat', msgs: [T('Mamo, zgubiłem telefon 😥', 'Mum, I lost my phone 😥', 'Mamá, perdí el móvil 😥'), T('To mój nowy numer', 'This is my new number', 'Este es mi nuevo número'), T('Pilnie potrzebuję 800 zł, oddam jutro', 'I urgently need €200, I’ll pay you back tomorrow', 'Necesito 200 € urgente, te los devuelvo mañana')], l: T('„Mamo, to mój nowy numer”', '“Mum, this is my new number”', '«Mamá, este es mi nuevo número»') },
+        { kind: 'ad', head: T('Zarabiaj 5000 zł dziennie!', 'Earn €1,000 a day!', '¡Gana 1.000 € al día!'), btn: T('INWESTUJ TERAZ', 'INVEST NOW', 'INVIERTE YA'), l: T('Reklamy „pewnych inwestycji” z deepfake', '“Sure investment” deepfake ads', 'Anuncios de «inversión segura» con deepfakes') }
       ] },
       { k: 'post', text: T('Twoja paczka czeka. Dopłać 1,99 zł: paczka-doplata.co', 'Your parcel is waiting. Pay €0.99: parcel-fee.co', 'Tu paquete te espera. Paga 0,99 €: paquete-pago.co'), note: T('Przykład wymyślony na potrzeby zajęć: nie klikamy!', 'A made-up example: never click!', 'Ejemplo inventado: ¡no pinches!'), sms: true },
       { k: 'text', h: T('5 zasad do zapamiętania', '5 rules to remember', '5 reglas para recordar'), li: [
@@ -255,7 +262,6 @@ window.DECKS = [
         T('Ustawienia → Prywatność → Lokalizacja: które aplikacje widzą, gdzie jesteś?', 'Settings → Privacy → Location: which apps know where you are?', 'Ajustes → Privacidad → Localización: ¿qué apps saben dónde estás?'),
         T('Sprawdźcie, czy system ma aktualizację', 'Check whether there is a system update', 'Comprobad si hay actualización del sistema')
       ] },
-      { k: 'q', q: 'bz_word' },
       { k: 'cert' },
       { k: 'credits' },
       { k: 'end', h: T('Dziękujemy! Dzãkùjemë! ¡Gracias!', 'Thank you! Dzãkùjemë! ¡Gracias!', '¡Gracias! Dzãkùjemë! Dziękujemy!') }
@@ -267,8 +273,11 @@ window.DECKS = [
       { k: 'title', kicker: T('Ewaluacja projektu', 'Project evaluation', 'Evaluación del proyecto'), h: T('Ankieta: dezinformacja', 'Survey: disinformation', 'Encuesta: desinformación'), p: T('10 pytań · anonimowo · ten sam kod przed i po', '10 questions · anonymous · same code before and after', '10 preguntas · anónima · mismo código antes y después'), img: 'img/phone.jpg' },
       { k: 'survey', phase: 'pre' },
       { k: 'survey', phase: 'post' },
+      { k: 'problem' },
       { k: 'results' },
+      { k: 'confidence' },
       { k: 'people' },
+      { k: 'evaluation' },
       { k: 'teams' }
     ]
   }

@@ -17,7 +17,9 @@
   .fields { display: flex; gap: 18px; margin: 10px 0 14px; flex-wrap: wrap; }
   .fields div { border: 2px solid #0B1F3A; border-radius: 6px; padding: 6px 10px; min-width: 200px; }
   .fields small { display: block; color: #4A5568; }
-  ol { padding-left: 22px; margin: 0; }
+  ol { padding-left: 0; margin: 0; list-style: none; }
+  li.sec p { font-size: 16px; background: #0B1F3A; color: #fff; padding: 4px 10px; border-radius: 4px; margin-top: 8px; }
+  .lk { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; } .lk .opt { display: inline; }
   li { margin-bottom: 10px; break-inside: avoid; }
   li p { margin: 0 0 4px; font-weight: 700; }
   .opt { display: block; margin-left: 4px; }
@@ -37,8 +39,8 @@
   <p id="help"></p>
   <ol id="qs"></ol>
 </div>
-<script src="data.js?v=29"></script>
-<script src="common.js?v=29"></script>
+<script src="data.js?v=30"></script>
+<script src="common.js?v=30"></script>
 <script>
   function draw() {
     const bar = document.getElementById('bar'); bar.innerHTML = '';
@@ -48,7 +50,18 @@
     document.getElementById('lc').textContent = L(SURVEY_UI.code);
     document.getElementById('help').textContent = L(SURVEY_UI.codeHelp);
     const qs = document.getElementById('qs'); qs.innerHTML = '';
-    window.SURVEY.forEach((q) => qs.append(h('li', {}, h('p', {}, L(q.q)), q.a.map((a, i) => h('span', { class: 'opt' }, 'ABC'[i] + '. ' + L(a))))));
+    let part = null;
+    window.SURVEY.forEach((q) => {
+      if (q.part !== part) {
+        part = q.part;
+        const tag = q.ph.length === 2 ? 'PRZED + PO' : q.ph[0] === 'pre' ? 'tylko PRZED' : 'tylko PO';
+        qs.append(h('li', { class: 'sec' }, h('p', {}, `${q.part}. ${L(PARTS[q.part])} (${tag})`)));
+      }
+      const opts = q.type === 'likert'
+        ? h('span', { class: 'lk' }, [1, 2, 3, 4, 5].map((v) => h('span', { class: 'opt' }, `${v} ${LIKERT_FACE[v - 1]}`)), h('small', {}, ` 1 = ${L(LIKERT[0])}, 5 = ${L(LIKERT[4])}`))
+        : q.a.map((a, i) => h('span', { class: 'opt' }, 'ABCD'[i] + '. ' + L(a)));
+      qs.append(h('li', {}, h('p', {}, `${q.id}. ${L(q.q)}`), opts));
+    });
   }
   if (!params.get('lang')) LANG = 'pl';
   draw();

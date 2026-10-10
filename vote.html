@@ -34,16 +34,18 @@
   .me { font-size: 15px; color: #4A5568; margin-top: 22px; display: flex; gap: 8px; align-items: center; }
   .me button { border: 0; background: none; text-decoration: underline; color: #4A5568; font: inherit; }
   .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+  .part { font-size: 15px; font-weight: 700; color: var(--eu); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+  .btn.lk .face { font-size: 32px; width: 42px; text-align: center; }
   .pin { width: 30px; height: 30px; border-radius: 50% 50% 50% 0; background: var(--c); transform: rotate(-45deg); border: 4px solid #fff; box-shadow: 0 3px 8px rgba(0,0,0,.35); }
 </style>
 </head>
 <body>
 <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
 <main id="main"></main>
-<script src="data.js?v=29"></script>
+<script src="data.js?v=30"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=29"></script>
-<script src="maps.js?v=29"></script>
+<script src="common.js?v=30"></script>
+<script src="maps.js?v=30"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -130,16 +132,18 @@ function drawMap() {
   });
 }
 
-// Survey: code → 10 questions, one per screen → send once.
+// Survey: code → items of this phase (parts A–D), one per screen → send once.
 function drawSurvey() {
-  const ph = open.phase, dk = 'kws-survey-draft-' + ph;
-  const d = store(dk) || { code: '', step: -1, ans: [] };
+  const ph = open.phase, dk = 'kws-survey2-draft-' + ph;
+  const items = window.SURVEY.filter((x) => x.ph.includes(ph));
+  const d = store(dk) || { code: '', step: -1, ans: {} };
   const saveD = () => store(dk, d);
   main.append(h('p', { class: 'help' }, L(SURVEY_UI.title) + ' · ' + L(SURVEY_UI[ph])));
   if (d.sent) { main.append(h('p', { class: 'msg ok' }, '✓ ' + L(SURVEY_UI.done))); return; }
   if (d.step < 0) {
     const inp = h('input', { class: 'code', maxlength: '4', value: d.code, placeholder: 'A07', autocomplete: 'off' });
     main.append(h('h1', {}, L(SURVEY_UI.code)), h('p', { class: 'help' }, L(SURVEY_UI.codeHelp)), inp,
+      h('p', { class: 'help' }, L(SURVEY_UI.intro)),
       h('button', { class: 'btn main', onclick: () => {
         const c = inp.value.trim().toUpperCase();
         if (!/^[A-ZĄĆĘŁŃÓŚŹŻÑ]\d{1,2}$/.test(c)) { inp.focus(); inp.style.borderColor = '#B3261E'; return; }
@@ -147,7 +151,7 @@ function drawSurvey() {
       } }, L(SURVEY_UI.start)));
     return;
   }
-  const n = window.SURVEY.length;
+  const n = items.length;
   if (d.step >= n) {
     main.append(h('h1', {}, '✓'),
       h('button', { class: 'btn main', onclick: () => {
@@ -157,12 +161,17 @@ function drawSurvey() {
       h('button', { class: 'btn', onclick: () => { d.step = n - 1; saveD(); draw(); } }, '←'));
     return;
   }
-  const q = window.SURVEY[d.step];
+  const q = items[d.step];
+  const next = (v) => { d.ans[q.id] = v; d.step++; saveD(); draw(); scrollTo(0, 0); };
   main.append(h('div', { class: 'prog' }, h('i', { style: `width:${(100 * d.step) / n}%` })),
+    h('p', { class: 'part' }, `${q.part}. ${L(PARTS[q.part])}`),
     h('p', { class: 'help' }, `${d.step + 1} / ${n} · ${d.code}`), h('h1', {}, L(q.q)));
-  q.a.forEach((a, i) => main.append(h('button', { class: 'btn' + (d.ans[d.step] === i ? ' pick' : ''), onclick: () => {
-    d.ans[d.step] = i; d.step++; saveD(); draw(); scrollTo(0, 0);
-  } }, h('b', {}, 'ABC'[i]), L(a))));
+  if (q.type === 'likert') {
+    [5, 4, 3, 2, 1].forEach((v) => main.append(h('button', { class: 'btn lk' + (d.ans[q.id] === v ? ' pick' : ''), onclick: () => next(v) },
+      h('span', { class: 'face' }, LIKERT_FACE[v - 1]), h('span', {}, `${v} · ${L(LIKERT[v - 1])}`))));
+  } else {
+    q.a.forEach((a, i) => main.append(h('button', { class: 'btn' + (d.ans[q.id] === i ? ' pick' : ''), onclick: () => next(i) }, h('b', {}, 'ABCD'[i]), L(a))));
+  }
   if (d.step > 0) main.append(h('div', { class: 'nav' }, h('button', { class: 'btn', onclick: () => { d.step--; saveD(); draw(); } }, '←')));
 }
 
