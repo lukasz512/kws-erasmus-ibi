@@ -171,6 +171,17 @@ const R = {
     const t = h('table', { class: 't' + (s.rows.length > 6 ? ' dense' : '') }, s.rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, L(c))))));
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)), t));
   },
+  rules(s) {
+    const V = {
+      link: () => h('div', { class: 'rv link' }, h('div', { class: 'url' }, '🔗 paczka-doplata.co'), h('div', { class: 'ban' }, '🚫')),
+      call: () => h('div', { class: 'rv call' }, h('div', { class: 'ph' }, '📱'), h('div', { class: 'num' }, '📇 Bank · Syn · Gmina'), h('div', { class: 'ok' }, '✓')),
+      pass: () => h('div', { class: 'rv pass' }, h('div', { class: 'pw' }, '••••••••••••••••'), h('div', { class: 'meter' }, h('i')), h('div', { class: 'code' }, '2FA · 482 913')),
+      blik: () => h('div', { class: 'rv blik' }, h('div', { class: 'cd' }, '123 456'), h('div', { class: 'lock' }, '🔒')),
+      family: () => h('div', { class: 'rv family' }, h('div', { class: 'fam' }, '👨‍👩‍👧'), h('div', { class: 'bub' }, L(T('Hasło? „Gryf”!', 'Code word? “Griffin”!', '¿Clave? «Grifo»!'))))
+    };
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
+      h('div', { class: 'rules' }, s.items.map((it, k) => h('div', { class: 'rule' }, h('div', { class: 'rn' }, String(k + 1)), V[it.v](), h('h3', {}, L(it.h)), h('p', {}, L(it.p)))))));
+  },
   disinfo(s) {
     const n = 7, R = 150, C = 190;
     const nodes = Array.from({ length: n }, (_, i) => { const t = (i / n) * Math.PI * 2 - Math.PI / 2; return [C + R * Math.cos(t), C + R * Math.sin(t)]; });

@@ -255,12 +255,12 @@ window.DECKS = [
         { kind: 'ad', head: T('Zarabiaj 5000 zł dziennie!', 'Earn €1,000 a day!', '¡Gana 1.000 € al día!'), btn: T('INWESTUJ TERAZ', 'INVEST NOW', 'INVIERTE YA'), l: T('Reklamy „pewnych inwestycji” z deepfake', '“Sure investment” deepfake ads', 'Anuncios de «inversión segura» con deepfakes') }
       ] },
       { k: 'post', text: T('Twoja paczka czeka. Dopłać 1,99 zł: paczka-doplata.co', 'Your parcel is waiting. Pay €0.99: parcel-fee.co', 'Tu paquete te espera. Paga 0,99 €: paquete-pago.co'), note: T('Przykład wymyślony na potrzeby zajęć: nie klikamy!', 'A made-up example: never click!', 'Ejemplo inventado: ¡no pinches!'), sms: true },
-      { k: 'text', h: T('5 zasad do zapamiętania', '5 rules to remember', '5 reglas para recordar'), li: [
-        T('Nie klikam w linki z SMS-ów i maili', "I don't click links in texts and emails", 'No pincho enlaces de SMS ni correos'),
-        T('Sam dzwonię na znany numer: banku, dziecka, urzędu', 'I call a number I know myself: the bank, my child, the office', 'Llamo yo a un número conocido: banco, hijo, oficina'),
-        T('Hasło = długie zdanie, a do tego kod z SMS-a (2FA)', 'Password = a long sentence, plus an SMS code (2FA)', 'Contraseña = frase larga, más código por SMS (2FA)'),
-        T('Nikomu nie podaję kodów BLIK ani kodów z SMS', 'I never give anyone payment or SMS codes', 'Nunca doy códigos de pago ni de SMS'),
-        T('Mamy rodzinne słowo-hasło na „pilne” telefony', 'Our family has a code word for “urgent” calls', 'En familia tenemos una palabra clave para llamadas «urgentes»')
+      { k: 'rules', h: T('5 zasad do zapamiętania', '5 rules to remember', '5 reglas para recordar'), items: [
+        { v: 'link', h: T('Nie klikam', "Don't click", 'No pincho'), p: T('linków z SMS-ów i maili', 'links in texts and emails', 'enlaces de SMS ni correos') },
+        { v: 'call', h: T('Sam oddzwaniam', 'I call back myself', 'Llamo yo'), p: T('na znany numer: banku, dziecka, urzędu', 'on a number I know: bank, child, office', 'a un número conocido: banco, hijo, oficina') },
+        { v: 'pass', h: T('Długie hasło + kod', 'Long password + code', 'Contraseña larga + código'), p: T('hasło to zdanie, a do tego kod z SMS-a (2FA)', 'a sentence as password, plus an SMS code (2FA)', 'una frase como contraseña y un código SMS (2FA)') },
+        { v: 'blik', h: T('Kod tylko dla mnie', 'Codes are mine only', 'Códigos solo para mí'), p: T('nikomu nie podaję kodów BLIK ani z SMS', 'I never give anyone payment or SMS codes', 'nunca doy códigos de pago ni de SMS') },
+        { v: 'family', h: T('Rodzinne słowo-hasło', 'Family code word', 'Palabra clave familiar'), p: T('na „pilne” telefony od bliskich', 'for “urgent” calls from loved ones', 'para llamadas «urgentes» de familiares') }
       ] },
       { k: 'task', h: T('Zabezpieczcie tablet', 'Secure the tablet', 'Proteged la tableta'), screen: 'secure', icons: ['🔒', '📍', '🔄'], li: [
         T('Ustawienia → Face ID / kod: czy blokada jest włączona?', 'Settings → Face ID / passcode: is the lock on?', 'Ajustes → Face ID / código: ¿está activado el bloqueo?'),

@@ -555,3 +555,31 @@ body.reader .tscr.ai .gimg { font-size: 60px; } body.reader .tscr.tr .menu b, bo
 body.reader .dgrid3 { grid-template-columns: 1fr; gap: 12px; }
 body.reader .dv { height: 160px; } body.reader .dv.money span, body.reader .dv.faces span { font-size: 44px; }
 body.reader .dicard { padding: 14px; } body.reader .dicard h3 { font-size: 20px; } body.reader .dicard p { font-size: 15px; }
+/* 5 rules */
+.rules { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; flex: 1; }
+.rule { background: #fff; border-radius: 26px; padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 6px 24px rgba(11,31,58,.08); position: relative; border-top: 10px solid var(--eu); }
+.rule .rn { position: absolute; top: -30px; left: 22px; width: 56px; height: 56px; border-radius: 50%; background: var(--gold); color: var(--navy); font: 900 30px var(--sans); display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,.15); }
+.rule h3 { font: 600 36px/1.1 var(--serif); }
+.rule p { font-size: 27px; color: var(--muted); }
+.rv { height: 300px; border-radius: 18px; background: #EEF2F8; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; overflow: hidden; }
+.rv.link .url { background: #fff; border-radius: 12px; padding: 12px 14px; font-size: 22px; color: #1A73E8; text-decoration: underline; }
+.rv.link .ban { position: absolute; font-size: 160px; opacity: 0; animation: banIn 3s infinite; }
+@keyframes banIn { 0%, 30% { opacity: 0; transform: scale(2); } 45%, 90% { opacity: .9; transform: scale(1); } 100% { opacity: 0; } }
+.rv.call .ph { font-size: 110px; animation: wob 1s infinite; }
+.rv.call .num { background: #fff; border-radius: 12px; padding: 10px 14px; font-size: 22px; }
+.rv.call .ok { position: absolute; right: 22px; top: 22px; width: 56px; height: 56px; border-radius: 50%; background: #34C759; color: #fff; font-size: 34px; display: grid; place-items: center; animation: pop2 2.4s infinite; }
+@keyframes pop2 { 0%, 40% { transform: scale(0); } 55%, 100% { transform: scale(1); } }
+.rv.pass .pw { background: #fff; border-radius: 12px; padding: 12px; font-size: 30px; letter-spacing: 2px; width: 88%; text-align: center; overflow: hidden; white-space: nowrap; }
+.rv.pass .meter { width: 88%; height: 16px; background: #fff; border-radius: 8px; overflow: hidden; }
+.rv.pass .meter i { display: block; height: 100%; width: 100%; border-radius: 8px; background: linear-gradient(90deg, #E5322D, #FFB300, #34C759); animation: fillM 3s ease-in-out infinite; transform-origin: left; }
+@keyframes fillM { 0% { transform: scaleX(.05); } 60%, 100% { transform: scaleX(1); } }
+.rv.pass .code { background: var(--navy); color: #fff; border-radius: 12px; padding: 10px 16px; font: 700 26px monospace; animation: resIn 3s infinite; }
+.rv.blik .cd { font: 900 54px monospace; letter-spacing: 4px; color: var(--navy); filter: blur(0); animation: hide 3s infinite; }
+@keyframes hide { 0%, 30% { filter: none; } 50%, 90% { filter: blur(10px); } 100% { filter: none; } }
+.rv.blik .lock { position: absolute; font-size: 110px; animation: lockIn 3s infinite; }
+@keyframes lockIn { 0%, 35% { opacity: 0; transform: translateY(-60px); } 50%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.rv.family .fam { font-size: 110px; }
+.rv.family .bub { background: #fff; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 26px; font-weight: 700; animation: chatIn 4s infinite; }
+body.reader .rules { grid-template-columns: 1fr 1fr; gap: 18px; } body.reader .rv { height: 130px; } body.reader .rule h3 { font-size: 17px; } body.reader .rule p { font-size: 13px; }
+body.reader .rv.call .ph, body.reader .rv.family .fam { font-size: 50px; } body.reader .rv.blik .cd { font-size: 24px; } body.reader .rv.link .ban, body.reader .rv.blik .lock { font-size: 60px; } body.reader .rule .rn { width: 30px; height: 30px; font-size: 16px; top: -14px; }
+body.reader .rv .url, body.reader .rv .num, body.reader .rv .code, body.reader .rv .bub, body.reader .rv .pw { font-size: 11px; }
