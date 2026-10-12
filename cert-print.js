@@ -15,7 +15,8 @@
     .cert .signs { display: flex; justify-content: space-between; width: 92%; margin-top: auto; align-items: flex-end; }
     .cert .sg { width: 30%; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; position: relative; }
     .cert .sg img { height: 56px; max-width: 100%; object-fit: contain; } .cert .sg .line { width: 100%; border-top: 1px solid #0B1F3A; padding-top: 3px; }
-    .cert .sg .stamp { position: absolute; bottom: 14px; left: 50%; transform: translateX(-90%); height: 80px; opacity: .9; }
+    .cert .sg .stamp { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); height: 96px; max-width: none; opacity: .85; z-index: 0; }
+    .cert .sg .boss { position: relative; z-index: 1; }
     .cert .eu { height: 42px; }`;
   document.head.append(Object.assign(document.createElement('style'), { textContent: css }));
   // One @page rule at a time: consents print portrait, certificates landscape.
@@ -37,7 +38,7 @@
       <div class="signs">
         <div class="sg">${sig ? `<img src="${sig}" alt="">` : ''}<div class="line">${L(UI.certSignP)}</div></div>
         <div class="sg"><img class="eu" src="img/eu-pl.jpg" alt=""><div>${L(UI.certPlace)}</div></div>
-        <div class="sg">${boss.stamp ? `<img class="stamp" src="${boss.stamp}" alt="">` : ''}${boss.sig ? `<img src="${boss.sig}" alt="">` : ''}<div class="line">${L(UI.certSignBoss)}</div></div>
+        <div class="sg">${boss.stamp ? `<img class="stamp" src="${boss.stamp}" alt="">` : ''}${boss.sig ? `<img class="boss" src="${boss.sig}" alt="">` : ''}<div class="line">${L(UI.certSignBoss)}</div></div>
       </div></div>`;
   };
 })();
