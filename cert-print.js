@@ -17,7 +17,7 @@
     .cert .sg img { height: 56px; max-width: 100%; object-fit: contain; } .cert .sg .line { width: 100%; border-top: 1px solid #0B1F3A; padding-top: 3px; }
     .cert .sg .stamp { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); height: 96px; max-width: none; opacity: .85; z-index: 0; }
     .cert .sg .boss { position: relative; z-index: 1; }
-    .cert .eu { height: 42px; }`;
+    .cert .eu { height: 42px; } .cert .pno { font-size: 11.5px; color: #4A5568; }`;
   document.head.append(Object.assign(document.createElement('style'), { textContent: css }));
   // One @page rule at a time: consents print portrait, certificates landscape.
   const page = document.head.appendChild(document.createElement('style'));
@@ -33,6 +33,7 @@
       <h1>${L(UI.certTitle)}</h1>
       <div class="nm">${esc(name)}</div>
       <p>${L(UI.certBody)}</p>
+      ${window.PROJECT_NO ? `<p class="pno">${L(UI.certProjNo)}: <b>${esc(window.PROJECT_NO)}</b></p>` : ''}
       <p><b>${L(UI.certSkillsTitle)}</b></p>
       <div class="grid">${groups}</div>
       <div class="signs">

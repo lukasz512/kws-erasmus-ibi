@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '62'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '63'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
@@ -101,7 +101,8 @@ window.UI = {
   ],
   certSignP: T('Podpis uczestnika', "Participant's signature", 'Firma de la persona participante'),
   certSignBoss: T('Prezes Fundacji Kaszëbi we swiecë', 'President of the Kaszëbi we swiecë Foundation', 'Presidente de la Fundación Kaszëbi we swiecë'),
-  certPlace: T('Nakla, 21 października 2026 r.', 'Nakla, 21 October 2026', 'Nakla, 21 de octubre de 2026')
+  certPlace: T('21 października 2026 r.', '21 October 2026', '21 de octubre de 2026'),
+  certProjNo: T('Nr projektu', 'Project no.', 'N.º de proyecto')
 };
 
 // Light opinion polls (no correct answer, no points).
