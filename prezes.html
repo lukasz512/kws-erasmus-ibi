@@ -56,9 +56,9 @@
   </div>
 </div>
 <div class="certs" id="printArea"></div>
-<script src="data.js?v=66"></script>
-<script src="common.js?v=66"></script>
-<script src="cert-print.js?v=66"></script>
+<script src="data.js?v=67"></script>
+<script src="common.js?v=67"></script>
+<script src="cert-print.js?v=67"></script>
 <script>
   LANG = 'pl';
   const BOSS = 'kws-boss';
@@ -82,7 +82,7 @@
     return new Promise((res) => {
       const img = new Image();
       img.onload = () => {
-        const k = Math.min(1, 1400 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+        const k = Math.min(1, 700 / Math.max(img.width, img.height)), c = document.createElement('canvas');
         c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
         const x = c.getContext('2d'); x.drawImage(img, 0, 0, c.width, c.height);
         const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
@@ -99,7 +99,13 @@
       img.src = URL.createObjectURL(file);
     });
   }
-  function put(key, val) { const b = boss(); if (val) b[key] = val; else delete b[key]; store(BOSS, b); render(); }
+  // Saved in this browser's storage (kept across sessions, never uploaded); a failed save is reported instead of silently lost.
+  function put(key, val) {
+    const b = boss(); if (val) b[key] = val; else delete b[key]; store(BOSS, b);
+    if (val && boss()[key] !== val) alert('Nie udało się zapisać (za mało miejsca w przeglądarce). Spróbuj mniejszego zdjęcia.');
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    render();
+  }
 
   // Drawing pad
   const cv = $('pad'), ctx = cv.getContext('2d'); let drawing = false, dirty = false;

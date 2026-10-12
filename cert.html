@@ -48,9 +48,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=66"></script>
-<script src="common.js?v=66"></script>
-<script src="cert-print.js?v=66"></script>
+<script src="data.js?v=67"></script>
+<script src="common.js?v=67"></script>
+<script src="cert-print.js?v=67"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -154,7 +154,8 @@
     x.fillStyle = '#F5F3EC'; x.fillRect(0, 0, 1080, 1350);
     x.fillStyle = '#fff'; x.strokeStyle = '#0B1F3A'; x.lineWidth = 12; x.beginPath(); x.roundRect(40, 40, 1000, 760, 24); x.fill(); x.stroke();
     x.strokeStyle = '#FFCC00'; x.lineWidth = 4; x.beginPath(); x.roundRect(62, 62, 956, 716, 16); x.stroke();
-    const [logo, eu, bb, sig] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg'), load(st.sig)]);
+    const boss = store('kws-boss') || {};
+    const [logo, eu, bb, sig, bsig, stamp] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg'), load(st.sig), load(boss.sig), load(boss.stamp)]);
     if (logo) x.drawImage(logo, 540 - 110, 84, 220, 220 * logo.height / logo.width);
     x.textAlign = 'center'; x.fillStyle = '#0B1F3A';
     x.font = '600 48px "Source Serif 4", Georgia, serif'; x.fillText(L(UI.certTitle), 540, 250);
@@ -171,8 +172,15 @@
       x.font = j ? '400 20px "Public Sans", Arial' : '700 23px "Public Sans", Arial'; x.fillStyle = j ? '#26334A' : '#003399';
       x.fillText((j ? '✓ ' : '') + L(t), 300 + i * 480, y + j * 28);
     }));
-    if (sig) { const sh = 70, sw = Math.min(300, sh * sig.width / sig.height); x.drawImage(sig, 540 - sw / 2, 668, sw, sh); }
-    x.fillStyle = '#8A94A6'; x.fillRect(400, 740, 280, 2); x.font = '400 16px "Public Sans", Arial'; x.fillText(L(UI.certSignP), 540, 762);
+    // Participant signature in the middle; with the president's signature on this device, the two sit side by side.
+    const two = !!(bsig || stamp), px = two ? 430 : 540, bx = 680;
+    const put = (img, cx, hh, maxW) => { const w = Math.min(maxW, hh * img.width / img.height); x.drawImage(img, cx - w / 2, 738 - hh, w, hh); };
+    if (sig) put(sig, px, 70, two ? 190 : 300);
+    if (stamp) { x.globalAlpha = .85; put(stamp, bx, 96, 120); x.globalAlpha = 1; }
+    if (bsig) put(bsig, bx, 64, 190);
+    x.fillStyle = '#8A94A6'; x.font = `400 ${two ? 14 : 16}px "Public Sans", Arial`;
+    if (two) { x.fillRect(340, 740, 180, 2); x.fillText(L(UI.certSignP), px, 762); x.fillRect(590, 740, 180, 2); x.fillText(L(UI.certSignBoss), bx, 762); }
+    else { x.fillRect(400, 740, 280, 2); x.fillText(L(UI.certSignP), 540, 762); }
     if (eu) x.drawImage(eu, 90, 700, 200, 200 * eu.height / eu.width);
     if (bb) x.drawImage(bb, 830, 708, 150, 150 * bb.height / bb.width);
     const list = photos.filter(Boolean);
@@ -201,8 +209,8 @@
   }
 
   function printCert() {
-    // The participant's copy has an empty line for the president; the organiser prints signed copies from the consent tablet.
-    document.getElementById('cert').innerHTML = certHtml(st.name, st.sig);
+    // President's signature/stamp come from this device's storage (added on prezes.html); without them the line stays empty.
+    document.getElementById('cert').innerHTML = certHtml(st.name, st.sig, store('kws-boss'));
     setTimeout(print, 300);
   }
   draw();

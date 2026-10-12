@@ -58,9 +58,9 @@
 <div class="print" id="printArea"></div>
 <div class="certs" id="certArea"></div>
 
-<script src="data.js?v=66"></script>
-<script src="common.js?v=66"></script>
-<script src="cert-print.js?v=66"></script>
+<script src="data.js?v=67"></script>
+<script src="common.js?v=67"></script>
+<script src="cert-print.js?v=67"></script>
 <script>
   LANG = 'pl'; // organiser station: consents and certificates print in Polish
   // Consents stay on this tablet only (never sent over the internet); print them as PDF for the project files.
@@ -107,7 +107,7 @@
       <p>☑ Zgoda na przetwarzanie danych w celu realizacji projektu</p><p>${c.image ? '☑' : '☐'} Zgoda na publikację wizerunku</p>
       <p><b>${c.name}</b> · ${new Date(c.at).toLocaleString('pl-PL')}</p><img class="sig" src="${c.sig}" alt=""></div>`).join('');
     document.getElementById('certArea').innerHTML = '';
-    setPage('A4 portrait'); print();
+    setPage('A4 portrait', 12); print();
   };
   // President's signature and stamp are added on prezes.html; kept in this browser only, never uploaded.
   const BOSS = 'kws-boss';
