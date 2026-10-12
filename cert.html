@@ -48,9 +48,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=59"></script>
-<script src="common.js?v=59"></script>
-<script src="cert-print.js?v=59"></script>
+<script src="data.js?v=60"></script>
+<script src="common.js?v=60"></script>
+<script src="cert-print.js?v=60"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -171,8 +171,8 @@
       x.font = j ? '400 20px "Public Sans", Arial' : '700 23px "Public Sans", Arial'; x.fillStyle = j ? '#26334A' : '#003399';
       x.fillText((j ? '✓ ' : '') + L(t), 300 + i * 480, y + j * 28);
     }));
-    if (sig) { const sh = 70, sw = Math.min(300, sh * sig.width / sig.height); x.drawImage(sig, 540 - sw / 2, 690, sw, sh); }
-    x.fillStyle = '#8A94A6'; x.fillRect(400, 764, 280, 2); x.font = '400 16px "Public Sans", Arial'; x.fillText(L(UI.certSignP), 540, 786);
+    if (sig) { const sh = 70, sw = Math.min(300, sh * sig.width / sig.height); x.drawImage(sig, 540 - sw / 2, 668, sw, sh); }
+    x.fillStyle = '#8A94A6'; x.fillRect(400, 740, 280, 2); x.font = '400 16px "Public Sans", Arial'; x.fillText(L(UI.certSignP), 540, 762);
     if (eu) x.drawImage(eu, 90, 700, 200, 200 * eu.height / eu.width);
     if (bb) x.drawImage(bb, 830, 708, 150, 150 * bb.height / bb.width);
     const list = photos.filter(Boolean);

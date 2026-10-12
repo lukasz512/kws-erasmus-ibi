@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '59'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '60'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
