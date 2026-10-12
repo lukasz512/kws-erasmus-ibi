@@ -28,25 +28,6 @@ const keyOf = (slide) => slide.q + (slide.phase ? ':' + slide.phase : '');
 const qOf = (key) => window.Q[key.split(':')[0]];
 
 const NTFY = 'https://ntfy.sh/';
-// Survey storage in a Google Sheet (reliable, no per-IP quota). Text body avoids a CORS preflight.
-const Sheet = {
-  url: () => (window.SHEET_URL || '').trim(),
-  async post(row) {
-    try { const r = await fetch(Sheet.url(), { method: 'POST', body: JSON.stringify(row) }); const j = await r.json(); return !!j.ok; }
-    catch (e) { return false; }
-  },
-  async postSure(row, onTry, tries = 12) {
-    for (let k = 0; k < tries; k++) {
-      if (await Sheet.post(row)) return true;
-      if (onTry) onTry(k + 1);
-      await new Promise((r) => setTimeout(r, 3000 + Math.random() * 3000));
-    }
-    return false;
-  },
-  async rows() {
-    try { const r = await fetch(Sheet.url()); const j = await r.json(); return j.ok ? j.rows : []; } catch (e) { return []; }
-  }
-};
 const Live = {
   send(topic, msg) {
     return fetch(NTFY + topic, { method: 'POST', body: JSON.stringify(msg) }).then((r) => r.ok).catch(() => false);
@@ -114,8 +95,8 @@ fetch('version.txt?' + Date.now(), { cache: 'no-store' }).then((r) => r.text()).
   }
 }).catch(() => {});
 
-// Preview mode (?pv=…, used by podglad.html): pages render normally but send nothing to the live channel or the sheet.
+// Preview mode (?pv=…, used by panel.html): pages render normally but send nothing to the live channel.
 if (params.get('pv') !== null) {
   const ok = () => Promise.resolve(true);
-  Live.send = ok; if (Live.sendSure) Live.sendSure = ok; Sheet.post = ok;
+  Live.send = ok; if (Live.sendSure) Live.sendSure = ok;
 }

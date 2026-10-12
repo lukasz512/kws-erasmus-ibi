@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel organizatora – Kaszëbi w Europie!</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: 'Public Sans', Arial, sans-serif; color: #0B1F3A; background: #E9ECF2; padding: 24px 16px 60px; }
+  header, section, .note { max-width: 1400px; margin-left: auto; margin-right: auto; }
+  header { margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  header img { height: 44px; }
+  h1 { font: 600 28px 'Source Serif 4', Georgia, serif; }
+  .note { margin-bottom: 18px; color: #4A5568; font-size: 15px; line-height: 1.5; }
+  section { margin-bottom: 28px; }
+  h2 { font: 700 13px 'Public Sans'; letter-spacing: .14em; text-transform: uppercase; color: #003399; margin: 0 0 12px; display: flex; gap: 10px; align-items: center; }
+  h2::after { content: ''; flex: 1; height: 1px; background: #CBD2DE; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .card { background: #fff; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px; color: inherit; text-decoration: none; border: 2px solid transparent; }
+  a.card:hover { border-color: #003399; }
+  .card b { font-size: 17px; } .card span { color: #4A5568; font-size: 14px; line-height: 1.4; }
+  .card .n { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #003399; font-weight: 700; }
+  .box { background: #fff; border-radius: 14px; padding: 16px 20px; font-size: 15px; line-height: 1.5; }
+  .box + .box { margin-top: 10px; } .warn { border-left: 4px solid #E5B800; }
+  ol, ul { padding-left: 20px; } li { margin: 4px 0; }
+  kbd { background: #E6EBF2; border-radius: 6px; padding: 1px 7px; font: 600 13px ui-monospace, monospace; }
+  table { border-collapse: collapse; width: 100%; } td { padding: 6px; border-bottom: 1px solid #E6EBF2; vertical-align: top; } td:first-child { white-space: nowrap; width: 1%; padding-right: 14px; }
+  .langs { margin-left: auto; display: flex; gap: 6px; }
+  .langs button { font: 700 15px 'Public Sans'; padding: 8px 14px; border-radius: 10px; border: 2px solid #0B1F3A; background: #fff; color: #0B1F3A; cursor: pointer; }
+  .langs button.on { background: #0B1F3A; color: #fff; }
+  .row { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; }
+  figure { flex: none; display: grid; gap: 8px; }
+  figcaption { font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; gap: 8px; }
+  figcaption a { color: #003399; font-weight: 400; }
+  /* Phone 390×800 shown at 75%. */
+  .ph { width: 293px; height: 600px; border-radius: 28px; border: 8px solid #0B1F3A; overflow: hidden; background: #fff; }
+  .ph iframe { width: 390px; height: 800px; border: 0; transform: scale(.7333); transform-origin: top left; }
+</style>
+</head>
+<body>
+<header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><h1>Panel organizatora</h1></header>
+<p class="note">Wszystko w jednym miejscu: prezentacje, narzędzia, instrukcja ankiety i podgląd tego, co widzą uczestnicy. Ten adres jest tylko dla organizatora.</p>
+
+<section><h2>Prezentacje</h2><div class="grid" id="decks"></div></section>
+
+<section><h2>Narzędzia</h2><div class="grid">
+  <a class="card" href="report.html" target="_blank"><b>📄 Raport ankiety</b><span>Wyniki przed/po i wskaźniki z wniosku. Każde otwarcie pobiera kopię CSV.</span></a>
+  <a class="card" href="survey-print.html" target="_blank"><b>🖨 Ankieta do druku</b><span>Dla osób bez telefonu; wpisujesz ją potem w menu prezentacji: „✍ Ankieta z kartki”.</span></a>
+  <a class="card" href="consent.html" target="_blank"><b>✍️ Zgody RODO i certyfikaty</b><span>Podpisy na tablecie, PDF zgód i certyfikatów dla wszystkich.</span></a>
+  <a class="card" href="prezes.html" target="_blank"><b>🖋 Podpis prezesa</b><span>Podpis i pieczątka na certyfikatach.</span></a>
+  <a class="card" href="social.html" target="_blank"><b>📣 Posty na Facebooka</b><span>Seria 10 postów „Bezpieczni w sieci” dla strony fundacji.</span></a>
+</div></section>
+
+<section><h2>Ankieta przed/po: jak przeprowadzić</h2>
+  <div class="box"><ol>
+    <li><b>PRZED</b> (pierwszy dzień warsztatów): prezentacja „Ankieta przed/po” → slajd „PRZED mobilnością”. Słuchacze skanują QR, wpisują kod (litera imienia mamy + dzień urodzin) i odpowiadają. Licznik rośnie na ekranie.</li>
+    <li>Kto nie ma telefonu, wypełnia <b>wersję papierową</b>; wpisujesz ją w menu prezentacji (<kbd>M</kbd>) → „✍ Ankieta z kartki”.</li>
+    <li><b>PO</b> (20.10): slajd „PO mobilności”, ten sam kod. Potem slajdy z wynikami.</li>
+    <li>Po każdej turze otwórz <b>Raport ankiety</b>: zbierze odpowiedzi i pobierze kopię CSV.</li>
+  </ol></div>
+  <div class="box warn">Odpowiedzi zapisują się <b>w przeglądarce tego laptopa</b>; serwis na żywo trzyma je tylko ok. 12 h. W dniu ankiety miej otwartą prezentację albo otwórz raport, używaj tego samego laptopa i przeglądarki, nie czyść danych przeglądarki.</div>
+</section>
+
+<section><h2>Sterowanie prezentacją</h2><div class="box"><table>
+  <tr><td><kbd>→</kbd> <kbd>←</kbd> / pilot</td><td>następny / poprzedni slajd (na mapie podróży: kolejny przystanek)</td></tr>
+  <tr><td><kbd>R</kbd></td><td>zgadywanka: pokaż prawdziwe miejsce i kto był najbliżej</td></tr>
+  <tr><td>klik w odpowiedź sondy</td><td>+1 głos z sali (podniesione ręce)</td></tr>
+  <tr><td><kbd>F</kbd> / <kbd>M</kbd> / <kbd>L</kbd></td><td>pełny ekran / menu (prezentacje, dzień, ankieta z kartki, CSV) / kod QR do wyboru języka</td></tr>
+</table></div></section>
+
+<section><h2>Dobrze wiedzieć</h2><div class="box warn"><ul>
+  <li>Przed pokazem odśwież stronę (Cmd+Shift+R), żeby wczytać najnowszą wersję.</li>
+  <li>Głosy idą przez darmowy serwis ntfy.sh (bez konta i danych osobowych, losowy kanał na sesję). Przy ok. 30 telefonach na jednym Wi-Fi lepiej głosować na danych komórkowych. Gdy coś nie działa, liczysz ręce klikiem.</li>
+  <li>Tablet potrzebuje: Map Google, Tłumacza Google, Google Lens i Copilota lub ChatGPT, najlepiej zainstalowanych i zalogowanych przed wyjazdem.</li>
+  <li>Zdjęcia: Wikimedia Commons (wolne licencje), autorzy na slajdzie „Źródła”.</li>
+</ul></div></section>
+
+<section><h2>Podgląd: co widzi uczestnik <span class="langs" id="langs"></span></h2>
+  <p class="note" style="margin:0 0 12px">Przyciski działają, ale nic nie jest wysyłane, a certyfikat pokazuje przykładową osobę.</p>
+  <div id="all"></div>
+</section>
+
+<script src="data.js?v=77"></script>
+<script>
+  // Preview session id, so nothing mixes with a real class session.
+  const TOPIC = 'podglad';
+  let lang = new URLSearchParams(location.search).get('lang') || 'pl';
+  const name = (t) => (t && t[lang]) || (t && t.pl) || '';
+  document.getElementById('decks').innerHTML = window.DECKS.map((d, i) =>
+    `<a class="card" href="index.html?d=${d.id}" target="_blank"><span class="n">${i + 1} · ${d.slides.length} slajdów</span><b>${d.title.pl}</b><span>▶ Prowadź</span></a>`).join('');
+  function build() {
+    document.getElementById('langs').innerHTML = ['pl', 'en', 'es'].map((l) => `<button class="${l === lang ? 'on' : ''}" data-l="${l}">${l.toUpperCase()}</button>`).join('');
+    const q = (pv, extra) => `pv=${pv}&t=${TOPIC}&lang=${lang}${extra ? '&' + extra : ''}`;
+    const groups = [
+      ['Wejście z kodu QR', [['Wybór języka', `lang.html?${q(1)}`], ['Prezentacja na telefonie', `index.html?${q(1, 'view=1&d=p1&s=0')}`]]],
+      ...Object.keys(window.DAYS).map((d) => [name(window.DAYS[d].name), [
+        ['Lista zadań', `vote.html?${q(1, 'day=' + d)}`],
+        ...window.DAYS[d].acts.map((a, i) => [`Zadanie ${i + 1}`, `vote.html?${q(1, `day=${d}&open=${i}`)}`])
+      ]]),
+      ['Certyfikat', [['1. Imię i podpis', `cert.html?${q(0)}`], ['2. Opis na FB', `cert.html?${q(1)}`], ['3. Certyfikat i Facebook (3 kroki)', `cert.html?${q(2)}`]]]
+    ];
+    document.getElementById('all').innerHTML = groups.map(([g, items]) => `<h2 style="margin-top:18px">${g}</h2><div class="row">${items.map(([t, u]) =>
+      `<figure><figcaption>${t}<a href="${u}" target="_blank">otwórz ↗</a></figcaption><div class="ph"><iframe loading="lazy" src="${u}" title="${t}"></iframe></div></figure>`).join('')}</div>`).join('');
+  }
+  document.getElementById('langs').onclick = (e) => { const l = e.target.dataset.l; if (!l) return; lang = l; history.replaceState(null, '', '?lang=' + l); build(); };
+  build();
+</script>
+</body>
+</html>

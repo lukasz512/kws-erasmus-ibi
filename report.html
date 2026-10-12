@@ -30,9 +30,9 @@
 <body>
 <div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
 <div class="page" id="page"></div>
-<script src="data.js?v=76"></script>
-<script src="common.js?v=76"></script>
-<script src="survey.js?v=76"></script>
+<script src="data.js?v=77"></script>
+<script src="common.js?v=77"></script>
+<script src="survey.js?v=77"></script>
 <script>
   LANG = 'pl';
   // Answers from phones arrive on the live channel; pull them here too, so the report works without the presentation open.
@@ -95,7 +95,13 @@
     <div class="sign"><div>Koordynator projektu</div><div>Data i podpis</div></div>`;
   }
   draw('⏳ Pobieram odpowiedzi…');
-  pull().then(draw, () => draw('Nie udało się pobrać odpowiedzi z kanału.'));
+  // Every opening saves a dated CSV copy: the survey's only durable backup besides this browser.
+  const backup = (note) => {
+    const has = Survey.entries('pre').length + Survey.entries('post').length > 0;
+    draw(note + (has ? ' Kopia CSV pobrana do Pobranych.' : ''));
+    if (has) Survey.csv(`kws-ankieta-${new Date().toISOString().slice(0, 16).replace(/[T:]/g, '-')}.csv`);
+  };
+  pull().then(backup, () => backup('Nie udało się pobrać odpowiedzi z kanału.'));
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // Pre/post survey: the single store and statistics used by the presentation slides, the menu and report.html.
-// Answers come from phones (live channel / sheet) and paper forms; all of them land in one place: localStorage 'kws-survey-v1'.
+// Answers come from phones (live channel) and paper forms; all of them land in one place: localStorage 'kws-survey-v1'.
 (function () {
   const KEY = 'kws-survey-v1', FB = 'kws-fb';
   const SV = store(KEY) || {};
@@ -28,18 +28,10 @@
       if (x.k === 'fb' && x.d) { const fb = store(FB) || {}; fb[x.d] = { g: x.g, t: m.time }; store(FB, fb); return true; }
       return false;
     },
-    paper(phase, code, ans) { put(phase, code, ans, Date.now() / 1000, 'paper'); Survey.save(); if (Sheet.url()) Sheet.postSure({ phase, code: String(code).trim().toUpperCase(), ans, src: 'paper', d: 'paper' }); },
-    async pullSheet() {
-      if (!Sheet.url()) return 0;
-      const rows = await Sheet.rows();
-      rows.forEach((r) => put(r.phase, r.code, r.ans, r.t, r.src, r.g, r.key));
-      if (rows.length) Survey.save();
-      return rows.length;
-    },
-    // Everything a page needs when it opens later: the session's channel history plus the sheet.
+    paper(phase, code, ans) { put(phase, code, ans, Date.now() / 1000, 'paper'); Survey.save(); },
+    // A page opened later catches up from the session's channel (ntfy keeps about 12 h).
     async pull(topic) {
       if (topic) (await Live.history(topic)).forEach((m) => Survey.ingest(m, Live.parse(m)));
-      await Survey.pullSheet();
     },
     dist(list, item) {
       const c = item.a.map(() => 0);
@@ -65,12 +57,12 @@
         d2: share((e) => e.ans.D2 === 0 || e.ans.D2 === 2)
       };
     },
-    csv() {
+    csv(file = 'kws-ankieta-dezinformacja.csv') {
       const head = ['faza', 'kod', 'zrodlo', 'czas', 'test_%', ...window.SURVEY.map((x) => x.id)];
       const cell = (x, v) => (v == null ? '' : x.type === 'likert' ? v : 'ABCD'[v] + (x.type === 'test' && v === x.ok ? ' ✓' : ''));
       const rows = [head, ...Object.values(SV).filter((e) => e.ans && !Array.isArray(e.ans)).map((e) => [e.phase, e.code, e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...window.SURVEY.map((x) => cell(x, e.ans[x.id]))])];
       const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
-      const el = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: 'kws-ankieta-dezinformacja.csv' });
+      const el = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: file });
       document.body.append(el); el.click(); el.remove();
     }
   };

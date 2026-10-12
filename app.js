@@ -37,13 +37,6 @@ function ingest(m) {
 // Survey store and statistics live in survey.js (shared with report.html).
 const { TESTS, entries, itemsFor } = Survey;
 const surveyStats = () => Survey.stats();
-let sheetAt = 0;
-async function pullSheet(force) {
-  if (READER || !Sheet.url() || (!force && Date.now() - sheetAt < 15000)) return;
-  sheetAt = Date.now();
-  if (await Survey.pullSheet() && ['survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(cur().k)) render();
-}
-
 function tally(key) {
   const q = qOf(key);
   const counts = q.a.map(() => 0);
@@ -451,7 +444,7 @@ function applyNav(x) {
   render(); scrollTo(0, 0);
 }
 
-let ANIM = params.get('anim') || (!READER && store('kws-anim')) || 'mix';
+const ANIM = params.get('anim') || 'mix'; // slide moves like B, list items enter like A; ?anim=none turns it off
 // Preload every picture once; a loaded picture is never faded or skeleton-ed again.
 const LOADED = new Set();
 const preload = (src) => new Promise((res) => {
@@ -489,7 +482,6 @@ function render(dir = 0) {
   fit();
   afterFns.forEach((f) => f());
   document.getElementById('pos').textContent = `${S.slide + 1}/${deck().slides.length}`;
-  if (['survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(s.k)) pullSheet();
   broadcast();
   const lo = document.getElementById('langov');
   if (lo && lo.classList.contains('on')) qr(lo.querySelector('.q'), langUrl(), 380);
@@ -597,13 +589,10 @@ function menu(on) {
       Object.keys(window.DAYS).map((k) => h('button', { style: S.day === k ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { S.day = k; save(); menu(true); render(); } }, '📅 ' + L(window.DAYS[k].name))),
       h('button', { onclick: paperForm }, '✍ Ankieta z kartki'),
       h('button', { onclick: Survey.csv }, '⬇ CSV ankiety'),
-      h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
-      h('a', { href: 'report.html', target: '_blank' }, '📄 Raport wyników (PDF)'),
-      h('a', { href: 'consent.html', target: '_blank' }, '✍️ Zgody RODO (tablet)'),
-      h('a', { href: 'social.html', target: '_blank' }, '📣 Posty na FB (seria)'),
-      [['mix', 'Animacja: przejścia B + lista A'], ['a', 'Animacja A'], ['b', 'Animacja B'], ['none', 'Bez animacji']].map(([v, t]) => h('button', { style: ANIM === v ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { ANIM = v; store('kws-anim', v); menu(true); } }, t)),
+      h('a', { href: 'panel.html', target: '_blank' }, '🧰 Panel organizatora'),
+      h('a', { href: 'report.html', target: '_blank' }, '📄 Raport wyników'),
       h('button', { onclick: () => { if (confirm('Nowa sesja głosowania? (wyniki ankiety zostają na tym laptopie)')) { store('kws-topic', null); location.search = ''; } } }, '↺ Nowa sesja')),
-    h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`, Sheet.url() ? h('button', { onclick: () => pullSheet(true) }, '↻ pobierz z arkusza') : null),
+    h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`),
     h('p', {}, 'Klawisze: ← → / spacja / pilot (na mapie podróży: kolejne przystanki) · R pokaż odpowiedź w zgadywance · F pełny ekran · M menu. Klik w odpowiedź sondy = +1 głos z sali.'),
     h('button', { onclick: () => menu(false) }, 'Zamknij'));
 }

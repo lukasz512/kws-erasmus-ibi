@@ -1,10 +1,8 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '76'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '77'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '2026-1-PL01-KA122-ADU-000404861';
-// Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
-window.SHEET_URL = '';
 // Facebook: the foundation page and the event for this mobility (fill in the event link).
 window.BOSS_FILES = { stamp: 'img/prezes-pieczatka.png' };
 window.FB = { page: 'https://www.facebook.com/371013242770908', event: 'https://www.facebook.com/events/1089602556789964' };

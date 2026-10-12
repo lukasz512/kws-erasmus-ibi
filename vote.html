@@ -89,10 +89,10 @@
   <header><img id="home" src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë" style="cursor:pointer"><div class="langs" id="langs"></div></header>
   <main id="main"></main>
 </div>
-<script src="data.js?v=76"></script>
+<script src="data.js?v=77"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=76"></script>
-<script src="maps.js?v=76"></script>
+<script src="common.js?v=77"></script>
+<script src="maps.js?v=77"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -188,8 +188,7 @@ async function flushOutbox() {
   if (flushing) return; flushing = true;
   const ob = store('kws-outbox') || {};
   for (const [k, it] of Object.entries(ob)) {
-    const ok = Sheet.url() ? await Sheet.post(it.row) : await Live.send(it.topic, it.row);
-    if (Sheet.url()) Live.send(it.topic, it.row);
+    const ok = await Live.send(it.topic, it.row);
     if (ok) { const cur = store('kws-outbox') || {}; delete cur[k]; store('kws-outbox', cur); }
   }
   flushing = false;
