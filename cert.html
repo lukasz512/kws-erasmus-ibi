@@ -50,9 +50,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=70"></script>
-<script src="common.js?v=70"></script>
-<script src="cert-print.js?v=70"></script>
+<script src="data.js?v=71"></script>
+<script src="common.js?v=71"></script>
+<script src="cert-print.js?v=71"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -74,6 +74,7 @@
     pdf: T('Zapisz certyfikat (PDF)', 'Save the certificate (PDF)', 'Guardar el certificado (PDF)'),
     thanks: T('Dziękujemy! Pamiętaj, aby oznaczyć fundację: @Kaszëbi we swiecë. Tekst jest już skopiowany: wystarczy go wkleić.', 'Thank you! Remember to tag the foundation: @Kaszëbi we swiecë. The text is copied: just paste it.', '¡Gracias! Etiqueta a la fundación: @Kaszëbi we swiecë. El texto está copiado: solo pégalo.'),
     event: T('📅 Zobacz wydarzenie na Facebooku', '📅 See the event on Facebook', '📅 Ver el evento en Facebook'),
+    signed: T('✓ podpisano', '✓ signed', '✓ firmado'),
     sign2: T('Mobilność Erasmus+ „KASZËBI W EUROPIE!” · Ibi i Alicante 2026 · @Kaszëbi we swiecë · Współfinansowane przez Unię Europejską #ErasmusPlus #KaszëbiWEuropie #Cyberbezpieczeństwo', 'Erasmus+ mobility “KASZËBI IN EUROPE!” · Ibi and Alicante 2026 · @Kaszëbi we swiecë · Co-funded by the European Union #ErasmusPlus #KaszëbiWEuropie', 'Movilidad Erasmus+ «KASZËBI EN EUROPA» · Ibi y Alicante 2026 · @Kaszëbi we swiecë · Cofinanciado por la Unión Europea #ErasmusPlus #KaszëbiWEuropie')
   };
   const st = store('kws-cert') || { step: 0, name: '', sig: '', text: '' };
@@ -158,7 +159,7 @@
     for (const w of text.split(' ')) { const t = line + w + ' '; if (x.measureText(t).width > maxW && line) { x.fillText(line.trim(), cx, y); line = w + ' '; y += lh; } else line = t; }
     x.fillText(line.trim(), cx, y); return y;
   }
-  // 1080×1350 picture for Facebook: certificate with signature on top, photos below.
+  // 1080×1350 picture for Facebook: certificate on top (signatures masked), photos below.
   async function makeImage() {
     const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
     const x = c.getContext('2d');
@@ -191,9 +192,10 @@
     // Signatures: participant left, president (stamp under signature) right — same as the printed certificate.
     const line = 652, px = 330, bx = 750;
     const put = (img, cx, hh, maxW) => { const w = Math.min(maxW, hh * img.width / img.height); x.drawImage(img, cx - w / 2, line - 4 - hh, w, hh); };
-    if (sig) put(sig, px, 64, 260);
-    if (stamp) { x.globalAlpha = .85; put(stamp, bx, 92, 140); x.globalAlpha = 1; }
-    if (bsig) put(bsig, bx, 60, 240);
+    // Public post: real signatures and the stamp stay off the picture (they appear only on the printed PDF).
+    x.font = 'italic 600 26px "Source Serif 4", Georgia, serif'; x.fillStyle = '#6A7385';
+    if (sig) x.fillText(L(C.signed), px, line - 16);
+    if (stamp || bsig) x.fillText(L(C.signed), bx, line - 16);
     x.fillStyle = '#0B1F3A'; x.fillRect(px - 150, line, 300, 1.5); x.fillRect(bx - 150, line, 300, 1.5);
     x.font = '400 14px "Public Sans", Arial'; x.fillText(L(UI.certSignP), px, line + 22); x.fillText(L(UI.certSignBoss), bx, line + 22);
     x.fillStyle = '#D9DEE8'; x.fillRect(100, 694, 880, 1);

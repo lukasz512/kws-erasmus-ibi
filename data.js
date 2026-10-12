@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '70'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '71'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '2026-1-PL01-KA122-ADU-000404861';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
@@ -226,7 +226,7 @@ window.DECKS = [
       { k: 'title', kicker: T('Erasmus+ · Edukacja dorosłych', 'Erasmus+ · Adult education', 'Erasmus+ · Educación de adultos'), h: T('KASZËBI W EUROPIE!', 'KASZËBI IN EUROPE!', '¡CASUBIOS EN EUROPA!'), p: T('Rzetelna i nowoczesna edukacja cyfrowa na terenach wiejskich · Ibi i Alicante, 11–21.10.2026', 'Reliable, modern digital education in rural areas · Ibi and Alicante, 11–21 Oct 2026', 'Educación digital fiable y moderna en zonas rurales · Ibi y Alicante, 11–21 oct 2026'), img: 'img/alicante.jpg' },
       { k: 'join' },
       { k: 'fb', h: T('Nasz wyjazd na Facebooku', 'Our trip on Facebook', 'Nuestro viaje en Facebook'), li: [
-        T('Zeskanuj kod i kliknij „Wezmę udział”', 'Scan the code and tap “Going”', 'Escanea el código y pulsa «Asistiré»'),
+        T('Zeskanuj kod: otworzy się nasze wydarzenie na Facebooku', 'Scan the code to open our Facebook event', 'Escanea el código: se abrirá nuestro evento en Facebook'),
         T('Codziennie wrzucaj 1 zdjęcie i 1 zdanie: co dziś było najlepsze?', 'Post 1 photo and 1 sentence every day: what was the best part today?', 'Sube cada día 1 foto y 1 frase: ¿qué fue lo mejor de hoy?'),
         T('Na koniec opublikuj swój certyfikat i napisz, czego się nauczyłeś(-aś)', 'At the end, post your certificate and say what you learned', 'Al final, publica tu certificado y cuenta qué aprendiste'),
         T('Oznaczaj posty: #KaszëbiWEuropie #ErasmusPlus', 'Tag your posts: #KaszëbiWEuropie #ErasmusPlus', 'Etiqueta tus publicaciones: #KaszëbiWEuropie #ErasmusPlus')

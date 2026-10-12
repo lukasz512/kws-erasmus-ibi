@@ -40,6 +40,15 @@
   .task small { font-size: 14px; color: #6A7385; }
   .task .st { margin-left: auto; font: 900 13px 'Public Sans'; padding: 7px 10px; border-radius: 99px; background: #F1EFE8; white-space: nowrap; }
   .task.done { opacity: .7; } .task.done .st { background: #DDF1E4; color: var(--ok); }
+  .fbev { position: relative; display: block; overflow: hidden; border-radius: 24px; margin: 0 0 18px; min-height: 250px; color: #fff; text-decoration: none; background: #1877F2 url(img/ibi.jpg) center/cover; box-shadow: 0 6px 0 #0E5BC2; }
+  .fbev::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(24,119,242,0) 20%, rgba(14,60,140,.94) 78%); }
+  .fbev > * { position: relative; }
+  .fbev .tag { position: absolute; top: 14px; left: 14px; display: flex; align-items: center; gap: 8px; font: 900 13px 'Public Sans'; letter-spacing: .08em; text-transform: uppercase; background: #fff; color: #1877F2; padding: 7px 12px; border-radius: 99px; }
+  .fbev .tag i { font: 900 16px Arial; font-style: normal; background: #1877F2; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+  .fbev .in { position: absolute; left: 16px; right: 16px; bottom: 14px; }
+  .fbev b { font: 900 24px/1.15 'Public Sans'; display: block; }
+  .fbev span { font-size: 15px; opacity: .95; display: block; margin-top: 4px; }
+  .fbev em { font-style: normal; display: inline-block; margin-top: 10px; background: #fff; color: #1877F2; font: 900 16px 'Public Sans'; padding: 10px 16px; border-radius: 14px; }
   .task.live { border-color: var(--t); animation: glow 1.4s ease-in-out infinite; } .task.live .st { background: var(--t); color: #fff; }
   @keyframes glow { 50% { box-shadow: 0 0 0 6px rgba(11,31,58,.15); } }
   .alldone { text-align: center; font: 900 22px 'Public Sans'; padding: 20px; }
@@ -80,10 +89,10 @@
   <header><img id="home" src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë" style="cursor:pointer"><div class="langs" id="langs"></div></header>
   <main id="main"></main>
 </div>
-<script src="data.js?v=70"></script>
+<script src="data.js?v=71"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=70"></script>
-<script src="maps.js?v=70"></script>
+<script src="common.js?v=71"></script>
+<script src="maps.js?v=71"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -155,6 +164,11 @@ function drawList() {
   main.append(h('div', { class: 'hero' }, h('div', { class: 'ic' }, '🇪🇺'),
     h('div', {}, h('b', {}, 'Kaszëbi w Europie!'), h('span', {}, `👥 ${m} ${L(GAME_UI.joined)} · ✓ ${f} ${L(GAME_UI.finished)}`)),
     h('div', { class: 'ring', style: `--p:${pct}%` }, h('i', {}, `${nDone}/${acts.length}`))));
+  if (window.FB.event) main.append(h('a', { class: 'fbev', href: window.FB.event, target: '_blank' },
+    h('span', { class: 'tag' }, h('i', {}, 'f'), L(T('Wydarzenie na Facebooku', 'Facebook event', 'Evento en Facebook'))),
+    h('div', { class: 'in' }, h('b', {}, 'Kaszëbi w Europie! · Ibi 2026'),
+      h('span', {}, L(T('Zdjęcia i relacja z naszego wyjazdu', 'Photos and news from our trip', 'Fotos y crónica de nuestro viaje'))),
+      h('em', {}, L(T('Otwórz wydarzenie na FB →', 'Open the event on FB →', 'Abrir el evento en FB →'))))));
   main.append(h('p', { class: 'sec' }, `${L(GAME_UI.tasks)} · ${L(DAY.name)}`));
   let gi = 0;
   acts.forEach((a) => {
@@ -167,7 +181,6 @@ function drawList() {
   const pb = pendingBox(); if (pb) main.append(pb);
   if (nDone === acts.length) main.append(h('div', { class: 'card alldone' }, '🏆 ' + L(GAME_UI.allDone)));
   if (done['survey-post']) main.append(h('a', { class: 'btn main', href: `cert.html?lang=${LANG}&t=${topic}`, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle) + ' → f'));
-  if (window.FB.event) main.append(h('a', { class: 'task', href: window.FB.event, target: '_blank', style: 'text-decoration:none' }, h('span', { class: 'ti' }, '📅'), h('span', {}, h('b', {}, L(T('Wydarzenie na Facebooku', 'Facebook event', 'Evento en Facebook'))), h('small', {}, L(T('Kliknij „Wezmę udział” i udostępnij', 'Tap “Going” and share it', 'Pulsa «Asistiré» y compártelo'))))));
 }
 
 let flushing = false;
