@@ -37,21 +37,7 @@
   .chip { font: 14px 'Public Sans'; padding: 8px 12px; border-radius: 99px; background: #fff; border: 1px solid #D9D5C8; color: #0B1F3A; }
   #preview { width: 100%; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
   .ok { background: #DDF1E4; border-radius: 14px; padding: 14px; font-weight: 700; line-height: 1.4; }
-  /* printable certificate */
-  .cert { display: none; }
-  @media print {
-    @page { size: A4 landscape; margin: 8mm; }
-    body { background: #fff; padding: 0; } .app { display: none; }
-    .cert { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; border: 8px solid #0B1F3A; outline: 2px solid #FFCC00; outline-offset: -16px; padding: 22px 40px; height: 192mm; }
-    .cert .logos { display: flex; gap: 24px; align-items: center; } .cert .logos img { height: 48px; }
-    .cert h1 { font-size: 34px; } .cert .nm { font: 600 34px 'Source Serif 4', Georgia, serif; border-bottom: 2px solid #0B1F3A; padding: 0 30px 4px; min-width: 50%; }
-    .cert p { font-size: 13px; line-height: 1.45; max-width: 880px; }
-    .cert ul { text-align: left; font-size: 12.5px; line-height: 1.5; margin: 0 auto; max-width: 820px; }
-    .cert .signs { display: flex; justify-content: space-between; width: 90%; margin-top: auto; align-items: flex-end; }
-    .cert .sg { width: 30%; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; }
-    .cert .sg img { height: 60px; max-width: 100%; object-fit: contain; } .cert .sg .line { width: 100%; border-top: 1px solid #0B1F3A; padding-top: 3px; }
-    .cert .eu { height: 46px; }
-  }
+  @media print { body { background: #fff; padding: 0; } .app { display: none; } }
 </style>
 </head>
 <body>
@@ -60,10 +46,11 @@
   <div class="steps" id="steps"></div>
   <div id="main"></div>
 </div>
-<div class="cert" id="cert"></div>
+<div class="certs" id="cert"></div>
 
-<script src="data.js?v=57"></script>
-<script src="common.js?v=57"></script>
+<script src="data.js?v=58"></script>
+<script src="common.js?v=58"></script>
+<script src="cert-print.js?v=58"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -175,9 +162,17 @@
     x.fillRect(240, 360, 600, 3);
     x.font = '400 21px "Public Sans", Arial'; x.fillStyle = '#26334A';
     let y = wrap(x, L(UI.certBody), 540, 402, 880, 29) + 40;
-    x.font = '700 21px "Public Sans", Arial'; x.fillStyle = '#003399';
-    ['💻 ' + L(T('Kompetencje cyfrowe i AI', 'Digital skills and AI', 'Competencias digitales e IA')), '🛡️ ' + L(T('Cyberbezpieczeństwo', 'Cybersecurity', 'Ciberseguridad')), '🔍 ' + L(T('Rozpoznawanie dezinformacji', 'Spotting disinformation', 'Detectar desinformación'))].forEach((t, i) => x.fillText(t, 220 + i * 320, y));
-    if (sig) x.drawImage(sig, 380, y + 10, 320, 320 * sig.height / sig.width * 0.6);
+    // Two short competence columns: digital skills and cybersecurity.
+    const cols = [
+      [T('💻 Kompetencje cyfrowe', '💻 Digital skills', '💻 Competencias digitales'), T('tablet, aplikacje, kody QR', 'tablet, apps, QR codes', 'tableta, apps, códigos QR'), T('AI: Copilot / ChatGPT', 'AI: Copilot / ChatGPT', 'IA: Copilot / ChatGPT'), T('Google Lens, fact-checking', 'Google Lens, fact-checking', 'Google Lens, verificación')],
+      [T('🛡️ Cyberbezpieczeństwo', '🛡️ Cybersecurity', '🛡️ Ciberseguridad'), T('phishing, SMS, deepfake', 'phishing, texts, deepfakes', 'phishing, SMS, deepfakes'), T('silne hasła, 2FA, BLIK', 'strong passwords, 2FA', 'contraseñas seguras, 2FA'), T('bezpieczny telefon i dane', 'safe phone and data', 'móvil y datos seguros')]
+    ];
+    cols.forEach((col, i) => col.forEach((t, j) => {
+      x.font = j ? '400 20px "Public Sans", Arial' : '700 23px "Public Sans", Arial'; x.fillStyle = j ? '#26334A' : '#003399';
+      x.fillText((j ? '✓ ' : '') + L(t), 300 + i * 480, y + j * 28);
+    }));
+    if (sig) { const sh = 70, sw = Math.min(300, sh * sig.width / sig.height); x.drawImage(sig, 540 - sw / 2, 690, sw, sh); }
+    x.fillStyle = '#8A94A6'; x.fillRect(400, 764, 280, 2); x.font = '400 16px "Public Sans", Arial'; x.fillText(L(UI.certSignP), 540, 786);
     if (eu) x.drawImage(eu, 90, 700, 200, 200 * eu.height / eu.width);
     if (bb) x.drawImage(bb, 830, 708, 150, 150 * bb.height / bb.width);
     const list = photos.filter(Boolean);
@@ -206,19 +201,8 @@
   }
 
   function printCert() {
-    const c = window.CERT || {};
-    document.getElementById('cert').innerHTML = `
-      <div class="logos"><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:34px"></div>
-      <h1>${L(UI.certTitle)}</h1>
-      <div class="nm">${(st.name || '').replace(/</g, '&lt;')}</div>
-      <p>${L(UI.certBody)}</p>
-      <p><b>${L(UI.certSkillsTitle)}</b></p>
-      <ul>${UI.certSkills.map((s) => `<li>${L(s)}</li>`).join('')}</ul>
-      <div class="signs">
-        <div class="sg">${st.sig ? `<img src="${st.sig}" alt="">` : ''}<div class="line">${L(UI.certSignP)}</div></div>
-        <div class="sg"><img class="eu" src="img/eu-pl.jpg" alt=""><div>${L(UI.certPlace)}</div></div>
-        <div class="sg">${c.stamp ? `<img src="img/${c.stamp}" alt="">` : ''}${c.presidentSignature ? `<img src="img/${c.presidentSignature}" alt="">` : ''}<div class="line">${L(UI.certSignBoss)}</div></div>
-      </div>`;
+    // The participant's copy has an empty line for the president; the organiser prints signed copies from the consent tablet.
+    document.getElementById('cert').innerHTML = certHtml(st.name, st.sig);
     setTimeout(print, 300);
   }
   draw();

@@ -1,12 +1,10 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '57'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '58'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
-// Certificate extras: put the files in img/ and fill in the names (empty = a blank line to sign by hand).
-window.CERT = { presidentSignature: '', stamp: '' };
 // Facebook: the foundation page and the event for this mobility (fill in the event link).
 window.FB = { page: 'https://www.facebook.com/371013242770908', event: '' }; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
 window.BASE = 'https://lukasz512.github.io/kws-erasmus-ibi/';
@@ -79,12 +77,27 @@ window.UI = {
     'took part in the Erasmus+ learning mobility “KASZËBI IN EUROPE! – ensuring access to reliable and modern digital education in rural areas”, held on 11–21 October 2026 in Ibi and Alicante (Spain) in cooperation with Associació Educativa i Cultural Blue Beehive.',
     'participó en la movilidad educativa Erasmus+ «KASZËBI EN EUROPA: acceso a una educación digital fiable y moderna en zonas rurales», realizada del 11 al 21 de octubre de 2026 en Ibi y Alicante (España) en colaboración con la Associació Educativa i Cultural Blue Beehive.'
   ),
-  certSkillsTitle: T('W trakcie mobilności uczestnik(-czka) podniósł(-osła) swoje kwalifikacje w zakresie:', 'During the mobility the participant improved their skills in:', 'Durante la movilidad, la persona participante mejoró sus competencias en:'),
-  certSkills: [
-    T('kompetencji cyfrowych: obsługa tabletu, aplikacji i narzędzi sztucznej inteligencji', 'digital skills: using a tablet, apps and artificial intelligence tools', 'competencias digitales: uso de la tableta, aplicaciones y herramientas de inteligencia artificial'),
-    T('cyberbezpieczeństwa: rozpoznawanie oszustw (SMS, telefon, deepfake), bezpieczne hasła i ochrona danych', 'cybersecurity: spotting scams (texts, calls, deepfakes), safe passwords and data protection', 'ciberseguridad: detectar estafas (SMS, llamadas, deepfakes), contraseñas seguras y protección de datos'),
-    T('rozpoznawania dezinformacji i krytycznej analizy źródeł informacji', 'recognising disinformation and critically assessing information sources', 'detección de la desinformación y análisis crítico de las fuentes'),
-    T('języka angielskiego oraz kompetencji międzykulturowych i społecznych', 'English and intercultural and social skills', 'inglés y competencias interculturales y sociales')
+  certSkillsTitle: T('W trakcie mobilności uczestnik(-czka) zdobył(-a) i rozwinął(-ęła) następujące kompetencje:', 'During the mobility the participant gained and developed the following competences:', 'Durante la movilidad, la persona participante adquirió y desarrolló las siguientes competencias:'),
+  // Two blocks shown on the certificate; areas follow the EU digital competence framework DigComp 2.2.
+  certGroups: [
+    { h: T('💻 Kompetencje cyfrowe (wg europejskich ram DigComp 2.2)', '💻 Digital competences (EU DigComp 2.2 framework)', '💻 Competencias digitales (marco europeo DigComp 2.2)'), li: [
+      T('samodzielna obsługa tabletu i smartfona: ustawienia, aplikacje, aparat, kody QR', 'using a tablet and smartphone independently: settings, apps, camera, QR codes', 'uso autónomo de tableta y smartphone: ajustes, aplicaciones, cámara, códigos QR'),
+      T('wyszukiwanie i ocena informacji w internecie, porównywanie źródeł', 'searching for and evaluating information online, comparing sources', 'búsqueda y evaluación de información en internet, comparación de fuentes'),
+      T('narzędzia sztucznej inteligencji (Copilot / ChatGPT): zadawanie pytań i krytyczna ocena odpowiedzi', 'artificial intelligence tools (Copilot / ChatGPT): asking questions and critically checking answers', 'herramientas de inteligencia artificial (Copilot / ChatGPT): hacer preguntas y valorar críticamente las respuestas'),
+      T('Tłumacz Google (tekst, głos, aparat) i Mapy Google w podróży i komunikacji', 'Google Translate (text, voice, camera) and Google Maps for travel and communication', 'Traductor de Google (texto, voz, cámara) y Google Maps para viajar y comunicarse'),
+      T('weryfikacja zdjęć w Google Lens i rozpoznawanie treści wygenerowanych przez AI', 'checking photos with Google Lens and recognising AI-generated content', 'verificación de fotos con Google Lens y reconocimiento de contenidos generados por IA'),
+      T('rozpoznawanie dezinformacji: metoda STOP, fact-checking (Demagog, Maldita.es), deepfake', 'recognising disinformation: the STOP method, fact-checking (Demagog, Maldita.es), deepfakes', 'detección de la desinformación: método STOP, verificación de datos (Demagog, Maldita.es), deepfakes')
+    ] },
+    { h: T('🛡️ Cyberbezpieczeństwo', '🛡️ Cybersecurity', '🛡️ Ciberseguridad'), li: [
+      T('rozpoznawanie oszustw: fałszywe SMS-y i linki (phishing), „na wnuczka”, podrobiony głos', 'spotting scams: fake texts and links (phishing), impostor calls, cloned voices', 'detección de estafas: SMS y enlaces falsos (phishing), llamadas de suplantación, voces clonadas'),
+      T('sprawdzanie adresu strony przed kliknięciem i bezpieczne płatności (BLIK, kody SMS)', 'checking a web address before clicking and paying safely (BLIK, SMS codes)', 'comprobar la dirección web antes de hacer clic y pagar con seguridad (BLIK, códigos SMS)'),
+      T('tworzenie silnych haseł (fraza z 4 słów) i weryfikacja dwuetapowa', 'creating strong passwords (4-word passphrase) and two-step verification', 'creación de contraseñas seguras (frase de 4 palabras) y verificación en dos pasos'),
+      T('zabezpieczanie urządzenia: blokada ekranu, aktualizacje, uprawnienia aplikacji, kopia zapasowa', 'securing a device: screen lock, updates, app permissions, backup', 'protección del dispositivo: bloqueo de pantalla, actualizaciones, permisos de apps, copia de seguridad'),
+      T('ochrona danych osobowych i prywatności w mediach społecznościowych', 'protecting personal data and privacy on social media', 'protección de datos personales y de la privacidad en redes sociales')
+    ] },
+    { h: T('🌍 Kompetencje językowe i społeczne', '🌍 Language and social competences', '🌍 Competencias lingüísticas y sociales'), li: [
+      T('język angielski i podstawowe zwroty hiszpańskie, współpraca w międzynarodowej grupie, kompetencje międzykulturowe', 'English and basic Spanish phrases, teamwork in an international group, intercultural competences', 'inglés y frases básicas en español, trabajo en un grupo internacional, competencias interculturales')
+    ] }
   ],
   certSignP: T('Podpis uczestnika', "Participant's signature", 'Firma de la persona participante'),
   certSignBoss: T('Prezes Fundacji Kaszëbi we swiecë', 'President of the Kaszëbi we swiecë Foundation', 'Presidente de la Fundación Kaszëbi we swiecë'),

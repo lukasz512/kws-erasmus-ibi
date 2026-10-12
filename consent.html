@@ -26,12 +26,13 @@
   .ok { background: #DDF1E4; border-radius: 14px; padding: 14px; font-weight: 700; margin-top: 12px; display: none; }
   .admin { max-width: 820px; margin: 16px auto 0; font-size: 15px; color: #4A5568; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .admin button { font-size: 15px; padding: 10px 14px; }
+  .admin.boss { background: #fff; border-radius: 16px; padding: 14px 16px; margin-top: 12px; }
+  .admin.boss label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
   .print { display: none; }
   @media print {
     body { background: #fff; padding: 0; } .page, .admin { display: none; } .print { display: block; }
     .sheet { page-break-after: always; padding: 10mm 6mm; font-size: 12px; line-height: 1.45; }
     .sheet img.sig { height: 70px; border-bottom: 1px solid #000; }
-    @page { size: A4; margin: 12mm; }
   }
 </style>
 </head>
@@ -48,10 +49,20 @@
   <div class="ok" id="ok"></div>
 </div>
 <div class="admin"><span id="count"></span><button id="print">🖨 Drukuj wszystkie zgody (PDF)</button><button id="backup">⬇ Kopia zapasowa</button></div>
+<div class="admin boss">
+  <b>🎓 Certyfikaty z podpisem prezesa</b>
+  <label>✍️ Podpis prezesa (PNG) <input type="file" accept="image/*" id="bossSig"></label>
+  <label>🔵 Pieczątka (PNG) <input type="file" accept="image/*" id="bossStamp"></label>
+  <span id="bossInfo"></span>
+  <button id="certs">🖨 Drukuj certyfikaty (PDF)</button>
+  <button id="bossClear">🗑 Usuń podpis z tego urządzenia</button>
+</div>
 <div class="print" id="printArea"></div>
+<div class="certs" id="certArea"></div>
 
-<script src="data.js?v=57"></script>
-<script src="common.js?v=57"></script>
+<script src="data.js?v=58"></script>
+<script src="common.js?v=58"></script>
+<script src="cert-print.js?v=58"></script>
 <script>
   // Consents stay on this tablet only (never sent over the internet); print them as PDF for the project files.
   const CLAUSE = [
@@ -96,8 +107,29 @@
       ${CLAUSE.map((p) => `<p>${p}</p>`).join('')}
       <p>☑ Zgoda na przetwarzanie danych w celu realizacji projektu</p><p>${c.image ? '☑' : '☐'} Zgoda na publikację wizerunku</p>
       <p><b>${c.name}</b> · ${new Date(c.at).toLocaleString('pl-PL')}</p><img class="sig" src="${c.sig}" alt=""></div>`).join('');
-    print();
+    document.getElementById('certArea').innerHTML = '';
+    setPage('A4 portrait'); print();
   };
+  // President's signature and stamp: read from a file on this device only, kept in this browser, never uploaded.
+  const BOSS = 'kws-boss';
+  const boss = () => store(BOSS) || {};
+  function bossInfo() { const b = boss(); document.getElementById('bossInfo').textContent = `Podpis: ${b.sig ? '✓' : '–'} · Pieczątka: ${b.stamp ? '✓' : '–'}`; }
+  const readImg = (input, key) => input.addEventListener('change', () => {
+    const f = input.files[0]; if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => { const b = boss(); b[key] = fr.result; store(BOSS, b); input.value = ''; bossInfo(); };
+    fr.readAsDataURL(f);
+  });
+  readImg(document.getElementById('bossSig'), 'sig');
+  readImg(document.getElementById('bossStamp'), 'stamp');
+  document.getElementById('bossClear').onclick = () => { if (confirm('Usunąć podpis i pieczątkę z tego urządzenia?')) { localStorage.removeItem(BOSS); bossInfo(); } };
+  document.getElementById('certs').onclick = () => {
+    const all = list(); if (!all.length) { alert('Brak zapisanych osób.'); return; }
+    document.getElementById('printArea').innerHTML = '';
+    document.getElementById('certArea').innerHTML = all.map((c) => certHtml(c.name, c.sig, boss())).join('');
+    setPage('A4 landscape'); setTimeout(print, 400);
+  };
+  bossInfo();
   document.getElementById('backup').onclick = () => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(list(), null, 1)], { type: 'application/json' }));
