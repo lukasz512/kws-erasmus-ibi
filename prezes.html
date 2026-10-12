@@ -50,15 +50,15 @@
     </div>
   </div>
   <div class="card">
-    <h2>3. Podgląd certyfikatu (A4 poziomo)</h2>
+    <h2>3. Podgląd certyfikatu (A4 pionowo)</h2>
     <div class="prev" id="prevBox"><div class="certs" id="prev"></div></div>
     <div class="row"><button class="main" id="printAll"></button><button id="printTest">🖨 Wydruk próbny (1 strona)</button><button class="danger" id="del">🗑 Usuń z tego urządzenia</button></div>
   </div>
 </div>
 <div class="certs" id="printArea"></div>
-<script src="data.js?v=63"></script>
-<script src="common.js?v=63"></script>
-<script src="cert-print.js?v=63"></script>
+<script src="data.js?v=64"></script>
+<script src="common.js?v=64"></script>
+<script src="cert-print.js?v=64"></script>
 <script>
   LANG = 'pl';
   const BOSS = 'kws-boss';
@@ -115,7 +115,7 @@
   $('stampDel').onclick = () => put('stamp', null);
   $('del').onclick = () => { if (confirm('Usunąć podpis i pieczątkę z tego urządzenia?')) { localStorage.removeItem(BOSS); render(); } };
 
-  function fit() { const box = $('prevBox'), p = $('prev'), c = p.firstElementChild; if (!c) return; const k = (box.clientWidth - 24) / c.offsetWidth; p.style.transform = `scale(${k})`; box.style.height = c.offsetHeight * k + 24 + 'px'; }
+  function fit() { const box = $('prevBox'), p = $('prev'), c = p.firstElementChild; if (!c) return; const k = Math.min((box.clientWidth - 24) / c.offsetWidth, 0.85); p.style.transform = `scale(${k})`; p.style.marginLeft = (box.clientWidth - 24 - c.offsetWidth * k) / 2 + 'px'; box.style.height = c.offsetHeight * k + 24 + 'px'; }
   function render() {
     const b = boss(), n = consents().length, first = consents()[0];
     $('sigImg').hidden = !b.sig; if (b.sig) $('sigImg').src = b.sig; $('sigInfo').textContent = b.sig ? '✓ Podpis zapisany na tym urządzeniu' : 'Brak podpisu';
@@ -125,7 +125,7 @@
     $('printAll').disabled = !n;
     requestAnimationFrame(fit);
   }
-  function go(list) { $('printArea').innerHTML = list.map((c) => certHtml(c.name, c.sig, boss())).join(''); setPage('A4 landscape'); setTimeout(print, 400); }
+  function go(list) { $('printArea').innerHTML = list.map((c) => certHtml(c.name, c.sig, boss())).join(''); setPage('A4 portrait'); setTimeout(print, 400); }
   $('printAll').onclick = () => go(consents());
   $('printTest').onclick = () => go([consents()[0] || { name: 'Imię i Nazwisko uczestnika', sig: '' }]);
   addEventListener('resize', fit);

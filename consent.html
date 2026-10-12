@@ -58,9 +58,9 @@
 <div class="print" id="printArea"></div>
 <div class="certs" id="certArea"></div>
 
-<script src="data.js?v=63"></script>
-<script src="common.js?v=63"></script>
-<script src="cert-print.js?v=63"></script>
+<script src="data.js?v=64"></script>
+<script src="common.js?v=64"></script>
+<script src="cert-print.js?v=64"></script>
 <script>
   LANG = 'pl'; // organiser station: consents and certificates print in Polish
   // Consents stay on this tablet only (never sent over the internet); print them as PDF for the project files.
@@ -117,7 +117,7 @@
     const all = list(); if (!all.length) { alert('Brak zapisanych osób.'); return; }
     document.getElementById('printArea').innerHTML = '';
     document.getElementById('certArea').innerHTML = all.map((c) => certHtml(c.name, c.sig, boss())).join('');
-    setPage('A4 landscape'); setTimeout(print, 400);
+    setPage('A4 portrait'); setTimeout(print, 400);
   };
   bossInfo();
   document.getElementById('backup').onclick = () => {
