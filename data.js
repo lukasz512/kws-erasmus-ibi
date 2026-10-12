@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '56'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '57'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
@@ -18,12 +18,15 @@ window.GROUPS = [
 ];
 
 // One QR per day: the phone shows that day's whole task list (presenter menu → Dzień).
+// The AFTER survey opens for everyone from 19.10 (phones and the presenter switch by themselves).
+window.POST_FROM = new Date('2026-10-19T00:00:00');
+window.autoDay = (d) => (new Date() >= window.POST_FROM ? 'd2' : d && window.DAYS[d] ? d : 'd1');
 window.DAYS = {
   d1: { name: T('Dzień 1 · start (13.10)', 'Day 1 · kick-off (13 Oct)', 'Día 1 · inicio (13 oct)'), acts: [
     { type: 'survey', phase: 'pre' },
     { type: 'guess', key: 'g_elche' }, { type: 'guess', key: 'g_vila' }, { type: 'guess', key: 'g_ibi' }
   ] },
-  d2: { name: T('Dzień 2 · finał (20.10)', 'Day 2 · finale (20 Oct)', 'Día 2 · final (20 oct)'), acts: [
+  d2: { name: T('Dzień 2 · finał (od 19.10)', 'Day 2 · finale (from 19 Oct)', 'Día 2 · final (desde el 19 oct)'), acts: [
     { type: 'survey', phase: 'post' }
   ] }
 };

@@ -7,7 +7,8 @@ let topic = params.get('t') || store('kws-topic');
 if (!topic) { topic = 'kws-ibi-' + Math.random().toString(36).slice(2, 12); }
 if (!READER) store('kws-topic', topic);
 
-const S = Object.assign({ deck: 0, slide: 0, step: 0, hand: {}, day: new Date() >= new Date('2026-10-20') ? 'd2' : 'd1' }, READER ? {} : store('kws-state-' + topic) || {});
+const S = Object.assign({ deck: 0, slide: 0, step: 0, hand: {}, day: autoDay() }, READER ? {} : store('kws-state-' + topic) || {});
+if (S.day === 'd1') S.day = autoDay('d1');
 const startDeck = window.DECKS.findIndex((d) => d.id === params.get('d'));
 if (startDeck >= 0) { S.deck = startDeck; S.slide = Math.max(0, parseInt(params.get('s') || '0', 10)); S.step = 0; }
 if (!window.DECKS[S.deck]) { S.deck = 0; S.slide = 0; }

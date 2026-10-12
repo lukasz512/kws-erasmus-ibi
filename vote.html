@@ -10,7 +10,7 @@
 <style>
   :root { --t: #0B1F3A; --td: #08172B; --navy: #0B1F3A; --eu: #003399; --ok: #1E7B4A; --line: #D9D5C8; --cream: #F5F3EC; }
   * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--cream); color: var(--navy); font-family: 'Public Sans', Arial, sans-serif; min-height: 100vh; }
+  body { background: var(--cream); color: var(--navy); font-family: 'Public Sans', Arial, sans-serif; min-height: 100vh; overflow-x: hidden; }
   body.team { background: var(--cream); }
   .wrap { padding: 14px 16px 40px; max-width: 520px; margin: 0 auto; }
   header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -67,6 +67,11 @@
   @keyframes up { from { transform: translateY(120%); } }
   .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; }
   .confetti i { position: absolute; top: -20px; width: 10px; height: 16px; border-radius: 3px; animation: fall 1.8s ease-in forwards; }
+  .sl-r { animation: slr .32s cubic-bezier(.2,.8,.2,1) both; } .sl-l { animation: sll .32s cubic-bezier(.2,.8,.2,1) both; }
+  .sl-r + .sl-r, .sl-l + .sl-l { animation-delay: .05s; }
+  @keyframes slr { from { transform: translateX(70%); opacity: 0; } }
+  @keyframes sll { from { transform: translateX(-70%); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .sl-r, .sl-l { animation: none; } }
   @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .6; } }
 </style>
 </head>
@@ -75,14 +80,14 @@
   <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
   <main id="main"></main>
 </div>
-<script src="data.js?v=56"></script>
+<script src="data.js?v=57"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=56"></script>
-<script src="maps.js?v=56"></script>
+<script src="common.js?v=57"></script>
+<script src="maps.js?v=57"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
-const day = window.DAYS[params.get('day')] ? params.get('day') : (new Date() >= new Date('2026-10-20') ? 'd2' : 'd1');
+const day = autoDay(params.get('day'));
 const DAY = window.DAYS[day];
 const done = store('kws-done-' + topic) || {};
 const mine = store('kws-mine-' + topic) || {};
@@ -130,7 +135,12 @@ function draw() {
   main.innerHTML = '';
   if (!topic) { main.append(h('p', { class: 'msg' }, L(UI.scan))); return; }
   if (!view) return drawList();
-  if (view.type === 'survey') return drawSurvey(view);
+  if (view.type === 'survey') {
+    const anim = slideDir > 0 ? 'sl-r' : slideDir < 0 ? 'sl-l' : ''; slideDir = 0;
+    drawSurvey(view);
+    if (anim) [...main.children].forEach((el) => el.classList.add(anim));
+    return;
+  }
   return drawMap(view);
 }
 
@@ -210,6 +220,7 @@ function drawMap(a) {
   });
 }
 
+let slideDir = 0; // +1 next question, -1 back: picks the slide-in direction
 function drawSurvey(a) {
   const ph = a.phase, dk = 'kws-survey2-draft-' + ph;
   const items = window.SURVEY.filter((x) => x.ph.includes(ph));
@@ -224,7 +235,7 @@ function drawSurvey(a) {
         h('button', { class: 'btn main', onclick: () => {
           const c = inp.value.trim().toUpperCase();
           if (!/^[A-ZĄĆĘŁŃÓŚŹŻÑ]\d{1,2}$/.test(c)) { inp.focus(); inp.style.borderColor = '#B3261E'; return; }
-          d.code = c; d.step = 0; saveD(); draw();
+          d.code = c; d.step = 0; saveD(); slideDir = 1; draw();
         } }, L(SURVEY_UI.start))));
     return;
   }
@@ -235,11 +246,11 @@ function drawSurvey(a) {
       const ob = store('kws-outbox') || {}; ob[topic + '|' + ph] = { topic, row, str: items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('') }; store('kws-outbox', ob);
       d.sent = true; saveD(); finished[dev] = 1; finish(a); flushOutbox();
     } }, '🚀 ' + L(SURVEY_UI.send));
-    main.append(backBar(h('h1', {}, '✓ ' + d.code)), h('div', { class: 'card' }, btn, h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step = n - 1; saveD(); draw(); } }, '←')));
+    main.append(backBar(h('h1', {}, '✓ ' + d.code)), h('div', { class: 'card' }, btn, h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step = n - 1; saveD(); slideDir = -1; draw(); } }, '←')));
     return;
   }
   const q = items[d.step];
-  const next = (v) => { d.ans[q.id] = v; d.step++; saveD(); draw(); scrollTo(0, 0); };
+  const next = (v) => { d.ans[q.id] = v; d.step++; saveD(); slideDir = 1; draw(); scrollTo(0, 0); };
   main.append(backBar(h('div', {}, h('p', { class: 'part' }, `${q.part}. ${L(PARTS[q.part])} · ${d.step + 1}/${n}`),
     h('div', { class: 'prog' }, h('i', { style: `width:${(100 * d.step) / n}%` })), h('h1', {}, L(q.q)))));
   const box = h('div', { class: 'card' }); main.append(box);
@@ -249,7 +260,7 @@ function drawSurvey(a) {
   } else {
     q.a.forEach((o, i) => box.append(h('button', { class: 'btn' + (d.ans[q.id] === i ? ' pick' : ''), onclick: () => next(i) }, h('b', {}, 'ABCD'[i]), L(o))));
   }
-  if (d.step > 0) box.append(h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step--; saveD(); draw(); } }, '←'));
+  if (d.step > 0) box.append(h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step--; saveD(); slideDir = -1; draw(); } }, '←'));
 }
 
 function handle(x, quiet) {
