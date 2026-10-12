@@ -59,8 +59,8 @@
         <div class="sg">${boss.stamp ? `<img class="stamp" src="${boss.stamp}" alt="">` : ''}${boss.sig ? `<img class="boss" src="${boss.sig}" alt="">` : ''}<div class="line">${L(UI.certSignBoss)}</div></div>
       </div>
       <footer>
-        <div class="logos"><img src="img/kaszebi-logo.png" alt=""><img class="bb" src="img/bluebeehive.jpg" alt=""><img class="eu" src="img/eu-pl.jpg" alt=""></div>
         <div class="fund">${UI.certFund.map((t) => `<p>${L(t)}</p>`).join('')}<p class="no">${L(UI.certProjNo)}: <b>${esc(window.PROJECT_NO)}</b></p></div>
+        <div class="logos"><img src="img/kaszebi-logo.png" alt=""><img class="bb" src="img/bluebeehive.jpg" alt=""><img class="eu" src="img/eu-pl.jpg" alt=""></div>
       </footer>
     </div></div></div>`;
   };
