@@ -8,11 +8,11 @@
     .cert:last-child { page-break-after: auto; break-after: auto; }
     .cert .logos { display: flex; gap: 24px; align-items: center; } .cert .logos img { height: 42px; }
     .cert h1 { font: 600 30px 'Source Serif 4', Georgia, serif; margin: 0; } .cert .nm { font: 600 30px 'Source Serif 4', Georgia, serif; border-bottom: 2px solid #0B1F3A; padding: 0 30px 2px; min-width: 50%; }
-    .cert p { font-size: 11.5px; line-height: 1.4; max-width: 920px; margin: 0; }
+    .cert p { font-size: 13px; line-height: 1.45; max-width: 920px; margin: 0; }
     .cert .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 22px; text-align: left; width: 100%; max-width: 980px; }
     .cert .grid .full { grid-column: 1 / -1; }
-    .cert h3 { font-size: 12px; margin: 2px 0; color: #003399; }
-    .cert ul { font-size: 10.5px; line-height: 1.35; margin: 0; padding-left: 16px; }
+    .cert h3 { font-size: 14px; margin: 6px 0 3px; color: #003399; }
+    .cert ul { font-size: 12.5px; line-height: 1.5; margin: 0; padding-left: 16px; }
     .cert .signs { display: flex; justify-content: space-between; width: 92%; margin-top: auto; align-items: flex-end; }
     .cert .sg { width: 30%; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10.5px; position: relative; }
     .cert .sg img { height: 56px; max-width: 100%; object-fit: contain; } .cert .sg .line { width: 100%; border-top: 1px solid #0B1F3A; padding-top: 3px; }
