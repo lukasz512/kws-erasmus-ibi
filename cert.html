@@ -50,9 +50,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=73"></script>
-<script src="common.js?v=73"></script>
-<script src="cert-print.js?v=73"></script>
+<script src="data.js?v=74"></script>
+<script src="common.js?v=74"></script>
+<script src="cert-print.js?v=74"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -72,7 +72,7 @@
     starters: [T('Najbardziej zaskoczyło mnie… ', 'What surprised me most… ', 'Lo que más me sorprendió… '), T('Polecam taki wyjazd, bo… ', 'I recommend a trip like this because… ', 'Recomiendo un viaje así porque… ')],
     fb: T('Opublikuj na Facebooku', 'Post on Facebook', 'Publicar en Facebook'),
     pdf: T('Zapisz certyfikat (PDF)', 'Save the certificate (PDF)', 'Guardar el certificado (PDF)'),
-    thanks: T('Dziękujemy! Pamiętaj, aby oznaczyć fundację: @Kaszëbi we swiecë. Tekst jest już skopiowany: wystarczy go wkleić.', 'Thank you! Remember to tag the foundation: @Kaszëbi we swiecë. The text is copied: just paste it.', '¡Gracias! Etiqueta a la fundación: @Kaszëbi we swiecë. El texto está copiado: solo pégalo.'),
+    thanks: T('Dziękujemy! Opis jest już skopiowany: w Facebooku przytrzymaj pole tekstu i wybierz „Wklej”. Oznacz fundację: @Kaszëbi we swiecë.', 'Thank you! The text is copied: in Facebook, press and hold the text box and choose “Paste”. Tag the foundation: @Kaszëbi we swiecë.', '¡Gracias! El texto está copiado: en Facebook mantén pulsado el cuadro de texto y elige «Pegar». Etiqueta a la fundación: @Kaszëbi we swiecë.'),
     event: T('📅 Zobacz wydarzenie na Facebooku', '📅 See the event on Facebook', '📅 Ver el evento en Facebook'),
     signed: T('✓ podpisano', '✓ signed', '✓ firmado'),
     sign2: T('Mobilność Erasmus+ „KASZËBI W EUROPIE!” · Ibi i Alicante 2026 · @Kaszëbi we swiecë · Współfinansowane przez Unię Europejską #ErasmusPlus #KaszëbiWEuropie #Cyberbezpieczeństwo', 'Erasmus+ mobility “KASZËBI IN EUROPE!” · Ibi and Alicante 2026 · @Kaszëbi we swiecë · Co-funded by the European Union #ErasmusPlus #KaszëbiWEuropie', 'Movilidad Erasmus+ «KASZËBI EN EUROPA» · Ibi y Alicante 2026 · @Kaszëbi we swiecë · Cofinanciado por la Unión Europea #ErasmusPlus #KaszëbiWEuropie')
@@ -157,7 +157,7 @@
     x.fillText(line.trim(), cx, y); return y;
   }
   // 1080×1350 picture for Facebook: certificate on top (signatures masked), photos below.
-  async function makeImage() {
+  async function makeImage(certOnly) {
     const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
     const x = c.getContext('2d');
     // Certificate card in the printed design (classic diploma): navy double frame, gold inner line, centred text.
@@ -202,19 +202,26 @@
     const list = photos.filter(Boolean);
     if (list.length) { const gap = 20, w = (1000 - gap * (list.length - 1)) / list.length; list.forEach((p, i) => cover(x, p, 40 + i * (w + gap), 830, w, 480, 22)); }
     else { x.fillStyle = '#003399'; x.beginPath(); x.roundRect(40, 830, 1000, 480, 22); x.fill(); x.fillStyle = '#FFCC00'; x.font = '900 70px "Public Sans", Arial'; x.fillText('Ibi · Alicante 2026', 540, 1090); }
-    return new Promise((r) => c.toBlob(r, 'image/jpeg', 0.9));
+    let out = c;
+    if (certOnly) { out = document.createElement('canvas'); out.width = 1080; out.height = 840; out.getContext('2d').drawImage(c, 0, 0); }
+    return new Promise((r) => out.toBlob(r, 'image/jpeg', 0.9));
   }
 
   async function share(btn) {
     btn.disabled = true;
-    const blob = await makeImage();
+    // Post = prepared text + masked certificate (no signatures) + the participant's own photos.
     const text = [st.text.trim(), L(C.sign2), window.FB.event].filter(Boolean).join('\n\n');
     try { await navigator.clipboard.writeText(text); } catch (e) { /* clipboard blocked */ }
-    const file = new File([blob], 'kaszebi-w-europie.jpg', { type: 'image/jpeg' });
+    const files = [new File([await makeImage(true)], 'certyfikat-kaszebi-w-europie.jpg', { type: 'image/jpeg' })];
+    for (const [i, p] of photos.entries()) { if (p) files.push(new File([await (await fetch(p.src)).blob()], `ibi-${i + 1}.jpg`, { type: 'image/jpeg' })); }
     let shared = false;
     try {
-      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text }); shared = true; }
-      else { const a = h('a', { href: URL.createObjectURL(blob), download: 'kaszebi-w-europie.jpg' }); document.body.append(a); a.click(); a.remove(); window.open(window.FB.page, '_blank'); shared = true; }
+      if (navigator.canShare && navigator.canShare({ files })) { await navigator.share({ files, text }); shared = true; }
+      else {
+        // Desktop: save the pictures, then open Facebook's post form with the event link; the text is on the clipboard.
+        files.forEach((f, i) => setTimeout(() => { const a = h('a', { href: URL.createObjectURL(f), download: f.name }); document.body.append(a); a.click(); a.remove(); }, i * 400));
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.FB.event || window.FB.page), '_blank'); shared = true;
+      }
     } catch (e) { /* closed the share sheet */ }
     if (shared) {
       // Organiser summary: count shares (no personal data, just the device).

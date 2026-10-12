@@ -37,8 +37,8 @@
   const page = document.head.appendChild(document.createElement('style'));
   window.setPage = (size, margin = 0) => { page.textContent = `@page { size: ${size}; margin: ${margin}mm; } @media print { html, body { margin: 0 !important; padding: 0 !important; } }`; };
   setPage('A4 portrait');
-  // Shared files (window.BOSS_FILES) on every device; a signature added on this device overrides them.
-  window.bossData = () => Object.assign({}, window.BOSS_FILES, store('kws-boss') || {});
+  // Shared files (window.BOSS_FILES) win over anything an older version left in this browser.
+  window.bossData = () => Object.assign({}, store('kws-boss') || {}, window.BOSS_FILES);
   const esc = (t) => String(t || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   // boss = { sig, stamp } as data URLs; when missing, the line stays empty for a pen signature.
   window.certHtml = function (name, sig, boss) {
