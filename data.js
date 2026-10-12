@@ -1,11 +1,12 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '67'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '68'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '2026-1-PL01-KA122-ADU-000404861';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
 // Facebook: the foundation page and the event for this mobility (fill in the event link).
+window.BOSS_FILES = {};
 window.FB = { page: 'https://www.facebook.com/371013242770908', event: 'https://www.facebook.com/events/1089602556789964' };
 window.BASE = 'https://lukasz512.github.io/kws-erasmus-ibi/';
 
@@ -105,9 +106,10 @@ window.UI = {
   certProjNo: T('Numer wniosku', 'Application no.', 'N.º de solicitud'),
   certKick: T('Program Erasmus+ · Edukacja dorosłych', 'Erasmus+ Programme · Adult education', 'Programa Erasmus+ · Educación de adultos'),
   // Funding statement required in the certificate footer (the project title stays in Polish, as registered).
+  // President's signature/stamp published for every device (empty until the PNGs are in img/).
   certFund: [
     T('Działanie finansowane ze środków Unii Europejskiej. Program Erasmus+ · Erasmus+ Edukacja dorosłych', 'Funded by the European Union. Erasmus+ Programme · Erasmus+ Adult education', 'Acción financiada por la Unión Europea. Programa Erasmus+ · Erasmus+ Educación de adultos'),
-    T('Typ akcji: AKCJA 1 Mobilność dorosłych osób uczących się i kadry edukacji dorosłych – projekty krótkoterminowe (KA122-ADU) w terminie do 19 lutego 2026 r.', 'Action type: KEY ACTION 1 Mobility of adult learners and adult education staff – short-term projects (KA122-ADU), deadline 19 February 2026', 'Tipo de acción: ACCIÓN CLAVE 1 Movilidad de personas adultas en formación y del personal de educación de adultos – proyectos de corta duración (KA122-ADU), plazo 19 de febrero de 2026'),
+    T('Typ akcji: AKCJA 1 Mobilność dorosłych osób uczących się i kadry edukacji dorosłych –<br>projekty krótkoterminowe (KA122-ADU) w\u00A0terminie do 19\u00A0lutego 2026\u00A0r.', 'Action type: KEY ACTION 1 Mobility of adult learners and adult education staff –<br>short-term projects (KA122-ADU), deadline 19\u00A0February 2026', 'Tipo de acción: ACCIÓN CLAVE 1 Movilidad de personas adultas en formación y del personal de educación de adultos –<br>proyectos de corta duración (KA122-ADU), plazo 19\u00A0de febrero de 2026'),
     T('Tytuł projektu: KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich', 'Project title: KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich (ensuring access to reliable and modern digital education in rural areas)', 'Título del proyecto: KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich (garantizar el acceso a una educación digital fiable y moderna en zonas rurales)')
   ]
 };

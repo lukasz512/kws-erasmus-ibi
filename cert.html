@@ -48,9 +48,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=67"></script>
-<script src="common.js?v=67"></script>
-<script src="cert-print.js?v=67"></script>
+<script src="data.js?v=68"></script>
+<script src="common.js?v=68"></script>
+<script src="cert-print.js?v=68"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -154,7 +154,7 @@
     x.fillStyle = '#F5F3EC'; x.fillRect(0, 0, 1080, 1350);
     x.fillStyle = '#fff'; x.strokeStyle = '#0B1F3A'; x.lineWidth = 12; x.beginPath(); x.roundRect(40, 40, 1000, 760, 24); x.fill(); x.stroke();
     x.strokeStyle = '#FFCC00'; x.lineWidth = 4; x.beginPath(); x.roundRect(62, 62, 956, 716, 16); x.stroke();
-    const boss = store('kws-boss') || {};
+    const boss = bossData();
     const [logo, eu, bb, sig, bsig, stamp] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg'), load(st.sig), load(boss.sig), load(boss.stamp)]);
     if (logo) x.drawImage(logo, 540 - 110, 84, 220, 220 * logo.height / logo.width);
     x.textAlign = 'center'; x.fillStyle = '#0B1F3A';
@@ -210,7 +210,7 @@
 
   function printCert() {
     // President's signature/stamp come from this device's storage (added on prezes.html); without them the line stays empty.
-    document.getElementById('cert').innerHTML = certHtml(st.name, st.sig, store('kws-boss'));
+    document.getElementById('cert').innerHTML = certHtml(st.name, st.sig, bossData());
     setTimeout(print, 300);
   }
   draw();

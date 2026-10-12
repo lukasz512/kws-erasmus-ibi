@@ -52,13 +52,13 @@
   <div class="card">
     <h2>3. Podgląd certyfikatu (A4 pionowo)</h2>
     <div class="prev" id="prevBox"><div class="certs" id="prev"></div></div>
-    <div class="row"><button class="main" id="printAll"></button><button id="printTest">🖨 Wydruk próbny (1 strona)</button><button class="danger" id="del">🗑 Usuń z tego urządzenia</button></div>
+    <div class="row"><button class="main" id="printAll"></button><button id="printTest">🖨 Wydruk próbny (1 strona)</button><button id="share">⬇ Pliki dla wszystkich urządzeń</button><button class="danger" id="del">🗑 Usuń z tego urządzenia</button></div>
   </div>
 </div>
 <div class="certs" id="printArea"></div>
-<script src="data.js?v=67"></script>
-<script src="common.js?v=67"></script>
-<script src="cert-print.js?v=67"></script>
+<script src="data.js?v=68"></script>
+<script src="common.js?v=68"></script>
+<script src="cert-print.js?v=68"></script>
 <script>
   LANG = 'pl';
   const BOSS = 'kws-boss';
@@ -118,6 +118,11 @@
   $('savePad').onclick = () => { if (!dirty) { alert('Najpierw się podpisz.'); return; } put('sig', crop(cv)); size(); };
   $('sigFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) put('sig', await clean(f, true)); };
   $('stampFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) put('stamp', await clean(f, false)); };
+  // Downloads the PNGs; once they are in the repo's img/ folder, every phone shows them (see BOSS_FILES in data.js).
+  $('share').onclick = () => {
+    const b = boss(); if (!b.sig && !b.stamp) { alert('Najpierw dodaj podpis lub pieczątkę.'); return; }
+    [['sig', 'prezes-podpis.png'], ['stamp', 'prezes-pieczatka.png']].forEach(([k, f], i) => { if (!b[k]) return; setTimeout(() => { const a = document.createElement('a'); a.href = b[k]; a.download = f; a.click(); }, i * 600); });
+  };
   $('stampDel').onclick = () => put('stamp', null);
   $('del').onclick = () => { if (confirm('Usunąć podpis i pieczątkę z tego urządzenia?')) { localStorage.removeItem(BOSS); render(); } };
 
@@ -126,12 +131,12 @@
     const b = boss(), n = consents().length, first = consents()[0];
     $('sigImg').hidden = !b.sig; if (b.sig) $('sigImg').src = b.sig; $('sigInfo').textContent = b.sig ? '✓ Podpis zapisany na tym urządzeniu' : 'Brak podpisu';
     $('stampImg').hidden = !b.stamp; if (b.stamp) $('stampImg').src = b.stamp; $('stampInfo').textContent = b.stamp ? '✓ Pieczątka zapisana' : 'Brak pieczątki';
-    $('prev').innerHTML = certHtml(first ? first.name : 'Imię i Nazwisko uczestnika', first ? first.sig : '', b);
+    $('prev').innerHTML = certHtml(first ? first.name : 'Imię i Nazwisko uczestnika', first ? first.sig : '', bossData());
     $('printAll').textContent = n ? `🖨 Drukuj certyfikaty dla ${n} os. (PDF)` : '🖨 Brak zgód na tym urządzeniu';
     $('printAll').disabled = !n;
     requestAnimationFrame(fit);
   }
-  function go(list) { $('printArea').innerHTML = list.map((c) => certHtml(c.name, c.sig, boss())).join(''); setPage('A4 portrait'); setTimeout(print, 400); }
+  function go(list) { $('printArea').innerHTML = list.map((c) => certHtml(c.name, c.sig, bossData())).join(''); setPage('A4 portrait'); setTimeout(print, 400); }
   $('printAll').onclick = () => go(consents());
   $('printTest').onclick = () => go([consents()[0] || { name: 'Imię i Nazwisko uczestnika', sig: '' }]);
   addEventListener('resize', fit);

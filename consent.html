@@ -58,9 +58,9 @@
 <div class="print" id="printArea"></div>
 <div class="certs" id="certArea"></div>
 
-<script src="data.js?v=67"></script>
-<script src="common.js?v=67"></script>
-<script src="cert-print.js?v=67"></script>
+<script src="data.js?v=68"></script>
+<script src="common.js?v=68"></script>
+<script src="cert-print.js?v=68"></script>
 <script>
   LANG = 'pl'; // organiser station: consents and certificates print in Polish
   // Consents stay on this tablet only (never sent over the internet); print them as PDF for the project files.
@@ -112,11 +112,11 @@
   // President's signature and stamp are added on prezes.html; kept in this browser only, never uploaded.
   const BOSS = 'kws-boss';
   const boss = () => store(BOSS) || {};
-  function bossInfo() { const b = boss(); document.getElementById('bossInfo').textContent = `Podpis: ${b.sig ? '✓' : '–'} · Pieczątka: ${b.stamp ? '✓' : '–'}`; }
+  function bossInfo() { const b = bossData(); document.getElementById('bossInfo').textContent = `Podpis: ${b.sig ? '✓' : '–'} · Pieczątka: ${b.stamp ? '✓' : '–'}`; }
   document.getElementById('certs').onclick = () => {
     const all = list(); if (!all.length) { alert('Brak zapisanych osób.'); return; }
     document.getElementById('printArea').innerHTML = '';
-    document.getElementById('certArea').innerHTML = all.map((c) => certHtml(c.name, c.sig, boss())).join('');
+    document.getElementById('certArea').innerHTML = all.map((c) => certHtml(c.name, c.sig, bossData())).join('');
     setPage('A4 portrait'); setTimeout(print, 400);
   };
   bossInfo();
