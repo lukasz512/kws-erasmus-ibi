@@ -28,7 +28,7 @@ function ingest(m) {
   seen.add(m.id);
   const x = Live.parse(m);
   if (!x || x.d == null) return false;
-  if (x.g != null && x.g >= 0) joined[x.d] = x.g;
+  joined[x.d] = 1;
   if (x.k === 'v' && x.key) (votes[x.key] = votes[x.key] || {})[x.d] = { a: x.a, g: x.g, t: m.time };
   else if ((x.k === 'gs' || x.k === 'pin') && x.key && Array.isArray(x.at)) (geo[x.key] = geo[x.key] || {})[x.d] = { at: x.at, g: x.g };
   else if (x.k === 'fb') { const fb = store('kws-fb') || {}; fb[x.d] = { g: x.g, t: m.time }; store('kws-fb', fb); }
@@ -60,14 +60,9 @@ function surveyStats() {
   pre.forEach((e) => { if (e.code) preBy[e.code] = e; });
   post.forEach((e) => { if (e.code) postBy[e.code] = e; });
   const people = Object.keys(preBy).filter((c) => postBy[c]).map((c) => ({ code: c, pre: pct(preBy[c].ans), post: pct(postBy[c].ans) })).sort((x, y) => (y.post - y.pre) - (x.post - x.pre));
-  const team = [0, 1, 2].map((g) => {
-    const x = avg(pre.filter((e) => e.g === g).map((e) => pct(e.ans))), y = avg(post.filter((e) => e.g === g).map((e) => pct(e.ans)));
-    return x == null || y == null ? 0 : y - x;
-  });
   const B = window.SURVEY.filter((x) => x.type === 'likert').map((x) => ({ item: x, pre: likert(pre, x.id), post: likert(post, x.id) }));
-  return { pre, post, preAvg: avg(pre.map((e) => pct(e.ans))), postAvg: avg(post.map((e) => pct(e.ans))), preQ: perQ(pre), postQ: perQ(post), people, team, B };
+  return { pre, post, preAvg: avg(pre.map((e) => pct(e.ans))), postAvg: avg(post.map((e) => pct(e.ans))), preQ: perQ(pre), postQ: perQ(post), people, B };
 }
-const scores = () => surveyStats().team;
 
 let sheetAt = 0;
 async function pullSheet(force) {
@@ -93,7 +88,7 @@ const bg = (url) => `background-image:url('${url}')`;
 const voteUrl = () => window.BASE + 'vote.html?t=' + topic + '&day=' + S.day;
 const langUrl = () => window.BASE + 'lang.html?d=' + deck().id + '&s=' + S.slide + '&t=' + topic;
 const slideKey = (s) => (s.k === 'q' ? keyOf(s) : s.k === 'guess' ? s.g : s.k === 'pins' ? 'pins-' + deck().id : s.k === 'survey' ? 'survey-' + s.phase : null);
-const grpColor = (g) => (GROUPS[g] || { color: '#8A94A6' }).color;
+const grpColor = () => '#C8102E';
 
 function euLogo() {
   if (LANG === 'pl') return h('img', { class: 'eu-img', src: 'img/eu-pl.jpg', alt: L(UI.cofund) });
@@ -102,9 +97,7 @@ function euLogo() {
   return box;
 }
 function footer() {
-  const sc = scores();
   return h('div', { class: 'footer' },
-    h('div', { class: 'mini-score', title: L(SURVEY_UI.teams) }, GROUPS.map((g, i) => h('span', { style: `background:${g.color}` }, (sc[i] > 0 ? '+' : '') + sc[i]))),
     h('span', { class: 'pg' }, `${S.slide + 1} / ${deck().slides.length}`),
     READER ? null : h('div', { class: 'ctl' }, h('button', { 'data-act': 'prev' }, '◀'), h('button', { 'data-act': 'next' }, '▶'),
       h('button', { 'data-act': 'reveal' }, 'R'), h('button', { 'data-act': 'lang', title: 'EN / ES (L)' }, '🌐'), h('button', { 'data-act': 'full' }, '⛶'), h('button', { 'data-act': 'menu' }, '☰')),
@@ -149,15 +142,12 @@ const R = {
       h('div', { class: 'right', style: bg(s.img) })));
   },
   join() {
-    const counts = [0, 0, 0];
-    Object.values(joined).forEach((g) => { if (g >= 0 && g < 3) counts[g]++; });
     return decorate(h('section', { class: 'slide' },
       h('h2', {}, L(UI.join)),
       h('div', { class: 'join' }, joinBox(460),
         h('div', { class: 'groups' },
           h('p', { class: 'muted' }, L(UI.scan)),
-          h('p', {}, L(UI.pickGroup) + ':'),
-          GROUPS.map((g, i) => h('div', { class: 'grp' }, h('i', { style: `background:${g.color}` }), L(g.name), h('span', { class: 'n' }, String(counts[i])))),
+          h('div', { class: 'count big' }, `👥 ${Object.keys(joined).length} ${L(GAME_UI.joined)}`),
           h('p', { class: 'muted', style: 'font-size:28px' }, voteUrl().replace('https://', ''))))));
   },
   text(s) {
@@ -319,7 +309,7 @@ const R = {
     if (revealed[key]) {
       const best = Object.values(geo[key] || {}).map((v) => ({ ...v, d: km(v.at, G.at) })).sort((a, b) => a.d - b.d)[0];
       result = h('div', { class: 'result' }, h('b', {}, '📍 ' + L(G.name)),
-        best ? h('span', {}, `${L(MAP_UI.closest)}: `, h('i', { class: 'dot', style: `background:${grpColor(best.g)}` }), ` ${L((GROUPS[best.g] || GROUPS[0]).name)} · ${best.d.toFixed(1)} ${L(MAP_UI.km)}`) : null);
+        best ? h('span', {}, `${L(MAP_UI.closest)}: ${best.d.toFixed(1)} ${L(MAP_UI.km)}`) : null);
     }
     const el = decorate(h('section', { class: 'slide' },
       h('div', { class: 'gwrap' },
@@ -390,28 +380,18 @@ const R = {
       h('div', { class: 'people' }, st.people.map((p) => h('div', { class: 'person' },
         h('b', {}, p.code), h('span', {}, `${p.pre}% → ${p.post}%`), h('em', { class: p.post - p.pre >= 40 ? 'ok' : '' }, `${p.post - p.pre > 0 ? '+' : ''}${p.post - p.pre}`))))));
   },
-  teams() {
-    const sc = scores(), max = Math.max(10, ...sc.map(Math.abs));
-    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(SURVEY_UI.teams)),
-      h('div', { class: 'score' }, GROUPS.map((g, i) => h('div', { class: 'col' },
-        h('div', { class: 'pts' }, (sc[i] > 0 ? '+' : '') + sc[i] + ' pp'),
-        h('div', { class: 'bar', style: `height:${(520 * Math.max(0, sc[i])) / max}px;background:${g.color}` }),
-        h('div', { class: 'nm' }, L(g.name)))))));
-  },
 
   teamsLive() {
     const pre = entries('pre'), post = entries('post');
-    const cards = GROUPS.map((g, i) => {
-      const m = Object.values(joined).filter((x) => x === i).length;
-      const a1 = pre.filter((e) => e.g === i).length, a2 = post.filter((e) => e.g === i).length;
-      const guesses = Object.values(geo).reduce((n, byDev) => n + Object.values(byDev).filter((v) => v.g === i).length, 0);
-      return h('div', { class: 'tlive', style: `--c:${g.color}` }, h('div', { class: 'big' }, g.icon), h('h3', {}, L(g.name)),
-        h('div', { class: 'stat' }, h('b', {}, String(m)), h('span', {}, '👥 ' + L(GAME_UI.members))),
-        h('div', { class: 'stat' }, h('b', {}, `${a1}`), h('span', {}, '📝 ' + L(SURVEY_UI.pre))),
-        h('div', { class: 'stat' }, h('b', {}, `${a2}`), h('span', {}, '📝 ' + L(SURVEY_UI.post))),
-        h('div', { class: 'stat' }, h('b', {}, String(guesses)), h('span', {}, '📍 ' + L(MAP_UI.answers))),
-        h('div', { class: 'stat' }, h('b', {}, String(Object.values(store('kws-fb') || {}).filter((v) => v.g === i).length)), h('span', {}, '📣 ' + L(T('posty na Facebooku', 'Facebook posts', 'publicaciones en Facebook')))));
-    });
+    const guesses = Object.values(geo).reduce((n, byDev) => n + Object.keys(byDev).length, 0);
+    const stat = (ic, v, label) => h('div', { class: 'tlive', style: '--c:#003399' }, h('div', { class: 'big' }, ic), h('div', { class: 'stat' }, h('b', {}, String(v)), h('span', {}, L(label))));
+    const cards = [
+      stat('👥', Object.keys(joined).length, GAME_UI.joined),
+      stat('📝', pre.length, SURVEY_UI.pre),
+      stat('📝', post.length, SURVEY_UI.post),
+      stat('📍', guesses, MAP_UI.answers),
+      stat('📣', Object.keys(store('kws-fb') || {}).length, T('posty na Facebooku', 'Facebook posts', 'publicaciones en Facebook'))
+    ];
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(GAME_UI.teamsLive)), h('div', { class: 'tlives' }, cards)));
   },
   problem() {
@@ -457,13 +437,9 @@ const R = {
 };
 
 function teamBars(list) {
-  const members = [0, 1, 2].map((g) => Object.values(joined).filter((x) => x === g).length);
-  const fin = [0, 1, 2].map((g) => list.filter((e) => e.g === g).length);
-  return h('div', { class: 'tbars' }, GROUPS.map((g, i) => {
-    const tot = Math.max(members[i], fin[i], 1);
-    return h('div', { class: 'tbar' }, h('span', { class: 'tic', style: `background:${g.color}` }, g.icon), h('b', {}, L(g.name)),
-      h('div', { class: 'track2' }, h('i', { style: `width:${(100 * fin[i]) / tot}%;background:${g.color}` })), h('em', {}, `${fin[i]} / ${members[i] || '–'}`));
-  }));
+  const members = Object.keys(joined).length, fin = list.length, tot = Math.max(members, fin, 1);
+  return h('div', { class: 'tbars' }, h('div', { class: 'tbar' }, h('span', { class: 'tic', style: 'background:#003399' }, '👥'), h('b', {}, L(GAME_UI.finished)),
+    h('div', { class: 'track2' }, h('i', { style: `width:${(100 * fin) / tot}%;background:#003399` })), h('em', {}, `${fin} / ${members || '–'}`)));
 }
 function distCard(it, list) {
   const c = dist(list, it), n = Math.max(1, c.reduce((x, y) => x + y, 0)), mx = Math.max(...c);
@@ -604,7 +580,6 @@ function paperForm() {
   c.innerHTML = '';
   const ph = h('select', {}, h('option', { value: 'pre' }, 'PRZED'), h('option', { value: 'post' }, 'PO'));
   const code = h('input', { placeholder: 'Kod, np. A07' });
-  const grp = h('select', {}, GROUPS.map((g, i) => h('option', { value: i }, L(g.name))));
   const ans = h('input', {});
   const hint = h('p', { class: 'hint' });
   const setHint = () => {
@@ -614,7 +589,7 @@ function paperForm() {
   };
   ph.onchange = setHint; setHint();
   const info = h('p', {}, `Zapisanych: przed ${entries('pre').length}, po ${entries('post').length}`);
-  c.append(h('h3', {}, 'Ankieta z kartki'), ph, code, grp, ans, hint,
+  c.append(h('h3', {}, 'Ankieta z kartki'), ph, code, ans, hint,
     h('div', { class: 'row' },
       h('button', { onclick: () => {
         const it = itemsFor(ph.value), raw = ans.value.toUpperCase().replace(/[^A-D1-5]/g, '');
@@ -626,9 +601,9 @@ function paperForm() {
           else { const v = 'ABCD'.indexOf(ch); if (v < 0 || v >= x.a.length) { alert(`${x.id}: litera ${'ABCD'.slice(0, x.a.length)}`); return; } out[x.id] = v; }
         }
         const cd = code.value.trim().toUpperCase();
-        SV[ph.value + '|' + cd] = { phase: ph.value, code: cd, g: +grp.value, ans: out, t: Date.now() / 1000, src: 'paper' };
+        SV[ph.value + '|' + cd] = { phase: ph.value, code: cd, ans: out, t: Date.now() / 1000, src: 'paper' };
         saveSV(); code.value = ''; ans.value = ''; code.focus();
-        if (Sheet.url()) Sheet.postSure({ phase: ph.value, code: cd, g: +grp.value, ans: out, src: 'paper', d: 'paper' });
+        if (Sheet.url()) Sheet.postSure({ phase: ph.value, code: cd, ans: out, src: 'paper', d: 'paper' });
         info.textContent = `Zapisano ${cd}. Zapisanych: przed ${entries('pre').length}, po ${entries('post').length}`;
       } }, 'Zapisz i następna'),
       h('button', { onclick: () => { menu(false); render(); } }, 'Zamknij')),
@@ -662,9 +637,9 @@ function menu(on) {
 
 function exportCsv() {
   const ids = window.SURVEY.map((x) => x.id);
-  const head = ['faza', 'kod', 'druzyna', 'zrodlo', 'czas', 'test_%', ...ids];
+  const head = ['faza', 'kod', 'zrodlo', 'czas', 'test_%', ...ids];
   const cell = (x, v) => (v == null ? '' : x.type === 'likert' ? v : 'ABCD'[v] + (x.type === 'test' && v === x.ok ? ' ✓' : ''));
-  const rows = [head, ...Object.values(SV).filter((e) => e.ans && !Array.isArray(e.ans)).map((e) => [e.phase, e.code, GROUPS[e.g] ? L(GROUPS[e.g].name) : '', e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...window.SURVEY.map((x) => cell(x, e.ans[x.id]))])];
+  const rows = [head, ...Object.values(SV).filter((e) => e.ans && !Array.isArray(e.ans)).map((e) => [e.phase, e.code, e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...window.SURVEY.map((x) => cell(x, e.ans[x.id]))])];
   const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
   const el = h('a', { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: 'kws-ankieta-dezinformacja.csv' });
   document.body.append(el); el.click(); el.remove();

@@ -1,7 +1,7 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '55'; // keep in sync with version.txt and the ?v= in the HTML files
+window.APP_V = '56'; // keep in sync with version.txt and the ?v= in the HTML files
 window.PROJECT_NO = '';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
@@ -40,7 +40,8 @@ window.GAME_UI = {
   allDone: T('Wszystko zrobione! Brawo!', 'All done! Well done!', '¡Todo hecho! ¡Bravo!'),
   survey: T('Ankieta', 'Survey', 'Encuesta'),
   guess: T('Zgadnij, gdzie to jest', 'Guess where this is', 'Adivina dónde es'),
-  teamsLive: T('Drużyny na żywo', 'Teams live', 'Equipos en directo'),
+  teamsLive: T('Na żywo: uczestnicy', 'Live: participants', 'En directo: participantes'),
+  joined: T('osób dołączyło', 'people joined', 'personas conectadas'),
   finished: T('ukończyło ankietę', 'finished the survey', 'terminaron la encuesta')
 };
 
@@ -309,7 +310,7 @@ window.DECKS = [
         { v: 'family', h: T('Rodzinne słowo-hasło', 'Family code word', 'Palabra clave familiar'), p: T('na „pilne” telefony od bliskich', 'for “urgent” calls from loved ones', 'para llamadas «urgentes» de familiares') }
       ] },
       { k: 'task', h: T('Hasło nie do złamania', 'An unbreakable password', 'Una contraseña irrompible'), screen: 'password', icons: ['🎲', '🔗', '🛡️'], li: [
-        T('Każda osoba w drużynie wymyśla jedno słowo, np. gryf, kawa, morze, rower', 'Everyone in the team thinks of one word, e.g. griffin, coffee, sea, bike', 'Cada persona del equipo piensa una palabra, p. ej. grifo, café, mar, bici'),
+        T('Każda osoba w parze wymyśla jedno słowo, np. gryf, kawa, morze, rower', 'Each person in the pair thinks of one word, e.g. griffin, coffee, sea, bike', 'Cada persona de la pareja piensa una palabra, p. ej. grifo, café, mar, bici'),
         T('Połączcie 4 słowa w zabawne zdanie: zielony-gryf-pije-kawę', 'Join 4 words into a funny phrase: green-griffin-drinks-coffee', 'Unid 4 palabras en una frase divertida: grifo-verde-toma-café'),
         T('Takie hasło łatwo zapamiętać, a komputer łamałby je setki lat. Nie wpisujcie go nigdzie!', 'Easy to remember, and a computer would need centuries to crack it. Don’t type it anywhere!', 'Fácil de recordar y un ordenador tardaría siglos en descifrarla. ¡No la escribáis en ningún sitio!')
       ] },
@@ -332,7 +333,6 @@ window.DECKS = [
       { k: 'results' },
       { k: 'confidence' },
       { k: 'evaluation' },
-      { k: 'teams' },
       { k: 'cert' },
       { k: 'credits' }
     ]

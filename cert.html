@@ -66,7 +66,7 @@
 <script src="common.js?v=55"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
-  const topic = params.get('t'), group = params.get('g');
+  const topic = params.get('t');
   const C = {
     s1: T('Twój certyfikat', 'Your certificate', 'Tu certificado'),
     s1h: T('Wpisz imię i nazwisko, a poniżej podpisz się palcem.', 'Type your full name and sign below with your finger.', 'Escribe tu nombre y firma abajo con el dedo.'),
@@ -198,8 +198,8 @@
       else { const a = h('a', { href: URL.createObjectURL(blob), download: 'kaszebi-w-europie.jpg' }); document.body.append(a); a.click(); a.remove(); window.open(window.FB.page, '_blank'); shared = true; }
     } catch (e) { /* closed the share sheet */ }
     if (shared) {
-      // Organiser summary: count shares (no personal data, just device + team).
-      if (topic && !store('kws-fb-sent-' + topic)) { Live.sendSure(topic, { k: 'fb', d: deviceId(), g: group == null ? null : +group }, null, 6).then((ok) => { if (ok) store('kws-fb-sent-' + topic, 1); }); }
+      // Organiser summary: count shares (no personal data, just the device).
+      if (topic && !store('kws-fb-sent-' + topic)) { Live.sendSure(topic, { k: 'fb', d: deviceId() }, null, 6).then((ok) => { if (ok) store('kws-fb-sent-' + topic, 1); }); }
       document.getElementById('done').innerHTML = ''; document.getElementById('done').append(h('p', { class: 'ok' }, '✓ ' + L(C.thanks)));
     }
     btn.disabled = false;

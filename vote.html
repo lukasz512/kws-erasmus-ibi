@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0B1F3A">
-<title>Kaszëbi w Europie! – drużyny</title>
+<title>Kaszëbi w Europie!</title>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
 <style>
@@ -84,19 +84,18 @@ const topic = params.get('t');
 const dev = deviceId();
 const day = window.DAYS[params.get('day')] ? params.get('day') : (new Date() >= new Date('2026-10-20') ? 'd2' : 'd1');
 const DAY = window.DAYS[day];
-const gKey = 'kws-group-' + topic;
-let group = store(gKey);
 const done = store('kws-done-' + topic) || {};
 const mine = store('kws-mine-' + topic) || {};
 const revealed = {};
-const members = {};      // device → group (join messages)
-const finished = {};     // device → group (survey sent)
+const members = {};      // devices that joined
+const finished = {};     // devices that sent a survey
 let liveKey = null;      // what the presenter shows right now
 let view = null;         // null = task list, otherwise the open activity
 let phoneMap = null, picked = null;
 const main = document.getElementById('main');
 if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
-if (group != null) members[dev] = group;
+members[dev] = 1;
+if (topic && !store('kws-joined-' + topic)) Live.send(topic, { k: 'j', d: dev }).then((ok) => { if (ok) store('kws-joined-' + topic, 1); });
 
 const actKey = (a) => (a.type === 'survey' ? 'survey-' + a.phase : a.key);
 const actTitle = (a) => (a.type === 'survey' ? `${L(GAME_UI.survey)}: ${L(SURVEY_UI[a.phase])}` : L(GAME_UI.guess));
@@ -104,11 +103,10 @@ const actIcon = (a) => (a.type === 'survey' ? '📝' : '📍');
 const saveDone = () => store('kws-done-' + topic, done);
 
 function theme() {
-  const g = GROUPS[group];
-  document.body.classList.toggle('team', !!g);
-  document.documentElement.style.setProperty('--t', g ? g.color : '#0B1F3A');
-  document.documentElement.style.setProperty('--td', g ? g.dark : '#08172B');
-  document.querySelector('meta[name=theme-color]').content = g ? g.color : '#0B1F3A';
+  document.body.classList.add('team');
+  document.documentElement.style.setProperty('--t', '#003399');
+  document.documentElement.style.setProperty('--td', '#002266');
+  document.querySelector('meta[name=theme-color]').content = '#003399';
 }
 function langs() {
   const el = document.getElementById('langs'); el.innerHTML = '';
@@ -131,27 +129,17 @@ function draw() {
   if (phoneMap) { phoneMap.destroy(); phoneMap = null; }
   main.innerHTML = '';
   if (!topic) { main.append(h('p', { class: 'msg' }, L(UI.scan))); return; }
-  if (group == null) return drawLobby();
   if (!view) return drawList();
   if (view.type === 'survey') return drawSurvey(view);
   return drawMap(view);
 }
 
-function drawLobby() {
-  const counts = [0, 0, 0]; Object.values(members).forEach((g) => { if (g >= 0 && g < 3) counts[g]++; });
-  main.append(h('div', { class: 'lobby' }, h('h1', {}, L(GAME_UI.join)),
-    GROUPS.map((g, i) => h('button', { class: 'tbtn', style: `background:${g.color}`, onclick: () => {
-      group = i; store(gKey, i); members[dev] = i; Live.send(topic, { k: 'j', g: i, d: dev }); confetti(); draw();
-    } }, h('span', { class: 'ic' }, g.icon), h('span', {}, L(g.name), h('small', {}, `👥 ${counts[i]} ${L(GAME_UI.members)}`))))));
-}
-
 function drawList() {
-  const g = GROUPS[group], acts = DAY.acts, nDone = acts.filter((a) => done[actKey(a)]).length;
-  const m = Object.values(members).filter((x) => x === group).length || 1;
-  const f = Object.values(finished).filter((x) => x === group).length;
+  const acts = DAY.acts, nDone = acts.filter((a) => done[actKey(a)]).length;
+  const m = Object.keys(members).length, f = Object.keys(finished).length;
   const pct = Math.round((100 * nDone) / acts.length);
-  main.append(h('div', { class: 'hero' }, h('div', { class: 'ic' }, g.icon),
-    h('div', {}, h('b', {}, L(g.name)), h('span', {}, `👥 ${m} ${L(GAME_UI.members)} · ✓ ${f} ${L(GAME_UI.finished)}`)),
+  main.append(h('div', { class: 'hero' }, h('div', { class: 'ic' }, '🇪🇺'),
+    h('div', {}, h('b', {}, 'Kaszëbi w Europie!'), h('span', {}, `👥 ${m} ${L(GAME_UI.joined)} · ✓ ${f} ${L(GAME_UI.finished)}`)),
     h('div', { class: 'ring', style: `--p:${pct}%` }, h('i', {}, `${nDone}/${acts.length}`))));
   main.append(h('p', { class: 'sec' }, `${L(GAME_UI.tasks)} · ${L(DAY.name)}`));
   let gi = 0;
@@ -164,9 +152,8 @@ function drawList() {
   });
   const pb = pendingBox(); if (pb) main.append(pb);
   if (nDone === acts.length) main.append(h('div', { class: 'card alldone' }, '🏆 ' + L(GAME_UI.allDone)));
-  if (done['survey-post']) main.append(h('a', { class: 'btn main', href: `cert.html?lang=${LANG}&t=${topic}&g=${group}`, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle) + ' → f'));
+  if (done['survey-post']) main.append(h('a', { class: 'btn main', href: `cert.html?lang=${LANG}&t=${topic}`, style: 'text-decoration:none;margin-top:12px' }, '🎓 ' + L(UI.certTitle) + ' → f'));
   if (window.FB.event) main.append(h('a', { class: 'task', href: window.FB.event, target: '_blank', style: 'text-decoration:none' }, h('span', { class: 'ti' }, '📅'), h('span', {}, h('b', {}, L(T('Wydarzenie na Facebooku', 'Facebook event', 'Evento en Facebook'))), h('small', {}, L(T('Kliknij „Wezmę udział” i udostępnij', 'Tap “Going” and share it', 'Pulsa «Asistiré» y compártelo'))))));
-  main.append(h('button', { class: 'link', style: 'color:#6A7385', onclick: () => { group = null; store(gKey, null); draw(); } }, L(UI.change)));
 }
 
 let flushing = false;
@@ -206,7 +193,7 @@ function drawMap(a) {
   const btn = h('button', { class: 'btn main', disabled: true, onclick: () => {
     if (!picked) return;
     mine[k] = picked; store('kws-mine-' + topic, mine);
-    Live.send(topic, { k: 'gs', key: k, at: picked, g: group, d: dev });
+    Live.send(topic, { k: 'gs', key: k, at: picked, d: dev });
     finish(a);
   } }, '📍 ' + L(MAP_UI.confirm));
   box.append(btn);
@@ -214,7 +201,7 @@ function drawMap(a) {
   picked = sent || null; if (picked) btn.disabled = false;
   if (!window.maplibregl) return;
   phoneMap = pinsMap(mapEl, window.REGION_VIEW, true);
-  const color = GROUPS[group].color;
+  const color = '#C8102E';
   phoneMap.map.on('load', () => { if (picked) phoneMap.set('me', picked, color); if (revealed[k]) phoneMap.reveal(G.at, picked ? [picked] : []); });
   phoneMap.map.on('click', (e) => {
     if (revealed[k]) return;
@@ -244,9 +231,9 @@ function drawSurvey(a) {
   if (d.step >= n) {
     const btn = h('button', { class: 'btn main', onclick: () => {
       // Answers are kept on the phone first, so the button never hangs; sending retries in the background.
-      const row = { k: 's', phase: ph, code: d.code, g: group, ans: d.ans, d: dev };
+      const row = { k: 's', phase: ph, code: d.code, ans: d.ans, d: dev };
       const ob = store('kws-outbox') || {}; ob[topic + '|' + ph] = { topic, row, str: items.map((x) => (x.type === 'likert' ? d.ans[x.id] : 'ABCD'[d.ans[x.id]])).join('') }; store('kws-outbox', ob);
-      d.sent = true; saveD(); finished[dev] = group; finish(a); flushOutbox();
+      d.sent = true; saveD(); finished[dev] = 1; finish(a); flushOutbox();
     } }, '🚀 ' + L(SURVEY_UI.send));
     main.append(backBar(h('h1', {}, '✓ ' + d.code)), h('div', { class: 'card' }, btn, h('button', { class: 'btn', style: 'justify-content:center', onclick: () => { d.step = n - 1; saveD(); draw(); } }, '←')));
     return;
@@ -267,15 +254,15 @@ function drawSurvey(a) {
 
 function handle(x, quiet) {
   if (!x) return;
-  if (x.k === 'j' && x.d != null) { members[x.d] = x.g; if (!view && !quiet) draw(); }
-  if (x.k === 's' && x.d != null) { finished[x.d] = x.g; members[x.d] = x.g; if (!view && !quiet) draw(); }
+  if (x.k === 'j' && x.d != null) { members[x.d] = 1; if (!view && !quiet) draw(); }
+  if (x.k === 's' && x.d != null) { finished[x.d] = 1; members[x.d] = 1; if (!view && !quiet) draw(); }
   if (x.k === 'r' && x.key) { revealed[x.key] = true; if (view && view.key === x.key) draw(); }
   if (x.k === 'o' && x.key) {
     const a = DAY.acts.find((t) => actKey(t) === x.key);
     if (!a || liveKey === x.key) return;
     liveKey = x.key;
     if (!view) draw();
-    if (!quiet && group != null && !done[x.key] && (!view || actKey(view) !== x.key)) toast('● ' + L(GAME_UI.live) + ': ' + actTitle(a), L(GAME_UI.open), () => { view = a; draw(); });
+    if (!quiet && !done[x.key] && (!view || actKey(view) !== x.key)) toast('● ' + L(GAME_UI.live) + ': ' + actTitle(a), L(GAME_UI.open), () => { view = a; draw(); });
     if (!quiet && navigator.vibrate) navigator.vibrate(80);
   }
 }
