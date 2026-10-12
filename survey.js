@@ -2,6 +2,9 @@
 // Answers come from phones (live channel) and paper forms; all of them land in one place: localStorage 'kws-survey-v1'.
 (function () {
   const KEY = 'kws-survey-v1', FB = 'kws-fb';
+  // Session reset: bumping SESSION drops this laptop's test answers, FB posts and live channel, so the real group starts from zero.
+  const SESSION = '2';
+  if (store('kws-session') !== SESSION) { [KEY, FB, 'kws-topic'].forEach((k) => store(k, null)); store('kws-session', SESSION); }
   const SV = store(KEY) || {};
   const TESTS = window.SURVEY.filter((x) => x.type === 'test');
   const avg = (xs, d = 0) => (xs.length ? Math.round((10 ** d * xs.reduce((a, b) => a + b, 0)) / xs.length) / 10 ** d : null);
@@ -54,10 +57,11 @@
         preQ: perQ(pre), postQ: perQ(post),
         B: window.SURVEY.filter((x) => x.type === 'likert').map((x) => ({ item: x, pre: likert(pre, x.id), post: likert(post, x.id) })),
         d1: share((e) => e.ans.D1 === 0),
-        d2: share((e) => e.ans.D2 === 0 || e.ans.D2 === 2)
+        d2: share((e) => e.ans.D2 === 0 || e.ans.D2 === 2),
+        d3: share((e) => e.ans.D3 === 0 || e.ans.D3 === 1)
       };
     },
-    csv(file = 'kws-ankieta-dezinformacja.csv') {
+    csv(file = 'kws-ankieta-cyfrowe.csv') {
       const head = ['faza', 'kod', 'zrodlo', 'czas', 'test_%', ...window.SURVEY.map((x) => x.id)];
       const cell = (x, v) => (v == null ? '' : x.type === 'likert' ? v : 'ABCD'[v] + (x.type === 'test' && v === x.ok ? ' ✓' : ''));
       const rows = [head, ...Object.values(SV).filter((e) => e.ans && !Array.isArray(e.ans)).map((e) => [e.phase, e.code, e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...window.SURVEY.map((x) => cell(x, e.ans[x.id]))])];

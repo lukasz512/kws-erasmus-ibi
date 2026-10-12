@@ -30,9 +30,9 @@
 <body>
 <div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
 <div class="page" id="page"></div>
-<script src="data.js?v=78"></script>
-<script src="common.js?v=78"></script>
-<script src="survey.js?v=78"></script>
+<script src="data.js?v=79"></script>
+<script src="common.js?v=79"></script>
+<script src="survey.js?v=79"></script>
 <script>
   LANG = 'pl';
   // Answers from phones arrive on the live channel; pull them here too, so the report works without the presentation open.
@@ -43,13 +43,13 @@
   }
   function draw(note) {
   const { TESTS } = Survey;
-  const st = Survey.stats(), { pre, post, preAvg, postAvg, gain, people, reached, d1, d2 } = st;
+  const st = Survey.stats(), { pre, post, preAvg, postAvg, gain, people, reached, d1, d2, d3 } = st;
   const yes = (v, t) => (v == null ? '–' : v >= t ? '<span class="ok">TAK</span>' : '<span class="no">NIE</span>');
   const dist = (list, it) => { const c = Survey.dist(list, it); const n = c.reduce((a, b) => a + b, 0) || 1; return it.a.map((o, i) => `${L(o)}: <b>${Math.round((100 * c[i]) / n)}%</b> (${c[i]})`).join('<br>'); };
 
   document.getElementById('page').innerHTML = `
     <header><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:40px"><img class="eu" src="img/eu-pl.jpg" alt=""></header>
-    <h1>Raport ankiety przed/po: dezinformacja</h1>
+    <h1>Raport ankiety przed/po: kompetencje cyfrowe i bezpieczeństwo w sieci</h1>
     <div class="meta">Projekt Erasmus+ KA122-ADU „KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”${PROJECT_NO ? ' · nr ' + PROJECT_NO : ''} · Ibi i Alicante, 11–21.10.2026 · wygenerowano ${new Date().toLocaleString('pl-PL')}</div>
     <p class="note" style="background:#FFF6D6;border-radius:10px;padding:8px 12px;font-size:14px">${note}</p>
     <h2>Efekty uczenia się</h2>
@@ -70,6 +70,7 @@
       <tr><td>W3. Osoby z przyrostem ≥ 40 pp</td><td>${reached} z ${people.length}</td><td>≥ 80% osób</td><td>${people.length ? yes(Math.round((100 * reached) / people.length), 80) : '–'}</td></tr>
       <tr><td>W6. Zamiar sprawdzania źródła (D1 „tak, zawsze”)</td><td>${d1 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d1, 70)}</td></tr>
       <tr><td>W6. Słowo-hasło w rodzinie (D2 „tak” lub „już mamy”)</td><td>${d2 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d2, 70)}</td></tr>
+      <tr><td>W6. Weryfikacja dwuetapowa (D3 „tak” lub „już mam”)</td><td>${d3 ?? '–'}%</td><td>≥ 70%</td><td>${yes(d3, 70)}</td></tr>
     </table>
     <h2>Test wiedzy: odsetek poprawnych odpowiedzi</h2>
     <table><tr><th>Pytanie</th><th>PRZED</th><th>PO</th></tr>
@@ -88,7 +89,7 @@
     <table><tr><th>Pytanie</th><th>Odpowiedzi (n = ${pre.length})</th></tr>
       ${SURVEY.filter((x) => x.part === 'A').map((x) => `<tr><td>${L(x.q)}</td><td>${dist(pre, x)}</td></tr>`).join('')}
     </table>
-    <h2>Ocena wyjazdu</h2>
+    <h2>Co dalej po wyjeździe</h2>
     <table><tr><th>Pytanie</th><th>Odpowiedzi (n = ${post.length})</th></tr>
       ${SURVEY.filter((x) => x.part === 'D').map((x) => `<tr><td>${L(x.q)}</td><td>${dist(post, x)}</td></tr>`).join('')}
     </table>

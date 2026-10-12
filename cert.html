@@ -51,9 +51,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=78"></script>
-<script src="common.js?v=78"></script>
-<script src="cert-print.js?v=78"></script>
+<script src="data.js?v=79"></script>
+<script src="common.js?v=79"></script>
+<script src="cert-print.js?v=79"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -201,12 +201,6 @@
     x.strokeStyle = '#E5B800'; x.lineWidth = 1.5; x.strokeRect(75, 75, 930, 690);
     const boss = bossData();
     const [logo, eu, bb, sig, bsig, stamp] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg'), load(st.sig), load(boss.sig), load(boss.stamp)]);
-    // Header like the consent form: foundation + Blue Beehive left, EU right, navy rule under; the card content sits below it.
-    if (logo) x.drawImage(logo, 100, 92, 54 * logo.width / logo.height, 54);
-    if (bb) x.drawImage(bb, 120 + (logo ? 54 * logo.width / logo.height : 0), 98, 42 * bb.width / bb.height, 42);
-    if (eu) x.drawImage(eu, 980 - 54 * eu.width / eu.height, 92, 54 * eu.width / eu.height, 54);
-    x.fillStyle = '#0B1F3A'; x.fillRect(100, 158, 880, 4);
-    x.save(); x.translate(0, 62);
     x.textAlign = 'center';
     x.fillStyle = '#003399'; x.font = '700 17px "Public Sans", Arial'; if ('letterSpacing' in x) x.letterSpacing = '4px';
     x.fillText(L(UI.certKick).toUpperCase(), 540, 124); if ('letterSpacing' in x) x.letterSpacing = '0px';
@@ -234,7 +228,11 @@
     if (stamp || bsig) x.fillText(L(C.signed), bx, line - 16);
     x.fillStyle = '#0B1F3A'; x.fillRect(px - 150, line, 300, 1.5); x.fillRect(bx - 150, line, 300, 1.5);
     x.font = '400 14px "Public Sans", Arial'; x.fillText(L(UI.certSignP), px, line + 22); x.fillText(L(UI.certSignBoss), bx, line + 22);
-    x.restore();
+    // Logo row as on the consent form: foundation + Blue Beehive left, EU right.
+    const lw = logo ? 52 * logo.width / logo.height : 0;
+    if (logo) x.drawImage(logo, 110, 700, lw, 52);
+    if (bb) x.drawImage(bb, 130 + lw, 707, 40 * bb.width / bb.height, 40);
+    if (eu) x.drawImage(eu, 970 - 52 * eu.width / eu.height, 700, 52 * eu.width / eu.height, 52);
     return new Promise((r) => c.toBlob(r, 'image/jpeg', 0.9));
   }
 
