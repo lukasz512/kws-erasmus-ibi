@@ -30,11 +30,29 @@
 <body>
 <div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
 <div class="page" id="page"></div>
-<script src="data.js?v=74"></script>
-<script src="common.js?v=74"></script>
+<script src="data.js?v=75"></script>
+<script src="common.js?v=75"></script>
 <script>
   LANG = 'pl';
   const SV = store('kws-survey-v1') || {};
+  // Answers from phones arrive on the live channel; pull them here too, so the report works without the presentation open.
+  const TOPIC = params.get('t') || store('kws-topic');
+  async function pull() {
+    const ms = TOPIC ? await Live.history(TOPIC) : [];
+    let n = 0;
+    const fb = store('kws-fb') || {};
+    ms.forEach((m) => {
+      const x = Live.parse(m); if (!x) return;
+      if (x.k === 's' && (x.phase === 'pre' || x.phase === 'post') && x.ans && typeof x.ans === 'object') {
+        const code = String(x.code || '').trim().toUpperCase();
+        SV[x.phase + '|' + (code || 'dev-' + x.d)] = { phase: x.phase, code, g: x.g, ans: x.ans, t: m.time, src: 'phone' }; n++;
+      } else if (x.k === 'fb' && x.d) fb[x.d] = { g: x.g, t: m.time };
+    });
+    if (Sheet.url()) (await Sheet.rows()).forEach((r) => { if (r.phase === 'pre' || r.phase === 'post') { SV[r.key] = { phase: r.phase, code: r.code, g: r.g, ans: r.ans, t: r.t, src: r.src }; n++; } });
+    store('kws-survey-v1', SV); store('kws-fb', fb);
+    return TOPIC ? `Pobrano ${n} ankiet z kanału sesji ${TOPIC} (kanał trzyma wiadomości ok. 12 h; wcześniejsze są zapisane na tym urządzeniu).` : 'Brak sesji na tym urządzeniu: otwórz raport na laptopie z prezentacją albo dodaj ?t=<kod sesji>.';
+  }
+  function draw(note) {
   const TESTS = SURVEY.filter((x) => x.type === 'test');
   const entries = (ph) => Object.values(SV).filter((e) => e.phase === ph && e.ans && !Array.isArray(e.ans));
   const pct = (ans) => Math.round((100 * TESTS.filter((x) => ans[x.id] === x.ok).length) / TESTS.length);
@@ -56,6 +74,7 @@
     <header><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:40px"><img class="eu" src="img/eu-pl.jpg" alt=""></header>
     <h1>Raport ankiety przed/po: dezinformacja</h1>
     <div class="meta">Projekt Erasmus+ KA122-ADU „KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich”${PROJECT_NO ? ' · nr ' + PROJECT_NO : ''} · Ibi i Alicante, 11–21.10.2026 · wygenerowano ${new Date().toLocaleString('pl-PL')}</div>
+    <p class="note" style="background:#FFF6D6;border-radius:10px;padding:8px 12px;font-size:14px">${note}</p>
     <h2>Efekty uczenia się</h2>
     <div class="kpis">
       <div class="kpi">Test PRZED<b>${preAvg ?? '–'}%</b>n = ${pre.length}</div>
@@ -97,6 +116,9 @@
       ${SURVEY.filter((x) => x.part === 'D').map((x) => `<tr><td>${L(x.q)}</td><td>${dist(post, x)}</td></tr>`).join('')}
     </table>
     <div class="sign"><div>Koordynator projektu</div><div>Data i podpis</div></div>`;
+  }
+  draw('⏳ Pobieram odpowiedzi…');
+  pull().then(draw, () => draw('Nie udało się pobrać odpowiedzi z kanału.'));
 </script>
 </body>
 </html>

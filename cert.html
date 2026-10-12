@@ -29,15 +29,16 @@
   .btn.ghost { background: #fff; color: #0B1F3A; border: 2px solid #D9D5C8; box-shadow: none; font-weight: 700; font-size: 17px; min-height: 52px; }
   .btn:disabled { opacity: .5; }
   .link { background: none; border: 0; color: #4A5568; font: 700 15px 'Public Sans'; text-decoration: underline; }
-  .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .slot { aspect-ratio: 1; border-radius: 14px; border: 2px dashed #9AA3B2; background: #fff center/cover; display: grid; place-items: center; font-size: 34px; color: #9AA3B2; position: relative; overflow: hidden; }
-  .slot input { position: absolute; inset: 0; opacity: 0; }
-  .slot.has { border: 3px solid #1877F2; font-size: 0; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { font: 14px 'Public Sans'; padding: 8px 12px; border-radius: 99px; background: #fff; border: 1px solid #D9D5C8; color: #0B1F3A; }
   .a4prev { width: 100%; overflow: hidden; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.15); background: #fff; }
   .a4prev .cert { transform-origin: top left; }
   #preview { width: 100%; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+  .guide { display: grid; gap: 8px; margin: 4px 0 12px; }
+  .gstep { display: flex; gap: 12px; align-items: center; background: #fff; border: 2px solid #E3E0D5; border-radius: 16px; padding: 12px; font-size: 17px; line-height: 1.35; }
+  .gstep b { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #1877F2; color: #fff; display: grid; place-items: center; font: 900 18px 'Public Sans'; }
+  textarea.copied { min-height: 90px; font-size: 15px; background: #F7F7F4; margin: 8px 0 2px; }
+  #guide { display: grid; gap: 8px; }
   .ok { background: #DDF1E4; border-radius: 14px; padding: 14px; font-weight: 700; line-height: 1.4; }
   @media print { body { background: #fff; padding: 0; } .app { display: none; } }
 </style>
@@ -50,9 +51,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=74"></script>
-<script src="common.js?v=74"></script>
-<script src="cert-print.js?v=74"></script>
+<script src="data.js?v=75"></script>
+<script src="common.js?v=75"></script>
+<script src="cert-print.js?v=75"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -64,21 +65,29 @@
     sign: T('✍️ Podpisz się palcem', '✍️ Sign with your finger', '✍️ Firma con el dedo'),
     clear: T('wyczyść', 'clear', 'borrar'),
     next: T('Dalej', 'Next', 'Siguiente'),
-    s2: T('Dodaj zdjęcia z wyjazdu', 'Add photos from the trip', 'Añade fotos del viaje'),
-    s2h: T('Do 3 zdjęć. Możesz pominąć.', 'Up to 3 photos. You can skip this.', 'Hasta 3 fotos. Puedes saltarlo.'),
+    s2: T('Opis na Facebooka', 'Your Facebook text', 'Tu texto para Facebook'),
+    s2h: T('Zmień tekst albo zostaw nasz. Dodamy do niego informację o projekcie.', 'Change the text or keep ours. We add the project information to it.', 'Cambia el texto o deja el nuestro. Le añadimos la información del proyecto.'),
     s3: T('Gotowe! Pochwal się', 'Done! Show it off', '¡Listo! Compártelo'),
-    s3h: T('Możesz zmienić tekst albo zostawić nasz.', 'Change the text or keep ours.', 'Cambia el texto o deja el nuestro.'),
+    s3h: T('Zrób dwa kroki, a potem dodasz post na Facebooku.', 'Do these two steps, then add the post on Facebook.', 'Haz estos dos pasos y luego publica en Facebook.'),
     defaultText: T('Wróciłam/em z Hiszpanii z nową wiedzą: jak rozpoznać oszustwa w sieci i nie dać się nabrać na fake newsy! 🇵🇱🇪🇸', 'Back from Spain with new skills: how to spot online scams and not fall for fake news! 🇵🇱🇪🇸', '¡Vuelvo de España sabiendo detectar estafas en internet y no caer en bulos! 🇵🇱🇪🇸'),
     starters: [T('Najbardziej zaskoczyło mnie… ', 'What surprised me most… ', 'Lo que más me sorprendió… '), T('Polecam taki wyjazd, bo… ', 'I recommend a trip like this because… ', 'Recomiendo un viaje así porque… ')],
-    fb: T('Opublikuj na Facebooku', 'Post on Facebook', 'Publicar en Facebook'),
+    saveImg: T('Zapisz certyfikat do zdjęć', 'Save the certificate to photos', 'Guardar el certificado en fotos'),
+    saveHint: T('Bez podpisów, gotowy na Facebooka. iPhone: wybierz „Zapisz obraz”.', 'No signatures, ready for Facebook. iPhone: choose “Save Image”.', 'Sin firmas, listo para Facebook. iPhone: elige «Guardar imagen».'),
+    savedOk: T('Certyfikat zapisany w telefonie', 'Certificate saved on your phone', 'Certificado guardado en el teléfono'),
+    copy: T('Kopiuj opis do Facebooka', 'Copy the text for Facebook', 'Copiar el texto para Facebook'),
+    copiedOk: T('Opis skopiowany. Jest w pamięci telefonu.', 'Text copied. It is in your phone’s memory.', 'Texto copiado. Está en la memoria del teléfono.'),
+    copyManual: T('Zaznacz tekst poniżej i skopiuj go.', 'Select the text below and copy it.', 'Selecciona el texto de abajo y cópialo.'),
+    copyAgain: T('kopiuj jeszcze raz', 'copy again', 'copiar otra vez'),
+    guide: [T('Otwórz Facebooka i kliknij „Co słychać?”', 'Open Facebook and tap “What’s on your mind?”', 'Abre Facebook y pulsa «¿Qué estás pensando?»'),
+      T('Przytrzymaj palec na polu tekstu i wybierz „Wklej”', 'Press and hold the text box and choose “Paste”', 'Mantén pulsado el cuadro de texto y elige «Pegar»'),
+      T('Kliknij „Zdjęcie”, wybierz certyfikat i zdjęcia z wyjazdu, potem „Opublikuj”', 'Tap “Photo”, pick the certificate and trip photos, then “Post”', 'Pulsa «Foto», elige el certificado y las fotos del viaje y luego «Publicar»')],
+    openFb: T('Otwórz Facebooka', 'Open Facebook', 'Abrir Facebook'),
+    forPrint: T('Certyfikat do druku', 'Certificate to print', 'Certificado para imprimir'),
     pdf: T('Zapisz certyfikat (PDF)', 'Save the certificate (PDF)', 'Guardar el certificado (PDF)'),
-    thanks: T('Dziękujemy! Opis jest już skopiowany: w Facebooku przytrzymaj pole tekstu i wybierz „Wklej”. Oznacz fundację: @Kaszëbi we swiecë.', 'Thank you! The text is copied: in Facebook, press and hold the text box and choose “Paste”. Tag the foundation: @Kaszëbi we swiecë.', '¡Gracias! El texto está copiado: en Facebook mantén pulsado el cuadro de texto y elige «Pegar». Etiqueta a la fundación: @Kaszëbi we swiecë.'),
-    event: T('📅 Zobacz wydarzenie na Facebooku', '📅 See the event on Facebook', '📅 Ver el evento en Facebook'),
     signed: T('✓ podpisano', '✓ signed', '✓ firmado'),
     sign2: T('Mobilność Erasmus+ „KASZËBI W EUROPIE!” · Ibi i Alicante 2026 · @Kaszëbi we swiecë · Współfinansowane przez Unię Europejską #ErasmusPlus #KaszëbiWEuropie #Cyberbezpieczeństwo', 'Erasmus+ mobility “KASZËBI IN EUROPE!” · Ibi and Alicante 2026 · @Kaszëbi we swiecë · Co-funded by the European Union #ErasmusPlus #KaszëbiWEuropie', 'Movilidad Erasmus+ «KASZËBI EN EUROPA» · Ibi y Alicante 2026 · @Kaszëbi we swiecë · Cofinanciado por la Unión Europea #ErasmusPlus #KaszëbiWEuropie')
   };
   const st = store('kws-cert') || { step: 0, name: '', sig: '', text: '' };
-  const photos = [null, null, null];
   // Preview (?pv=<step>): a sample participant at that step, never saved over the real one on this device.
   const pv = params.get('pv');
   if (pv !== null) Object.assign(st, { step: +pv || 0, name: 'Anna Kowalska', sig: '', text: '' });
@@ -120,45 +129,69 @@
       card.append(h('button', { class: 'link', onclick: () => { clear(); } }, L(C.clear)),
         h('button', { class: 'btn', onclick: () => { if (!st.name.trim()) { inp.focus(); return; } st.step = 1; saveSt(); draw(); } }, L(C.next) + ' →'));
     } else if (st.step === 1) {
-      card.append(h('h1', {}, '📷 ' + L(C.s2)), h('p', { class: 'hint' }, L(C.s2h)));
-      const ph = h('div', { class: 'photos' });
-      photos.forEach((p, i) => {
-        const inp = h('input', { type: 'file', accept: 'image/*' });
-        inp.onchange = () => { const f = inp.files[0]; if (!f) return; const im = new Image(); im.onload = () => { photos[i] = im; draw(); }; im.src = URL.createObjectURL(f); };
-        ph.append(h('label', { class: 'slot' + (p ? ' has' : ''), style: p ? `background-image:url('${p.src}')` : '' }, '＋', inp));
-      });
-      card.append(ph, h('button', { class: 'btn', onclick: () => { st.step = 2; saveSt(); draw(); } }, L(C.next) + ' →'),
-        h('button', { class: 'link', onclick: () => { st.step = 0; saveSt(); draw(); } }, '← ' + L(C.s1)));
-    } else {
+      // Step 2: the participant writes the Facebook text first.
       if (!st.text) st.text = L(C.defaultText);
       const ta = h('textarea', {}); ta.value = st.text; ta.oninput = () => { st.text = ta.value; saveSt(); };
-      const fbBtn = h('button', { class: 'btn fb', onclick: () => share(fbBtn) }, 'f  ' + L(C.fb));
-      // Live A4 preview of exactly what prints (cert-print.js), scaled to the card width.
+      card.append(h('h1', {}, '✏️ ' + L(C.s2)), h('p', { class: 'hint' }, L(C.s2h)), ta,
+        h('div', { class: 'chips' }, C.starters.map((t) => h('button', { class: 'chip', onclick: () => { ta.value += '\n' + L(t); st.text = ta.value; saveSt(); ta.focus(); } }, '+ ' + L(t).trim()))),
+        h('button', { class: 'btn', onclick: () => { st.step = 2; saveSt(); draw(); } }, L(C.next) + ' →'),
+        h('button', { class: 'link', onclick: () => { st.step = 0; saveSt(); draw(); } }, '← ' + L(C.s1)));
+    } else {
+      // Step 3: save the masked certificate, copy the text, then a 3-step guide for the Facebook post.
+      const saveBtn = h('button', { class: 'btn fb', onclick: () => saveImage(saveBtn) }, '① ' + L(C.saveImg));
+      const copyBtn = h('button', { class: 'btn fb', onclick: () => copyText() }, '② ' + L(C.copy));
       const a4 = h('div', { class: 'a4prev' }); a4.innerHTML = certHtml(st.name, st.sig, bossData());
       requestAnimationFrame(() => { const k = a4.clientWidth / a4.firstElementChild.offsetWidth; a4.firstElementChild.style.transform = `scale(${k})`; a4.style.height = a4.firstElementChild.offsetHeight * k + 'px'; });
-      card.append(h('h1', {}, '🎉 ' + L(C.s3)), a4, h('p', { class: 'hint' }, L(C.s3h)), ta,
-        h('div', { class: 'chips' }, C.starters.map((s) => h('button', { class: 'chip', onclick: () => { ta.value += '\n' + L(s); st.text = ta.value; saveSt(); ta.focus(); } }, '+ ' + L(s).trim()))),
-        fbBtn, h('div', { id: 'done' }),
+      card.append(h('h1', {}, '🎉 ' + L(C.s3)), h('p', { class: 'hint' }, L(C.s3h)),
+        saveBtn, h('p', { class: 'hint', id: 'saved' }, st.saved ? '✓ ' + L(C.savedOk) : L(C.saveHint)),
+        copyBtn, h('div', { id: 'guide' }));
+      if (st.copied) showGuide();
+      card.append(h('h1', { style: 'margin-top:14px;font-size:21px' }, '🎓 ' + L(C.forPrint)), a4,
         h('button', { class: 'btn ghost', onclick: printCert }, '⬇ ' + L(C.pdf)),
-        window.FB.event ? h('a', { class: 'btn ghost', href: window.FB.event, target: '_blank' }, L(C.event)) : null,
         h('button', { class: 'link', onclick: () => { st.step = 1; saveSt(); draw(); } }, '← ' + L(C.s2)));
     }
   }
 
-  const load = (src) => new Promise((r) => { if (!src) return r(null); const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
-  function cover(x, img, a, b, w, hh, rad) {
-    x.save(); x.beginPath(); x.roundRect(a, b, w, hh, rad); x.clip();
-    const s = Math.max(w / img.width, hh / img.height);
-    x.drawImage(img, a + (w - img.width * s) / 2, b + (hh - img.height * s) / 2, img.width * s, img.height * s); x.restore();
+  function postText() { return [(st.text || L(C.defaultText)).trim(), L(C.sign2), window.FB.event].filter(Boolean).join('\n\n'); }
+  async function saveImage(btn) {
+    btn.disabled = true;
+    const f = new File([await makeImage()], 'certyfikat-kaszebi-w-europie.jpg', { type: 'image/jpeg' });
+    let ok = false;
+    try {
+      // Phones: the share sheet's "Save image" puts it in the gallery, where Facebook's photo picker finds it.
+      if (/Android|iPhone|iPad/i.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); ok = true; }
+      else { const a = h('a', { href: URL.createObjectURL(f), download: f.name }); document.body.append(a); a.click(); a.remove(); ok = true; }
+    } catch (e) { /* closed the share sheet */ }
+    if (ok) { st.saved = true; saveSt(); document.getElementById('saved').textContent = '✓ ' + L(C.savedOk); }
+    btn.disabled = false;
   }
+  async function copyText() {
+    let ok = true;
+    try { await navigator.clipboard.writeText(postText()); } catch (e) { ok = false; }
+    st.copied = true; saveSt(); showGuide(ok);
+    // Organiser summary: count participants who got to the Facebook step (no personal data, just the device).
+    if (topic && !store('kws-fb-sent-' + topic)) { Live.sendSure(topic, { k: 'fb', d: deviceId() }, null, 6).then((r) => { if (r) store('kws-fb-sent-' + topic, 1); }); }
+  }
+  function showGuide(ok = true) {
+    const g = document.getElementById('guide'); if (!g) return;
+    const box = h('textarea', { readonly: true, class: 'copied' }); box.value = postText();
+    g.innerHTML = '';
+    g.append(h('p', { class: 'ok' }, ok ? '✓ ' + L(C.copiedOk) : L(C.copyManual)), box,
+      h('button', { class: 'link', onclick: () => copyText() }, '📋 ' + L(C.copyAgain)),
+      h('div', { class: 'guide' }, C.guide.map((t, i) => h('div', { class: 'gstep' }, h('b', {}, String(i + 1)), h('span', {}, L(t))))),
+      h('a', { class: 'btn fb', href: 'https://www.facebook.com/', target: '_blank' }, 'f  ' + L(C.openFb)));
+    g.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  const load = (src) => new Promise((r) => { if (!src) return r(null); const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
   function wrap(x, text, cx, y, maxW, lh) {
     let line = '';
     for (const w of text.split(' ')) { const t = line + w + ' '; if (x.measureText(t).width > maxW && line) { x.fillText(line.trim(), cx, y); line = w + ' '; y += lh; } else line = t; }
     x.fillText(line.trim(), cx, y); return y;
   }
-  // 1080×1350 picture for Facebook: certificate on top (signatures masked), photos below.
-  async function makeImage(certOnly) {
-    const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
+  // 1080×840 picture for Facebook: the certificate with signatures masked.
+  async function makeImage() {
+    const c = document.createElement('canvas'); c.width = 1080; c.height = 840;
     const x = c.getContext('2d');
     // Certificate card in the printed design (classic diploma): navy double frame, gold inner line, centred text.
     x.fillStyle = '#F5F3EC'; x.fillRect(0, 0, 1080, 1350);
@@ -199,36 +232,7 @@
     if (logo) x.drawImage(logo, 110, 706, 52 * logo.width / logo.height, 52);
     if (bb) x.drawImage(bb, 540 - 19 * bb.width / bb.height, 718, 38 * bb.width / bb.height, 38);
     if (eu) x.drawImage(eu, 970 - 52 * eu.width / eu.height, 706, 52 * eu.width / eu.height, 52);
-    const list = photos.filter(Boolean);
-    if (list.length) { const gap = 20, w = (1000 - gap * (list.length - 1)) / list.length; list.forEach((p, i) => cover(x, p, 40 + i * (w + gap), 830, w, 480, 22)); }
-    else { x.fillStyle = '#003399'; x.beginPath(); x.roundRect(40, 830, 1000, 480, 22); x.fill(); x.fillStyle = '#FFCC00'; x.font = '900 70px "Public Sans", Arial'; x.fillText('Ibi · Alicante 2026', 540, 1090); }
-    let out = c;
-    if (certOnly) { out = document.createElement('canvas'); out.width = 1080; out.height = 840; out.getContext('2d').drawImage(c, 0, 0); }
-    return new Promise((r) => out.toBlob(r, 'image/jpeg', 0.9));
-  }
-
-  async function share(btn) {
-    btn.disabled = true;
-    // Post = prepared text + masked certificate (no signatures) + the participant's own photos.
-    const text = [st.text.trim(), L(C.sign2), window.FB.event].filter(Boolean).join('\n\n');
-    try { await navigator.clipboard.writeText(text); } catch (e) { /* clipboard blocked */ }
-    const files = [new File([await makeImage(true)], 'certyfikat-kaszebi-w-europie.jpg', { type: 'image/jpeg' })];
-    for (const [i, p] of photos.entries()) { if (p) files.push(new File([await (await fetch(p.src)).blob()], `ibi-${i + 1}.jpg`, { type: 'image/jpeg' })); }
-    let shared = false;
-    try {
-      if (navigator.canShare && navigator.canShare({ files })) { await navigator.share({ files, text }); shared = true; }
-      else {
-        // Desktop: save the pictures, then open Facebook's post form with the event link; the text is on the clipboard.
-        files.forEach((f, i) => setTimeout(() => { const a = h('a', { href: URL.createObjectURL(f), download: f.name }); document.body.append(a); a.click(); a.remove(); }, i * 400));
-        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.FB.event || window.FB.page), '_blank'); shared = true;
-      }
-    } catch (e) { /* closed the share sheet */ }
-    if (shared) {
-      // Organiser summary: count shares (no personal data, just the device).
-      if (topic && !store('kws-fb-sent-' + topic)) { Live.sendSure(topic, { k: 'fb', d: deviceId() }, null, 6).then((ok) => { if (ok) store('kws-fb-sent-' + topic, 1); }); }
-      document.getElementById('done').innerHTML = ''; document.getElementById('done').append(h('p', { class: 'ok' }, '✓ ' + L(C.thanks)));
-    }
-    btn.disabled = false;
+    return new Promise((r) => c.toBlob(r, 'image/jpeg', 0.9));
   }
 
   function printCert() {

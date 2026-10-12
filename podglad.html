@@ -34,7 +34,7 @@
   <div class="langs" id="langs"></div></header>
 <p class="note">Tryb podglądu: przyciski działają, ale nic nie jest wysyłane do prezentacji ani arkusza, a certyfikat pokazuje przykładową osobę. „otwórz” pokazuje widok na pełnym ekranie.</p>
 <div id="all"></div>
-<script src="data.js?v=74"></script>
+<script src="data.js?v=75"></script>
 <script>
   // One preview session id so nothing mixes with a real class session.
   const TOPIC = 'podglad';
@@ -49,7 +49,7 @@
         ['Lista zadań', `vote.html?${q('day=' + d)}`],
         ...window.DAYS[d].acts.map((a, i) => [`Zadanie ${i + 1}`, `vote.html?${q(`day=${d}&open=${i}`)}`])
       ]]),
-      ['Certyfikat', [['1. Imię i podpis', `cert.html?${q().replace('pv=1', 'pv=0')}`], ['2. Zdjęcia', `cert.html?${q()}`], ['3. Certyfikat do pobrania i na FB', `cert.html?${q().replace('pv=1', 'pv=2')}`]]]
+      ['Certyfikat', [['1. Imię i podpis', `cert.html?${q().replace('pv=1', 'pv=0')}`], ['2. Opis na FB', `cert.html?${q()}`], ['3. Certyfikat i Facebook (3 kroki)', `cert.html?${q().replace('pv=1', 'pv=2')}`]]]
     ];
     document.getElementById('all').innerHTML = groups.map(([g, items]) => `<section><h2>${g}</h2><div class="row">${items.map(([t, u, k]) =>
       `<figure><figcaption>${t}<a href="${u}" target="_blank">otwórz ↗</a></figcaption><div class="${k || 'ph'}"><iframe loading="lazy" src="${u}" title="${t}"></iframe></div></figure>`).join('')}</div></section>`).join('');
