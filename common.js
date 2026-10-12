@@ -113,3 +113,9 @@ fetch('version.txt?' + Date.now(), { cache: 'no-store' }).then((r) => r.text()).
     location.replace(u.toString());
   }
 }).catch(() => {});
+
+// Preview mode (?pv=…, used by podglad.html): pages render normally but send nothing to the live channel or the sheet.
+if (params.get('pv') !== null) {
+  const ok = () => Promise.resolve(true);
+  Live.send = ok; if (Live.sendSure) Live.sendSure = ok; Sheet.post = ok;
+}

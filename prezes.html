@@ -56,9 +56,9 @@
   </div>
 </div>
 <div class="certs" id="printArea"></div>
-<script src="data.js?v=69"></script>
-<script src="common.js?v=69"></script>
-<script src="cert-print.js?v=69"></script>
+<script src="data.js?v=70"></script>
+<script src="common.js?v=70"></script>
+<script src="cert-print.js?v=70"></script>
 <script>
   LANG = 'pl';
   const BOSS = 'kws-boss';
@@ -78,6 +78,7 @@
     return o.toDataURL('image/png');
   }
   // Photo → transparent background. ink=true recolours strokes to dark blue (signature); false keeps colours (stamp).
+  // Tries a strict ink threshold first, then looser ones for faint pen or grey photos; null when nothing was found.
   function clean(file, ink) {
     return new Promise((res) => {
       const img = new Image();
@@ -87,14 +88,18 @@
         const x = c.getContext('2d'); x.drawImage(img, 0, 0, c.width, c.height);
         const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
         let sum = 0; for (let i = 0; i < d.length; i += 4) sum += (d[i] + d[i + 1] + d[i + 2]) / 3;
-        const paper = sum / (d.length / 4), cut = paper - 45; // anything clearly darker than the paper is ink
+        const paper = sum / (d.length / 4), src = new Uint8ClampedArray(d);
+        for (const gap of [45, 25, 12]) {
+        d.set(src); const cut = paper - gap; // anything clearly darker than the paper is ink
         for (let i = 0; i < d.length; i += 4) {
           const lum = (d[i] + d[i + 1] + d[i + 2]) / 3, sat = Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]);
           const a = ink ? (lum < cut ? Math.min(255, (cut - lum) * 4 + 120) : 0) : (lum < cut || sat > 60 ? Math.min(255, (paper - lum) * 3 + sat * 2) : 0);
           if (ink) { d[i] = 11; d[i + 1] = 31; d[i + 2] = 80; }
           d[i + 3] = Math.max(0, a);
         }
-        x.putImageData(id, 0, 0); URL.revokeObjectURL(img.src); res(crop(c));
+        x.putImageData(id, 0, 0); const out = crop(c); if (out) { URL.revokeObjectURL(img.src); res(out); return; }
+        }
+        URL.revokeObjectURL(img.src); res(null);
       };
       img.src = URL.createObjectURL(file);
     });
@@ -116,8 +121,8 @@
   addEventListener('pointerup', () => { drawing = false; });
   $('clr').onclick = size;
   $('savePad').onclick = () => { if (!dirty) { alert('Najpierw się podpisz.'); return; } put('sig', crop(cv)); size(); };
-  $('sigFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) put('sig', await clean(f, true)); };
-  $('stampFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) put('stamp', await clean(f, false)); };
+  $('sigFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; const v = await clean(f, true); if (v) put('sig', v); else alert('Nie widać podpisu na zdjęciu. Zrób zdjęcie ciemnym długopisem na białej kartce albo podpisz się palcem w ramce.'); };
+  $('stampFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; const v = await clean(f, false); if (v) put('stamp', v); else alert('Nie widać pieczątki na zdjęciu.'); };
   // Downloads the PNGs; once they are in the repo's img/ folder, every phone shows them (see BOSS_FILES in data.js).
   $('share').onclick = () => {
     const b = boss(); if (!b.sig && !b.stamp) { alert('Najpierw dodaj podpis lub pieczątkę.'); return; }

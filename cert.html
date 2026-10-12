@@ -44,18 +44,20 @@
 </head>
 <body>
 <div class="app">
-  <div class="top"><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></div>
+  <div class="top"><a id="home"><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"></a><div class="langs" id="langs"></div></div>
   <div class="steps" id="steps"></div>
   <div id="main"></div>
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=69"></script>
-<script src="common.js?v=69"></script>
-<script src="cert-print.js?v=69"></script>
+<script src="data.js?v=70"></script>
+<script src="common.js?v=70"></script>
+<script src="cert-print.js?v=70"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
+  // Foundation logo = home: the participant's task list for this session.
+  document.getElementById('home').href = topic ? `vote.html?lang=${LANG}&t=${topic}` : 'lang.html';
   const C = {
     s1: T('Twój certyfikat', 'Your certificate', 'Tu certificado'),
     s1h: T('Wpisz imię i nazwisko, a poniżej podpisz się palcem.', 'Type your full name and sign below with your finger.', 'Escribe tu nombre y firma abajo con el dedo.'),
@@ -76,7 +78,10 @@
   };
   const st = store('kws-cert') || { step: 0, name: '', sig: '', text: '' };
   const photos = [null, null, null];
-  const saveSt = () => store('kws-cert', st);
+  // Preview (?pv=<step>): a sample participant at that step, never saved over the real one on this device.
+  const pv = params.get('pv');
+  if (pv !== null) Object.assign(st, { step: +pv || 0, name: 'Anna Kowalska', sig: '', text: '' });
+  const saveSt = () => { if (pv === null) store('kws-cert', st); };
   const main = document.getElementById('main');
 
   function langs() {

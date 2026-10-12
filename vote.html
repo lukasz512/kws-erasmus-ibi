@@ -77,13 +77,13 @@
 </head>
 <body>
 <div class="wrap">
-  <header><img src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë"><div class="langs" id="langs"></div></header>
+  <header><img id="home" src="img/kaszebi-logo.png" alt="Kaszëbi we swiecë" style="cursor:pointer"><div class="langs" id="langs"></div></header>
   <main id="main"></main>
 </div>
-<script src="data.js?v=69"></script>
+<script src="data.js?v=70"></script>
 <script src="vendor/maplibre-gl.js"></script>
-<script src="common.js?v=69"></script>
-<script src="maps.js?v=69"></script>
+<script src="common.js?v=70"></script>
+<script src="maps.js?v=70"></script>
 <script>
 const topic = params.get('t');
 const dev = deviceId();
@@ -98,6 +98,10 @@ let liveKey = null;      // what the presenter shows right now
 let view = null;         // null = task list, otherwise the open activity
 let phoneMap = null, picked = null;
 const main = document.getElementById('main');
+// Foundation logo = home: back to the task list from any open activity.
+// Preview (?open=<n>): open that activity of the day straight away.
+if (params.get('open') !== null) view = DAY.acts[+params.get('open')] || null;
+document.getElementById('home').onclick = () => { view = null; draw(); scrollTo(0, 0); };
 if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
 members[dev] = 1;
 if (topic && !store('kws-joined-' + topic)) Live.send(topic, { k: 'j', d: dev }).then((ok) => { if (ok) store('kws-joined-' + topic, 1); });
