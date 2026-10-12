@@ -20,8 +20,6 @@ const geo = {};      // guess/pin key → { device: {at, g} }
 const revealed = {};
 const seen = new Set();
 // Survey answers survive across days on this laptop (the live channel keeps messages only ~12 h).
-const SV = (!READER && store('kws-survey-v1')) || {};
-const saveSV = () => store('kws-survey-v1', SV);
 const save = () => { if (!READER) store('kws-state-' + topic, { deck: S.deck, slide: S.slide, step: S.step, hand: S.hand, day: S.day }); };
 
 function ingest(m) {
@@ -32,46 +30,18 @@ function ingest(m) {
   joined[x.d] = 1;
   if (x.k === 'v' && x.key) (votes[x.key] = votes[x.key] || {})[x.d] = { a: x.a, g: x.g, t: m.time };
   else if ((x.k === 'gs' || x.k === 'pin') && x.key && Array.isArray(x.at)) (geo[x.key] = geo[x.key] || {})[x.d] = { at: x.at, g: x.g };
-  else if (x.k === 'fb') { const fb = store('kws-fb') || {}; fb[x.d] = { g: x.g, t: m.time }; store('kws-fb', fb); }
-  else if (x.k === 's' && (x.phase === 'pre' || x.phase === 'post') && Array.isArray(x.ans)) {
-    const code = String(x.code || '').trim().toUpperCase();
-    SV[x.phase + '|' + (code || 'dev-' + x.d)] = { phase: x.phase, code, g: x.g, ans: x.ans, t: m.time, src: 'phone' };
-    saveSV();
-  }
+  else Survey.ingest(m, x);
   return true;
 }
 
-// ---------- survey statistics ----------
-const TESTS = window.SURVEY.filter((x) => x.type === 'test');
-const itemsFor = (phase) => window.SURVEY.filter((x) => x.ph.includes(phase));
-const pct = (ans) => Math.round((100 * TESTS.filter((x) => ans[x.id] === x.ok).length) / TESTS.length);
-const entries = (phase) => Object.values(SV).filter((e) => e.phase === phase && e.ans && !Array.isArray(e.ans));
-const avg = (xs) => (xs.length ? Math.round(xs.reduce((a, b) => a + b, 0) / xs.length) : null);
-const avg1 = (xs) => (xs.length ? Math.round((10 * xs.reduce((a, b) => a + b, 0)) / xs.length) / 10 : null);
-function dist(list, item) {
-  const c = item.a.map(() => 0);
-  list.forEach((e) => { const v = e.ans[item.id]; if (v >= 0 && v < c.length) c[v]++; });
-  return c;
-}
-function surveyStats() {
-  const pre = entries('pre'), post = entries('post');
-  const perQ = (list) => TESTS.map((q) => (list.length ? Math.round((100 * list.filter((e) => e.ans[q.id] === q.ok).length) / list.length) : null));
-  const likert = (list, id) => avg1(list.map((e) => e.ans[id]).filter((v) => v >= 1 && v <= 5));
-  const preBy = {}, postBy = {};
-  pre.forEach((e) => { if (e.code) preBy[e.code] = e; });
-  post.forEach((e) => { if (e.code) postBy[e.code] = e; });
-  const people = Object.keys(preBy).filter((c) => postBy[c]).map((c) => ({ code: c, pre: pct(preBy[c].ans), post: pct(postBy[c].ans) })).sort((x, y) => (y.post - y.pre) - (x.post - x.pre));
-  const B = window.SURVEY.filter((x) => x.type === 'likert').map((x) => ({ item: x, pre: likert(pre, x.id), post: likert(post, x.id) }));
-  return { pre, post, preAvg: avg(pre.map((e) => pct(e.ans))), postAvg: avg(post.map((e) => pct(e.ans))), preQ: perQ(pre), postQ: perQ(post), people, B };
-}
-
+// Survey store and statistics live in survey.js (shared with report.html).
+const { TESTS, entries, itemsFor } = Survey;
+const surveyStats = () => Survey.stats();
 let sheetAt = 0;
 async function pullSheet(force) {
   if (READER || !Sheet.url() || (!force && Date.now() - sheetAt < 15000)) return;
   sheetAt = Date.now();
-  const rows = await Sheet.rows();
-  rows.forEach((r) => { if (r.phase === 'pre' || r.phase === 'post') SV[r.key] = { phase: r.phase, code: r.code, g: r.g, ans: r.ans, t: r.t, src: r.src }; });
-  if (rows.length) { saveSV(); if (['survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(cur().k)) render(); }
+  if (await Survey.pullSheet() && ['survey', 'results', 'people', 'teams', 'problem', 'confidence', 'evaluation'].includes(cur().k)) render();
 }
 
 function tally(key) {
@@ -395,7 +365,7 @@ const R = {
       stat('📝', pre.length, SURVEY_UI.pre),
       stat('📝', post.length, SURVEY_UI.post),
       stat('📍', guesses, MAP_UI.answers),
-      stat('📣', Object.keys(store('kws-fb') || {}).length, T('posty na Facebooku', 'Facebook posts', 'publicaciones en Facebook'))
+      stat('📣', Survey.fbCount(), T('posty na Facebooku', 'Facebook posts', 'publicaciones en Facebook'))
     ];
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(GAME_UI.teamsLive)), h('div', { class: 'tlives' }, cards)));
   },
@@ -447,7 +417,7 @@ function teamBars(list) {
     h('div', { class: 'track2' }, h('i', { style: `width:${(100 * fin) / tot}%;background:#003399` })), h('em', {}, `${fin} / ${members || '–'}`)));
 }
 function distCard(it, list) {
-  const c = dist(list, it), n = Math.max(1, c.reduce((x, y) => x + y, 0)), mx = Math.max(...c);
+  const c = Survey.dist(list, it), n = Math.max(1, c.reduce((x, y) => x + y, 0)), mx = Math.max(...c);
   return h('div', { class: 'dcard' }, h('h3', {}, L(it.q)),
     it.a.map((o, i) => h('div', { class: 'drow' + (c[i] === mx && mx > 0 ? ' top' : '') },
       h('span', { class: 'dl' }, L(o)), h('div', { class: 'dbar' }, h('i', { style: `width:${(100 * c[i]) / n}%` })), h('b', {}, Math.round((100 * c[i]) / n) + '%'))));
@@ -606,9 +576,7 @@ function paperForm() {
           else { const v = 'ABCD'.indexOf(ch); if (v < 0 || v >= x.a.length) { alert(`${x.id}: litera ${'ABCD'.slice(0, x.a.length)}`); return; } out[x.id] = v; }
         }
         const cd = code.value.trim().toUpperCase();
-        SV[ph.value + '|' + cd] = { phase: ph.value, code: cd, ans: out, t: Date.now() / 1000, src: 'paper' };
-        saveSV(); code.value = ''; ans.value = ''; code.focus();
-        if (Sheet.url()) Sheet.postSure({ phase: ph.value, code: cd, ans: out, src: 'paper', d: 'paper' });
+        Survey.paper(ph.value, cd, out); code.value = ''; ans.value = ''; code.focus();
         info.textContent = `Zapisano ${cd}. Zapisanych: przed ${entries('pre').length}, po ${entries('post').length}`;
       } }, 'Zapisz i następna'),
       h('button', { onclick: () => { menu(false); render(); } }, 'Zamknij')),
@@ -628,7 +596,7 @@ function menu(on) {
       ['pl', 'en', 'es'].map((l) => h('button', { onclick: () => { LANG = l; menu(false); render(); } }, 'Język: ' + l.toUpperCase())),
       Object.keys(window.DAYS).map((k) => h('button', { style: S.day === k ? 'background:#0B1F3A;color:#fff' : '', onclick: () => { S.day = k; save(); menu(true); render(); } }, '📅 ' + L(window.DAYS[k].name))),
       h('button', { onclick: paperForm }, '✍ Ankieta z kartki'),
-      h('button', { onclick: exportCsv }, '⬇ CSV ankiety'),
+      h('button', { onclick: Survey.csv }, '⬇ CSV ankiety'),
       h('a', { href: 'survey-print.html', target: '_blank' }, '🖨 Ankieta do druku'),
       h('a', { href: 'report.html', target: '_blank' }, '📄 Raport wyników (PDF)'),
       h('a', { href: 'consent.html', target: '_blank' }, '✍️ Zgody RODO (tablet)'),
@@ -638,16 +606,6 @@ function menu(on) {
     h('p', {}, 'Sesja: ', h('code', {}, topic), ` · ankieta: przed ${entries('pre').length}, po ${entries('post').length}`, Sheet.url() ? h('button', { onclick: () => pullSheet(true) }, '↻ pobierz z arkusza') : null),
     h('p', {}, 'Klawisze: ← → / spacja / pilot (na mapie podróży: kolejne przystanki) · R pokaż odpowiedź w zgadywance · F pełny ekran · M menu. Klik w odpowiedź sondy = +1 głos z sali.'),
     h('button', { onclick: () => menu(false) }, 'Zamknij'));
-}
-
-function exportCsv() {
-  const ids = window.SURVEY.map((x) => x.id);
-  const head = ['faza', 'kod', 'zrodlo', 'czas', 'test_%', ...ids];
-  const cell = (x, v) => (v == null ? '' : x.type === 'likert' ? v : 'ABCD'[v] + (x.type === 'test' && v === x.ok ? ' ✓' : ''));
-  const rows = [head, ...Object.values(SV).filter((e) => e.ans && !Array.isArray(e.ans)).map((e) => [e.phase, e.code, e.src, new Date(e.t * 1000).toISOString(), pct(e.ans), ...window.SURVEY.map((x) => cell(x, e.ans[x.id]))])];
-  const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
-  const el = h('a', { href: URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })), download: 'kws-ankieta-dezinformacja.csv' });
-  document.body.append(el); el.click(); el.remove();
 }
 
 addEventListener('resize', fit);

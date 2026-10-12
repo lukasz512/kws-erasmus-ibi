@@ -30,45 +30,22 @@
 <body>
 <div class="tools"><button onclick="print()">🖨 Drukuj / zapisz PDF</button></div>
 <div class="page" id="page"></div>
-<script src="data.js?v=75"></script>
-<script src="common.js?v=75"></script>
+<script src="data.js?v=76"></script>
+<script src="common.js?v=76"></script>
+<script src="survey.js?v=76"></script>
 <script>
   LANG = 'pl';
-  const SV = store('kws-survey-v1') || {};
   // Answers from phones arrive on the live channel; pull them here too, so the report works without the presentation open.
   const TOPIC = params.get('t') || store('kws-topic');
   async function pull() {
-    const ms = TOPIC ? await Live.history(TOPIC) : [];
-    let n = 0;
-    const fb = store('kws-fb') || {};
-    ms.forEach((m) => {
-      const x = Live.parse(m); if (!x) return;
-      if (x.k === 's' && (x.phase === 'pre' || x.phase === 'post') && x.ans && typeof x.ans === 'object') {
-        const code = String(x.code || '').trim().toUpperCase();
-        SV[x.phase + '|' + (code || 'dev-' + x.d)] = { phase: x.phase, code, g: x.g, ans: x.ans, t: m.time, src: 'phone' }; n++;
-      } else if (x.k === 'fb' && x.d) fb[x.d] = { g: x.g, t: m.time };
-    });
-    if (Sheet.url()) (await Sheet.rows()).forEach((r) => { if (r.phase === 'pre' || r.phase === 'post') { SV[r.key] = { phase: r.phase, code: r.code, g: r.g, ans: r.ans, t: r.t, src: r.src }; n++; } });
-    store('kws-survey-v1', SV); store('kws-fb', fb);
-    return TOPIC ? `Pobrano ${n} ankiet z kanału sesji ${TOPIC} (kanał trzyma wiadomości ok. 12 h; wcześniejsze są zapisane na tym urządzeniu).` : 'Brak sesji na tym urządzeniu: otwórz raport na laptopie z prezentacją albo dodaj ?t=<kod sesji>.';
+    await Survey.pull(TOPIC);
+    return TOPIC ? `Dane z tego urządzenia + kanał sesji ${TOPIC} (kanał trzyma wiadomości ok. 12 h).` : 'Brak sesji na tym urządzeniu: otwórz raport na laptopie z prezentacją albo dodaj ?t=<kod sesji>.';
   }
   function draw(note) {
-  const TESTS = SURVEY.filter((x) => x.type === 'test');
-  const entries = (ph) => Object.values(SV).filter((e) => e.phase === ph && e.ans && !Array.isArray(e.ans));
-  const pct = (ans) => Math.round((100 * TESTS.filter((x) => ans[x.id] === x.ok).length) / TESTS.length);
-  const avg = (xs, d = 0) => (xs.length ? Math.round((10 ** d * xs.reduce((a, b) => a + b, 0)) / xs.length) / 10 ** d : null);
-  const pre = entries('pre'), post = entries('post');
-  const preAvg = avg(pre.map((e) => pct(e.ans))), postAvg = avg(post.map((e) => pct(e.ans)));
-  const gain = preAvg != null && postAvg != null ? postAvg - preAvg : null;
-  const by = (list) => Object.fromEntries(list.filter((e) => e.code).map((e) => [e.code, e]));
-  const P = by(pre), Q = by(post);
-  const people = Object.keys(P).filter((c) => Q[c]).map((c) => ({ code: c, a: pct(P[c].ans), b: pct(Q[c].ans) })).sort((x, y) => (y.b - y.a) - (x.b - x.a));
-  const reached = people.filter((p) => p.b - p.a >= 40).length;
+  const { TESTS } = Survey;
+  const st = Survey.stats(), { pre, post, preAvg, postAvg, gain, people, reached, d1, d2 } = st;
   const yes = (v, t) => (v == null ? '–' : v >= t ? '<span class="ok">TAK</span>' : '<span class="no">NIE</span>');
-  const dist = (list, it) => { const c = it.a.map(() => 0); list.forEach((e) => { const v = e.ans[it.id]; if (v >= 0 && v < c.length) c[v]++; }); const n = c.reduce((a, b) => a + b, 0) || 1; return it.a.map((o, i) => `${L(o)}: <b>${Math.round((100 * c[i]) / n)}%</b> (${c[i]})`).join('<br>'); };
-  const lk = (list, id) => avg(list.map((e) => e.ans[id]).filter((v) => v >= 1 && v <= 5), 1);
-  const d1 = post.length ? Math.round((100 * post.filter((e) => e.ans.D1 === 0).length) / post.length) : null;
-  const d2 = post.length ? Math.round((100 * post.filter((e) => e.ans.D2 === 0 || e.ans.D2 === 2).length) / post.length) : null;
+  const dist = (list, it) => { const c = Survey.dist(list, it); const n = c.reduce((a, b) => a + b, 0) || 1; return it.a.map((o, i) => `${L(o)}: <b>${Math.round((100 * c[i]) / n)}%</b> (${c[i]})`).join('<br>'); };
 
   document.getElementById('page').innerHTML = `
     <header><img src="img/kaszebi-logo.png" alt=""><img src="img/bluebeehive.jpg" alt="" style="height:40px"><img class="eu" src="img/eu-pl.jpg" alt=""></header>
@@ -83,7 +60,7 @@
     </div>
     <h2>Upowszechnianie</h2>
     <table><tr><th>Działanie</th><th>Liczba</th></tr>
-      <tr><td>Uczestnicy, którzy udostępnili certyfikat na Facebooku (kliknięcie „Opublikuj”)</td><td>${Object.keys(store('kws-fb') || {}).length}</td></tr>
+      <tr><td>Uczestnicy, którzy udostępnili certyfikat na Facebooku (kliknięcie „Opublikuj”)</td><td>${Survey.fbCount()}</td></tr>
       <tr><td>Zgody RODO zapisane na tym urządzeniu</td><td>${(store('kws-consents') || []).length}</td></tr>
     </table>
     <h2>Wskaźniki z wniosku</h2>
@@ -96,16 +73,16 @@
     </table>
     <h2>Test wiedzy: odsetek poprawnych odpowiedzi</h2>
     <table><tr><th>Pytanie</th><th>PRZED</th><th>PO</th></tr>
-      ${TESTS.map((q) => { const f = (l) => (l.length ? Math.round((100 * l.filter((e) => e.ans[q.id] === q.ok).length) / l.length) : null); const a = f(pre), b = f(post);
+      ${TESTS.map((q, i) => { const a = st.preQ[i], b = st.postQ[i];
         return `<tr><td>${q.id}. ${L(q.q)}</td><td><span class="bar pre" style="width:${a || 0}px"></span> ${a ?? '–'}%</td><td><span class="bar" style="width:${b || 0}px"></span> ${b ?? '–'}%</td></tr>`; }).join('')}
     </table>
     <h2>W4. Samoocena (skala 1–5)</h2>
     <table><tr><th>Twierdzenie</th><th>PRZED</th><th>PO</th><th>Zmiana</th></tr>
-      ${SURVEY.filter((x) => x.type === 'likert').map((x) => { const a = lk(pre, x.id), b = lk(post, x.id); return `<tr><td>${L(x.q)}</td><td>${a ?? '–'}</td><td>${b ?? '–'}</td><td>${a != null && b != null ? (b - a >= 0 ? '+' : '') + Math.round((b - a) * 10) / 10 : '–'}</td></tr>`; }).join('')}
+      ${st.B.map(({ item: x, pre: a, post: b }) => { return `<tr><td>${L(x.q)}</td><td>${a ?? '–'}</td><td>${b ?? '–'}</td><td>${a != null && b != null ? (b - a >= 0 ? '+' : '') + Math.round((b - a) * 10) / 10 : '–'}</td></tr>`; }).join('')}
     </table>
     <h2>W3. Wynik każdej osoby (anonimowy kod)</h2>
     <table><tr><th>Kod</th><th>PRZED</th><th>PO</th><th>Przyrost</th></tr>
-      ${people.map((p) => `<tr><td>${p.code}</td><td>${p.a}%</td><td>${p.b}%</td><td class="${p.b - p.a >= 40 ? 'ok' : ''}">${p.b - p.a > 0 ? '+' : ''}${p.b - p.a} pp</td></tr>`).join('') || '<tr><td colspan="4">brak par przed/po</td></tr>'}
+      ${people.map((p) => `<tr><td>${p.code}</td><td>${p.pre}%</td><td>${p.post}%</td><td class="${p.post - p.pre >= 40 ? 'ok' : ''}">${p.post - p.pre > 0 ? '+' : ''}${p.post - p.pre} pp</td></tr>`).join('') || '<tr><td colspan="4">brak par przed/po</td></tr>'}
     </table>
     <h2>W5. Skala problemu przed wyjazdem</h2>
     <table><tr><th>Pytanie</th><th>Odpowiedzi (n = ${pre.length})</th></tr>
