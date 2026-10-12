@@ -6,7 +6,7 @@
     .cert { box-sizing: border-box; background: #fff; width: 210mm; height: 296mm; margin: 0; padding: 8mm; page-break-after: always; break-after: page; break-inside: avoid; page-break-inside: avoid; overflow: hidden; font-family: 'Public Sans', Arial, sans-serif; color: #0B1F3A; }
     .cert .bd { box-sizing: border-box; height: 100%; border: 5px solid #0B1F3A; padding: 4px; }
     .cert:last-child { page-break-after: auto; break-after: auto; }
-    .cert .fr { box-sizing: border-box; height: 100%; border: 1.5px solid #0B1F3A; position: relative; padding: 32px 44px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .cert .fr { box-sizing: border-box; height: 100%; border: 1.5px solid #0B1F3A; position: relative; padding: 24px 44px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .cert .fr::before { content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px solid #E5B800; pointer-events: none; }
     .cert h1, .cert h3, .cert p, .cert ul { margin: 0; }
     .cert .kick { font: 700 10.5px 'Public Sans', Arial; letter-spacing: .26em; text-transform: uppercase; color: #003399; }
@@ -28,8 +28,9 @@
     .cert .sg .stamp { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); height: 96px; max-width: none; opacity: .85; z-index: 0; }
     .cert .sg .boss { position: relative; z-index: 1; }
     .cert footer { width: 100%; margin-top: 12px; padding-top: 10px; border-top: 1px solid #D9DEE8; display: grid; gap: 7px; }
-    .cert .logos { display: flex; justify-content: space-between; align-items: center; }
-    .cert .logos img { height: 36px; } .cert .logos .bb { height: 27px; } .cert .logos .eu { height: 38px; }
+    /* Same header as the consent form: foundation + Blue Beehive left, EU right, navy rule under. */
+    .cert .logos { width: 100%; display: flex; align-items: center; gap: 14px; border-bottom: 3px solid #0B1F3A; padding-bottom: 10px; margin-bottom: 14px; }
+    .cert .logos img { height: 40px; } .cert .logos .bb { height: 32px; } .cert .logos .eu { height: 40px; margin-left: auto; }
     .cert .fund p { font-size: 9px; line-height: 1.4; color: #4A5568; }
     .cert .fund .no { font-size: 10px; color: #0B1F3A; margin-top: 2px; }`;
   document.head.append(Object.assign(document.createElement('style'), { textContent: css }));
@@ -46,6 +47,7 @@
     const plain = (t) => L(t).replace(/^[^\p{L}]+/u, ''); // headings without leading emoji
     const groups = UI.certGroups.map((g) => `<h3>${plain(g.h)}</h3><ul>${g.li.map((x) => `<li>${L(x)}</li>`).join('')}</ul>`).join('');
     return `<div class="cert ${LANG}"><div class="bd"><div class="fr">
+      <div class="logos"><img src="img/kaszebi-logo.png" alt=""><img class="bb" src="img/bluebeehive.jpg" alt=""><img class="eu" src="img/eu-pl.jpg" alt=""></div>
       <div class="kick">${L(UI.certKick)}</div>
       <h1>${L(UI.certTitle)}</h1>
       <div class="nm"${String(name || '').length > 26 ? ' style="font-size:24px"' : ''}>${esc(name)}</div>
@@ -58,7 +60,6 @@
         <div class="sg">${boss.stamp ? `<img class="stamp" src="${boss.stamp}" alt="">` : ''}${boss.sig ? `<img class="boss" src="${boss.sig}" alt="">` : ''}<div class="line">${L(UI.certSignBoss)}</div></div>
       </div>
       <footer>
-        <div class="logos"><img src="img/kaszebi-logo.png" alt=""><img class="bb" src="img/bluebeehive.jpg" alt=""><img class="eu" src="img/eu-pl.jpg" alt=""></div>
         <div class="fund">${UI.certFund.map((t) => `<p>${L(t)}</p>`).join('')}<p class="no">${L(UI.certProjNo)}: <b>${esc(window.PROJECT_NO)}</b></p></div>
       </footer>
     </div></div></div>`;
