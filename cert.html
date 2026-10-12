@@ -50,9 +50,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=72"></script>
-<script src="common.js?v=72"></script>
-<script src="cert-print.js?v=72"></script>
+<script src="data.js?v=73"></script>
+<script src="common.js?v=73"></script>
+<script src="cert-print.js?v=73"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -132,16 +132,13 @@
     } else {
       if (!st.text) st.text = L(C.defaultText);
       const ta = h('textarea', {}); ta.value = st.text; ta.oninput = () => { st.text = ta.value; saveSt(); };
-      const prev = h('img', { id: 'preview', alt: '' });
-      makeImage().then((b) => { prev.src = URL.createObjectURL(b); });
       const fbBtn = h('button', { class: 'btn fb', onclick: () => share(fbBtn) }, 'f  ' + L(C.fb));
       // Live A4 preview of exactly what prints (cert-print.js), scaled to the card width.
       const a4 = h('div', { class: 'a4prev' }); a4.innerHTML = certHtml(st.name, st.sig, bossData());
       requestAnimationFrame(() => { const k = a4.clientWidth / a4.firstElementChild.offsetWidth; a4.firstElementChild.style.transform = `scale(${k})`; a4.style.height = a4.firstElementChild.offsetHeight * k + 'px'; });
-      card.append(h('h1', {}, '🎉 ' + L(C.s3)), prev, h('p', { class: 'hint' }, L(C.s3h)), ta,
+      card.append(h('h1', {}, '🎉 ' + L(C.s3)), a4, h('p', { class: 'hint' }, L(C.s3h)), ta,
         h('div', { class: 'chips' }, C.starters.map((s) => h('button', { class: 'chip', onclick: () => { ta.value += '\n' + L(s); st.text = ta.value; saveSt(); ta.focus(); } }, '+ ' + L(s).trim()))),
         fbBtn, h('div', { id: 'done' }),
-        a4,
         h('button', { class: 'btn ghost', onclick: printCert }, '⬇ ' + L(C.pdf)),
         window.FB.event ? h('a', { class: 'btn ghost', href: window.FB.event, target: '_blank' }, L(C.event)) : null,
         h('button', { class: 'link', onclick: () => { st.step = 1; saveSt(); draw(); } }, '← ' + L(C.s2)));
