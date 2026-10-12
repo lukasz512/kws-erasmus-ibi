@@ -35,6 +35,8 @@
   .slot.has { border: 3px solid #1877F2; font-size: 0; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { font: 14px 'Public Sans'; padding: 8px 12px; border-radius: 99px; background: #fff; border: 1px solid #D9D5C8; color: #0B1F3A; }
+  .a4prev { width: 100%; overflow: hidden; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.15); background: #fff; }
+  .a4prev .cert { transform-origin: top left; }
   #preview { width: 100%; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
   .ok { background: #DDF1E4; border-radius: 14px; padding: 14px; font-weight: 700; line-height: 1.4; }
   @media print { body { background: #fff; padding: 0; } .app { display: none; } }
@@ -48,9 +50,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=68"></script>
-<script src="common.js?v=68"></script>
-<script src="cert-print.js?v=68"></script>
+<script src="data.js?v=69"></script>
+<script src="common.js?v=69"></script>
+<script src="cert-print.js?v=69"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -127,9 +129,13 @@
       const prev = h('img', { id: 'preview', alt: '' });
       makeImage().then((b) => { prev.src = URL.createObjectURL(b); });
       const fbBtn = h('button', { class: 'btn fb', onclick: () => share(fbBtn) }, 'f  ' + L(C.fb));
+      // Live A4 preview of exactly what prints (cert-print.js), scaled to the card width.
+      const a4 = h('div', { class: 'a4prev' }); a4.innerHTML = certHtml(st.name, st.sig, bossData());
+      requestAnimationFrame(() => { const k = a4.clientWidth / a4.firstElementChild.offsetWidth; a4.firstElementChild.style.transform = `scale(${k})`; a4.style.height = a4.firstElementChild.offsetHeight * k + 'px'; });
       card.append(h('h1', {}, '🎉 ' + L(C.s3)), prev, h('p', { class: 'hint' }, L(C.s3h)), ta,
         h('div', { class: 'chips' }, C.starters.map((s) => h('button', { class: 'chip', onclick: () => { ta.value += '\n' + L(s); st.text = ta.value; saveSt(); ta.focus(); } }, '+ ' + L(s).trim()))),
         fbBtn, h('div', { id: 'done' }),
+        a4,
         h('button', { class: 'btn ghost', onclick: printCert }, '⬇ ' + L(C.pdf)),
         window.FB.event ? h('a', { class: 'btn ghost', href: window.FB.event, target: '_blank' }, L(C.event)) : null,
         h('button', { class: 'link', onclick: () => { st.step = 1; saveSt(); draw(); } }, '← ' + L(C.s2)));
@@ -151,38 +157,44 @@
   async function makeImage() {
     const c = document.createElement('canvas'); c.width = 1080; c.height = 1350;
     const x = c.getContext('2d');
+    // Certificate card in the printed design (classic diploma): navy double frame, gold inner line, centred text.
     x.fillStyle = '#F5F3EC'; x.fillRect(0, 0, 1080, 1350);
-    x.fillStyle = '#fff'; x.strokeStyle = '#0B1F3A'; x.lineWidth = 12; x.beginPath(); x.roundRect(40, 40, 1000, 760, 24); x.fill(); x.stroke();
-    x.strokeStyle = '#FFCC00'; x.lineWidth = 4; x.beginPath(); x.roundRect(62, 62, 956, 716, 16); x.stroke();
+    x.fillStyle = '#fff'; x.fillRect(40, 40, 1000, 760);
+    x.strokeStyle = '#0B1F3A'; x.lineWidth = 8; x.strokeRect(52, 52, 976, 736);
+    x.lineWidth = 2; x.strokeRect(66, 66, 948, 708);
+    x.strokeStyle = '#E5B800'; x.lineWidth = 1.5; x.strokeRect(75, 75, 930, 690);
     const boss = bossData();
     const [logo, eu, bb, sig, bsig, stamp] = await Promise.all([load('img/kaszebi-logo.png'), load('img/eu-pl.jpg'), load('img/bluebeehive.jpg'), load(st.sig), load(boss.sig), load(boss.stamp)]);
-    if (logo) x.drawImage(logo, 540 - 110, 84, 220, 220 * logo.height / logo.width);
-    x.textAlign = 'center'; x.fillStyle = '#0B1F3A';
-    x.font = '600 48px "Source Serif 4", Georgia, serif'; x.fillText(L(UI.certTitle), 540, 250);
-    x.font = '600 60px "Source Serif 4", Georgia, serif'; x.fillText(st.name.trim() || '…', 540, 340);
-    x.fillRect(240, 360, 600, 3);
-    x.font = '400 21px "Public Sans", Arial'; x.fillStyle = '#26334A';
-    let y = wrap(x, L(UI.certBody), 540, 402, 880, 29) + 40;
+    x.textAlign = 'center';
+    x.fillStyle = '#003399'; x.font = '700 17px "Public Sans", Arial'; if ('letterSpacing' in x) x.letterSpacing = '4px';
+    x.fillText(L(UI.certKick).toUpperCase(), 540, 124); if ('letterSpacing' in x) x.letterSpacing = '0px';
+    x.fillStyle = '#0B1F3A'; x.font = '600 56px "Source Serif 4", Georgia, serif'; x.fillText(L(UI.certTitle), 540, 192);
+    const nm = st.name.trim() || '…';
+    x.font = `italic 500 ${nm.length > 26 ? 44 : 56}px "Source Serif 4", Georgia, serif`; x.fillText(nm, 540, 274);
+    x.fillStyle = '#E5B800'; x.fillRect(250, 294, 580, 2.5);
+    x.font = '400 20px "Public Sans", Arial'; x.fillStyle = '#26334A';
+    let y = wrap(x, L(UI.certBody), 540, 336, 860, 28) + 44;
     // Two short competence columns: digital skills and cybersecurity.
     const cols = [
-      [T('💻 Kompetencje cyfrowe', '💻 Digital skills', '💻 Competencias digitales'), T('tablet, aplikacje, kody QR', 'tablet, apps, QR codes', 'tableta, apps, códigos QR'), T('AI: Copilot / ChatGPT', 'AI: Copilot / ChatGPT', 'IA: Copilot / ChatGPT'), T('Google Lens, fact-checking', 'Google Lens, fact-checking', 'Google Lens, verificación')],
-      [T('🛡️ Cyberbezpieczeństwo', '🛡️ Cybersecurity', '🛡️ Ciberseguridad'), T('phishing, SMS, deepfake', 'phishing, texts, deepfakes', 'phishing, SMS, deepfakes'), T('silne hasła, 2FA, BLIK', 'strong passwords, 2FA', 'contraseñas seguras, 2FA'), T('bezpieczny telefon i dane', 'safe phone and data', 'móvil y datos seguros')]
+      [T('Kompetencje cyfrowe', 'Digital skills', 'Competencias digitales'), T('tablet, aplikacje, kody QR', 'tablet, apps, QR codes', 'tableta, apps, códigos QR'), T('AI: Copilot / ChatGPT', 'AI: Copilot / ChatGPT', 'IA: Copilot / ChatGPT'), T('Google Lens, fact-checking', 'Google Lens, fact-checking', 'Google Lens, verificación')],
+      [T('Cyberbezpieczeństwo', 'Cybersecurity', 'Ciberseguridad'), T('phishing, SMS, deepfake', 'phishing, texts, deepfakes', 'phishing, SMS, deepfakes'), T('silne hasła, 2FA, BLIK', 'strong passwords, 2FA', 'contraseñas seguras, 2FA'), T('bezpieczny telefon i dane', 'safe phone and data', 'móvil y datos seguros')]
     ];
     cols.forEach((col, i) => col.forEach((t, j) => {
-      x.font = j ? '400 20px "Public Sans", Arial' : '700 23px "Public Sans", Arial'; x.fillStyle = j ? '#26334A' : '#003399';
-      x.fillText((j ? '✓ ' : '') + L(t), 300 + i * 480, y + j * 28);
+      x.font = j ? '400 19px "Public Sans", Arial' : '700 17px "Public Sans", Arial'; x.fillStyle = j ? '#26334A' : '#003399';
+      x.fillText(j ? L(t) : L(t).toUpperCase(), 310 + i * 460, y + j * 27);
     }));
-    // Participant signature in the middle; with the president's signature on this device, the two sit side by side.
-    const two = !!(bsig || stamp), px = two ? 430 : 540, bx = 680;
-    const put = (img, cx, hh, maxW) => { const w = Math.min(maxW, hh * img.width / img.height); x.drawImage(img, cx - w / 2, 738 - hh, w, hh); };
-    if (sig) put(sig, px, 70, two ? 190 : 300);
-    if (stamp) { x.globalAlpha = .85; put(stamp, bx, 96, 120); x.globalAlpha = 1; }
-    if (bsig) put(bsig, bx, 64, 190);
-    x.fillStyle = '#8A94A6'; x.font = `400 ${two ? 14 : 16}px "Public Sans", Arial`;
-    if (two) { x.fillRect(340, 740, 180, 2); x.fillText(L(UI.certSignP), px, 762); x.fillRect(590, 740, 180, 2); x.fillText(L(UI.certSignBoss), bx, 762); }
-    else { x.fillRect(400, 740, 280, 2); x.fillText(L(UI.certSignP), 540, 762); }
-    if (eu) x.drawImage(eu, 90, 700, 200, 200 * eu.height / eu.width);
-    if (bb) x.drawImage(bb, 830, 708, 150, 150 * bb.height / bb.width);
+    // Signatures: participant left, president (stamp under signature) right — same as the printed certificate.
+    const line = 652, px = 330, bx = 750;
+    const put = (img, cx, hh, maxW) => { const w = Math.min(maxW, hh * img.width / img.height); x.drawImage(img, cx - w / 2, line - 4 - hh, w, hh); };
+    if (sig) put(sig, px, 64, 260);
+    if (stamp) { x.globalAlpha = .85; put(stamp, bx, 92, 140); x.globalAlpha = 1; }
+    if (bsig) put(bsig, bx, 60, 240);
+    x.fillStyle = '#0B1F3A'; x.fillRect(px - 150, line, 300, 1.5); x.fillRect(bx - 150, line, 300, 1.5);
+    x.font = '400 14px "Public Sans", Arial'; x.fillText(L(UI.certSignP), px, line + 22); x.fillText(L(UI.certSignBoss), bx, line + 22);
+    x.fillStyle = '#D9DEE8'; x.fillRect(100, 694, 880, 1);
+    if (logo) x.drawImage(logo, 110, 706, 52 * logo.width / logo.height, 52);
+    if (bb) x.drawImage(bb, 540 - 19 * bb.width / bb.height, 718, 38 * bb.width / bb.height, 38);
+    if (eu) x.drawImage(eu, 970 - 52 * eu.width / eu.height, 706, 52 * eu.width / eu.height, 52);
     const list = photos.filter(Boolean);
     if (list.length) { const gap = 20, w = (1000 - gap * (list.length - 1)) / list.length; list.forEach((p, i) => cover(x, p, 40 + i * (w + gap), 830, w, 480, 22)); }
     else { x.fillStyle = '#003399'; x.beginPath(); x.roundRect(40, 830, 1000, 480, 22); x.fill(); x.fillStyle = '#FFCC00'; x.font = '900 70px "Public Sans", Arial'; x.fillText('Ibi · Alicante 2026', 540, 1090); }
