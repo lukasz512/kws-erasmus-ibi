@@ -3,7 +3,7 @@
   const css = `
   .certs { display: none; }
   @media print { .certs { display: block; } }
-    .cert { box-sizing: border-box; background: #fff; width: 186mm; height: 272mm; border: 5px solid #0B1F3A; padding: 4px; page-break-after: always; break-after: page; font-family: 'Public Sans', Arial, sans-serif; color: #0B1F3A; }
+    .cert { box-sizing: border-box; background: #fff; width: 182mm; height: 258mm; margin: 0 auto; border: 5px solid #0B1F3A; padding: 4px; page-break-after: always; break-after: page; break-inside: avoid; page-break-inside: avoid; overflow: hidden; font-family: 'Public Sans', Arial, sans-serif; color: #0B1F3A; }
     .cert:last-child { page-break-after: auto; break-after: auto; }
     .cert .fr { box-sizing: border-box; height: 100%; border: 1.5px solid #0B1F3A; position: relative; padding: 32px 44px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .cert .fr::before { content: ''; position: absolute; inset: 6px; border: 1px solid #E5B800; pointer-events: none; }
@@ -11,13 +11,14 @@
     .cert .kick { font: 700 10.5px 'Public Sans', Arial; letter-spacing: .26em; text-transform: uppercase; color: #003399; }
     .cert h1 { font: 600 40px/1.1 'Source Serif 4', Georgia, serif; margin-top: 10px; }
     .cert .nm { font: italic 500 34px 'Source Serif 4', Georgia, serif; margin-top: 20px; padding: 0 28px 5px; border-bottom: 1.5px solid #E5B800; min-width: 62%; }
-    .cert .body { font-size: 14px; line-height: 1.55; margin-top: 16px; max-width: 580px; }
+    .cert .body { font-size: 13.5px; line-height: 1.5; margin-top: 14px; max-width: 580px; }
     .cert .lead { font-size: 13.5px; font-weight: 700; margin-top: 18px; }
     .cert .comp { width: 100%; text-align: left; }
     .cert h3 { font: 700 12px 'Public Sans', Arial; letter-spacing: .14em; text-transform: uppercase; color: #003399; margin: 13px 0 4px; display: flex; align-items: center; gap: 10px; }
     .cert h3::after { content: ''; flex: 1; height: 1px; background: #D9DEE8; }
-    .cert ul { font-size: 13px; line-height: 1.45; padding-left: 17px; }
-    .cert.es ul { font-size: 12.5px; } .cert.es .body { font-size: 13px; }
+    .cert .fr > * { flex-shrink: 0; }
+    .cert ul { font-size: 12.5px; line-height: 1.45; padding-left: 17px; }
+    .cert.es ul { font-size: 12px; } .cert.es .body { font-size: 13px; }
     .cert .date { margin-top: auto; padding-top: 10px; font-size: 12px; }
     .cert .signs { display: flex; justify-content: space-between; gap: 40px; width: 100%; }
     .cert .sg { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; min-height: 92px; font-size: 10.5px; }
