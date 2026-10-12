@@ -51,18 +51,16 @@
 <div class="admin"><span id="count"></span><button id="print">🖨 Drukuj wszystkie zgody (PDF)</button><button id="backup">⬇ Kopia zapasowa</button></div>
 <div class="admin boss">
   <b>🎓 Certyfikaty z podpisem prezesa</b>
-  <label>✍️ Podpis prezesa (PNG) <input type="file" accept="image/*" id="bossSig"></label>
-  <label>🔵 Pieczątka (PNG) <input type="file" accept="image/*" id="bossStamp"></label>
   <span id="bossInfo"></span>
+  <a href="prezes.html" style="font-weight:700;color:#003399">✍️ Podpis prezesa i podgląd →</a>
   <button id="certs">🖨 Drukuj certyfikaty (PDF)</button>
-  <button id="bossClear">🗑 Usuń podpis z tego urządzenia</button>
 </div>
 <div class="print" id="printArea"></div>
 <div class="certs" id="certArea"></div>
 
-<script src="data.js?v=60"></script>
-<script src="common.js?v=60"></script>
-<script src="cert-print.js?v=60"></script>
+<script src="data.js?v=61"></script>
+<script src="common.js?v=61"></script>
+<script src="cert-print.js?v=61"></script>
 <script>
   LANG = 'pl'; // organiser station: consents and certificates print in Polish
   // Consents stay on this tablet only (never sent over the internet); print them as PDF for the project files.
@@ -111,19 +109,10 @@
     document.getElementById('certArea').innerHTML = '';
     setPage('A4 portrait'); print();
   };
-  // President's signature and stamp: read from a file on this device only, kept in this browser, never uploaded.
+  // President's signature and stamp are added on prezes.html; kept in this browser only, never uploaded.
   const BOSS = 'kws-boss';
   const boss = () => store(BOSS) || {};
   function bossInfo() { const b = boss(); document.getElementById('bossInfo').textContent = `Podpis: ${b.sig ? '✓' : '–'} · Pieczątka: ${b.stamp ? '✓' : '–'}`; }
-  const readImg = (input, key) => input.addEventListener('change', () => {
-    const f = input.files[0]; if (!f) return;
-    const fr = new FileReader();
-    fr.onload = () => { const b = boss(); b[key] = fr.result; store(BOSS, b); input.value = ''; bossInfo(); };
-    fr.readAsDataURL(f);
-  });
-  readImg(document.getElementById('bossSig'), 'sig');
-  readImg(document.getElementById('bossStamp'), 'stamp');
-  document.getElementById('bossClear').onclick = () => { if (confirm('Usunąć podpis i pieczątkę z tego urządzenia?')) { localStorage.removeItem(BOSS); bossInfo(); } };
   document.getElementById('certs').onclick = () => {
     const all = list(); if (!all.length) { alert('Brak zapisanych osób.'); return; }
     document.getElementById('printArea').innerHTML = '';

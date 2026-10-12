@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="robots" content="noindex">
+<title>Podpis prezesa – Kaszëbi w Europie!</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700;900&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: 'Public Sans', Arial, sans-serif; color: #0B1F3A; background: #F5F3EC; padding: 16px; }
+  .w { max-width: 1100px; margin: 0 auto; display: grid; gap: 16px; }
+  .card { background: #fff; border-radius: 20px; padding: 20px; box-shadow: 0 6px 24px rgba(11,31,58,.08); display: grid; gap: 12px; }
+  h1 { font: 600 28px 'Source Serif 4', Georgia, serif; } h2 { font-size: 18px; }
+  .note { background: #DDF1E4; border-radius: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.45; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; } @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+  .padwrap { position: relative; border: 3px dashed #0B1F3A; border-radius: 16px; height: 220px; touch-action: none; background: #fff; }
+  .padwrap canvas { width: 100%; height: 100%; display: block; border-radius: 14px; }
+  .padwrap span { position: absolute; left: 16px; bottom: 10px; color: #9AA3B2; font-size: 14px; pointer-events: none; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  button, .file { font: 700 15px 'Public Sans'; padding: 11px 14px; border-radius: 12px; border: 0; background: #E7E4DA; color: #0B1F3A; cursor: pointer; }
+  button.main { background: #0B1F3A; color: #fff; } button.danger { background: #F6DADA; color: #8A1020; }
+  .file input { display: none; }
+  .have { display: flex; gap: 12px; align-items: center; min-height: 70px; background: #F7F7F4; border-radius: 12px; padding: 8px 12px; font-size: 14px; color: #4A5568; }
+  .have img { max-height: 60px; max-width: 220px; background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0 / 12px 12px; border-radius: 6px; }
+  .prev { overflow: hidden; border-radius: 12px; background: #DAD6CA; padding: 12px; }
+  .prev .certs { display: block; transform-origin: top left; }
+  @media print { body { padding: 0; background: #fff; } .w { display: none; } }
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="card">
+    <h1>✍️ Podpis prezesa na certyfikatach</h1>
+    <div class="note">🔒 Podpis i pieczątka zostają <b>tylko na tym urządzeniu, w tej przeglądarce</b>. Nic nie jest wysyłane do internetu ani zapisywane na stronie. Otwórz tę stronę na tym samym tablecie lub laptopie, na którym uczestnicy podpisywali zgody RODO, bo stamtąd biorą się ich imiona i podpisy. Po wydrukowaniu kliknij „Usuń z tego urządzenia”.</div>
+  </div>
+  <div class="cols">
+    <div class="card">
+      <h2>1. Twój podpis</h2>
+      <div class="padwrap"><canvas id="pad"></canvas><span>Podpisz się palcem, rysikiem lub myszką</span></div>
+      <div class="row"><button id="clr">↺ Wyczyść</button><button class="main" id="savePad">✓ Zapisz podpis</button>
+        <label class="file">📷 albo zdjęcie podpisu <input type="file" accept="image/*" id="sigFile"></label></div>
+      <div class="have"><img id="sigImg" alt="" hidden><span id="sigInfo">Brak podpisu</span></div>
+    </div>
+    <div class="card">
+      <h2>2. Pieczątka (opcjonalnie)</h2>
+      <p style="font-size:14px;color:#4A5568;line-height:1.45">Odbij pieczątkę na białej kartce i zrób zdjęcie z bliska, prosto z góry, przy dobrym świetle. Białe tło zostanie usunięte automatycznie.</p>
+      <div class="row"><label class="file">📷 Zdjęcie pieczątki <input type="file" accept="image/*" id="stampFile"></label><button id="stampDel">✕ Bez pieczątki</button></div>
+      <div class="have"><img id="stampImg" alt="" hidden><span id="stampInfo">Brak pieczątki</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>3. Podgląd certyfikatu (A4 poziomo)</h2>
+    <div class="prev" id="prevBox"><div class="certs" id="prev"></div></div>
+    <div class="row"><button class="main" id="printAll"></button><button id="printTest">🖨 Wydruk próbny (1 strona)</button><button class="danger" id="del">🗑 Usuń z tego urządzenia</button></div>
+  </div>
+</div>
+<div class="certs" id="printArea"></div>
+<script src="data.js?v=61"></script>
+<script src="common.js?v=61"></script>
+<script src="cert-print.js?v=61"></script>
+<script>
+  LANG = 'pl';
+  const BOSS = 'kws-boss';
+  const boss = () => store(BOSS) || {};
+  const consents = () => store('kws-consents') || [];
+  const $ = (id) => document.getElementById(id);
+
+  // Crop a canvas to its non-transparent pixels and return a PNG data URL.
+  function crop(c) {
+    const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height).data;
+    let t = c.height, l = c.width, b = -1, r = -1;
+    for (let y = 0; y < c.height; y++) for (let i = 0; i < c.width; i++) if (d[(y * c.width + i) * 4 + 3] > 20) { if (y < t) t = y; if (y > b) b = y; if (i < l) l = i; if (i > r) r = i; }
+    if (b < 0) return null;
+    const p = 6, o = document.createElement('canvas');
+    o.width = r - l + 1 + p * 2; o.height = b - t + 1 + p * 2;
+    o.getContext('2d').drawImage(c, l, t, r - l + 1, b - t + 1, p, p, r - l + 1, b - t + 1);
+    return o.toDataURL('image/png');
+  }
+  // Photo → transparent background. ink=true recolours strokes to dark blue (signature); false keeps colours (stamp).
+  function clean(file, ink) {
+    return new Promise((res) => {
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 1400 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        const x = c.getContext('2d'); x.drawImage(img, 0, 0, c.width, c.height);
+        const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
+        let sum = 0; for (let i = 0; i < d.length; i += 4) sum += (d[i] + d[i + 1] + d[i + 2]) / 3;
+        const paper = sum / (d.length / 4), cut = paper - 45; // anything clearly darker than the paper is ink
+        for (let i = 0; i < d.length; i += 4) {
+          const lum = (d[i] + d[i + 1] + d[i + 2]) / 3, sat = Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]);
+          const a = ink ? (lum < cut ? Math.min(255, (cut - lum) * 4 + 120) : 0) : (lum < cut || sat > 60 ? Math.min(255, (paper - lum) * 3 + sat * 2) : 0);
+          if (ink) { d[i] = 11; d[i + 1] = 31; d[i + 2] = 80; }
+          d[i + 3] = Math.max(0, a);
+        }
+        x.putImageData(id, 0, 0); URL.revokeObjectURL(img.src); res(crop(c));
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  function put(key, val) { const b = boss(); if (val) b[key] = val; else delete b[key]; store(BOSS, b); render(); }
+
+  // Drawing pad
+  const cv = $('pad'), ctx = cv.getContext('2d'); let drawing = false, dirty = false;
+  function size() { const r = cv.getBoundingClientRect(), s = devicePixelRatio || 1; cv.width = r.width * s; cv.height = r.height * s; ctx.scale(s, s); ctx.lineWidth = 2.6; ctx.lineCap = ctx.lineJoin = 'round'; ctx.strokeStyle = '#0B1F50'; dirty = false; }
+  const pt = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener('pointerdown', (e) => { drawing = true; cv.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.moveTo(...pt(e)); });
+  cv.addEventListener('pointermove', (e) => { if (!drawing) return; ctx.lineTo(...pt(e)); ctx.stroke(); dirty = true; });
+  addEventListener('pointerup', () => { drawing = false; });
+  $('clr').onclick = size;
+  $('savePad').onclick = () => { if (!dirty) { alert('Najpierw się podpisz.'); return; } put('sig', crop(cv)); size(); };
+  $('sigFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) put('sig', await clean(f, true)); };
+  $('stampFile').onchange = async (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) put('stamp', await clean(f, false)); };
+  $('stampDel').onclick = () => put('stamp', null);
+  $('del').onclick = () => { if (confirm('Usunąć podpis i pieczątkę z tego urządzenia?')) { localStorage.removeItem(BOSS); render(); } };
+
+  function fit() { const box = $('prevBox'), p = $('prev'), c = p.firstElementChild; if (!c) return; const k = (box.clientWidth - 24) / c.offsetWidth; p.style.transform = `scale(${k})`; box.style.height = c.offsetHeight * k + 24 + 'px'; }
+  function render() {
+    const b = boss(), n = consents().length, first = consents()[0];
+    $('sigImg').hidden = !b.sig; if (b.sig) $('sigImg').src = b.sig; $('sigInfo').textContent = b.sig ? '✓ Podpis zapisany na tym urządzeniu' : 'Brak podpisu';
+    $('stampImg').hidden = !b.stamp; if (b.stamp) $('stampImg').src = b.stamp; $('stampInfo').textContent = b.stamp ? '✓ Pieczątka zapisana' : 'Brak pieczątki';
+    $('prev').innerHTML = certHtml(first ? first.name : 'Imię i Nazwisko uczestnika', first ? first.sig : '', b);
+    $('printAll').textContent = n ? `🖨 Drukuj certyfikaty dla ${n} os. (PDF)` : '🖨 Brak zgód na tym urządzeniu';
+    $('printAll').disabled = !n;
+    requestAnimationFrame(fit);
+  }
+  function go(list) { $('printArea').innerHTML = list.map((c) => certHtml(c.name, c.sig, boss())).join(''); setPage('A4 landscape'); setTimeout(print, 400); }
+  $('printAll').onclick = () => go(consents());
+  $('printTest').onclick = () => go([consents()[0] || { name: 'Imię i Nazwisko uczestnika', sig: '' }]);
+  addEventListener('resize', fit);
+  size(); render();
+</script>
+</body>
+</html>
