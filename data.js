@@ -1,12 +1,12 @@
 // Content for the five presentations. Every string is {pl, en, es}; L() picks the active language.
 const T = (pl, en, es) => ({ pl, en, es });
 
-window.APP_V = '64'; // keep in sync with version.txt and the ?v= in the HTML files
-window.PROJECT_NO = '';
+window.APP_V = '65'; // keep in sync with version.txt and the ?v= in the HTML files
+window.PROJECT_NO = '2026-1-PL01-KA122-ADU-000404861';
 // Google Apps Script web app that stores survey answers in a Sheet (setup-arkusz.html). Empty = live channel only.
 window.SHEET_URL = '';
 // Facebook: the foundation page and the event for this mobility (fill in the event link).
-window.FB = { page: 'https://www.facebook.com/371013242770908', event: '' }; // e.g. '2026-1-PL01-KA122-ADU-000xxxxxx'
+window.FB = { page: 'https://www.facebook.com/371013242770908', event: 'https://www.facebook.com/events/1089602556789964' };
 window.BASE = 'https://lukasz512.github.io/kws-erasmus-ibi/';
 
 window.GROUPS = [
@@ -102,7 +102,14 @@ window.UI = {
   certSignP: T('Podpis uczestnika', "Participant's signature", 'Firma de la persona participante'),
   certSignBoss: T('Prezes Fundacji Kaszëbi we swiecë', 'President of the Kaszëbi we swiecë Foundation', 'Presidente de la Fundación Kaszëbi we swiecë'),
   certPlace: T('21 października 2026 r.', '21 October 2026', '21 de octubre de 2026'),
-  certProjNo: T('Nr projektu', 'Project no.', 'N.º de proyecto')
+  certProjNo: T('Numer wniosku', 'Application no.', 'N.º de solicitud'),
+  certKick: T('Program Erasmus+ · Edukacja dorosłych', 'Erasmus+ Programme · Adult education', 'Programa Erasmus+ · Educación de adultos'),
+  // Funding statement required in the certificate footer (the project title stays in Polish, as registered).
+  certFund: [
+    T('Działanie finansowane ze środków Unii Europejskiej. Program Erasmus+ · Erasmus+ Edukacja dorosłych', 'Funded by the European Union. Erasmus+ Programme · Erasmus+ Adult education', 'Acción financiada por la Unión Europea. Programa Erasmus+ · Erasmus+ Educación de adultos'),
+    T('Typ akcji: AKCJA 1 Mobilność dorosłych osób uczących się i kadry edukacji dorosłych – projekty krótkoterminowe (KA122-ADU) w terminie do 19 lutego 2026 r.', 'Action type: KEY ACTION 1 Mobility of adult learners and adult education staff – short-term projects (KA122-ADU), deadline 19 February 2026', 'Tipo de acción: ACCIÓN CLAVE 1 Movilidad de personas adultas en formación y del personal de educación de adultos – proyectos de corta duración (KA122-ADU), plazo 19 de febrero de 2026'),
+    T('Tytuł projektu: KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich', 'Project title: KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich (ensuring access to reliable and modern digital education in rural areas)', 'Título del proyecto: KASZËBI W EUROPIE! – zapewnienie dostępu do rzetelnej i nowoczesnej edukacji cyfrowej na terenach wiejskich (garantizar el acceso a una educación digital fiable y moderna en zonas rurales)')
+  ]
 };
 
 // Light opinion polls (no correct answer, no points).
@@ -216,6 +223,12 @@ window.DECKS = [
     slides: [
       { k: 'title', kicker: T('Erasmus+ · Edukacja dorosłych', 'Erasmus+ · Adult education', 'Erasmus+ · Educación de adultos'), h: T('KASZËBI W EUROPIE!', 'KASZËBI IN EUROPE!', '¡CASUBIOS EN EUROPA!'), p: T('Rzetelna i nowoczesna edukacja cyfrowa na terenach wiejskich · Ibi i Alicante, 11–21.10.2026', 'Reliable, modern digital education in rural areas · Ibi and Alicante, 11–21 Oct 2026', 'Educación digital fiable y moderna en zonas rurales · Ibi y Alicante, 11–21 oct 2026'), img: 'img/alicante.jpg' },
       { k: 'join' },
+      { k: 'fb', h: T('Nasz wyjazd na Facebooku', 'Our trip on Facebook', 'Nuestro viaje en Facebook'), li: [
+        T('Zeskanuj kod i kliknij „Wezmę udział”', 'Scan the code and tap “Going”', 'Escanea el código y pulsa «Asistiré»'),
+        T('Codziennie wrzucaj 1 zdjęcie i 1 zdanie: co dziś było najlepsze?', 'Post 1 photo and 1 sentence every day: what was the best part today?', 'Sube cada día 1 foto y 1 frase: ¿qué fue lo mejor de hoy?'),
+        T('Na koniec opublikuj swój certyfikat i napisz, czego się nauczyłeś(-aś)', 'At the end, post your certificate and say what you learned', 'Al final, publica tu certificado y cuenta qué aprendiste'),
+        T('Oznaczaj posty: #KaszëbiWEuropie #ErasmusPlus', 'Tag your posts: #KaszëbiWEuropie #ErasmusPlus', 'Etiqueta tus publicaciones: #KaszëbiWEuropie #ErasmusPlus')
+      ] },
       { k: 'text', h: T('Kim jesteśmy', 'Who we are', 'Quiénes somos'), img: 'img/fundacja.jpg', wide: true, li: [
         T('Organizacja pozarządowa (NGO): fundacja non-profit z kaszubskiej wsi Nakla, działamy od 2023 r.', 'A non-governmental organisation (NGO): a non-profit foundation from the Kashubian village of Nakla, active since 2023', 'Una organización no gubernamental (ONG): fundación sin ánimo de lucro del pueblo casubio de Nakla, activa desde 2023'),
         T('Ok. 120 dorosłych słuchaczy ze wsi: koła gospodyń wiejskich i seniorzy, wszystkie zajęcia bezpłatne', 'About 120 adult learners from villages: rural women’s circles and seniors, all classes free of charge', 'Unos 120 alumnos adultos de pueblos: asociaciones de mujeres rurales y mayores, todas las clases gratuitas'),
@@ -351,6 +364,11 @@ window.DECKS = [
       { k: 'confidence' },
       { k: 'evaluation' },
       { k: 'cert' },
+      { k: 'fb', h: T('Pochwal się na Facebooku', 'Share it on Facebook', 'Compártelo en Facebook'), li: [
+        T('Otwórz certyfikat i kliknij „Opublikuj na Facebooku”', 'Open your certificate and tap “Post on Facebook”', 'Abre tu certificado y pulsa «Publicar en Facebook»'),
+        T('Dopisz od siebie: czego się nauczyłeś(-aś) i co przeżyłeś(-aś)', 'Add your own words: what you learned and what you experienced', 'Añade tus palabras: qué aprendiste y qué viviste'),
+        T('Wrzuć post także do wydarzenia (kod obok)', 'Also post it in the event (code on the left)', 'Publícalo también en el evento (código al lado)')
+      ] },
       { k: 'credits' }
     ]
   }

@@ -151,6 +151,10 @@ const R = {
           h('div', { class: 'count big' }, `👥 ${Object.keys(joined).length} ${L(GAME_UI.joined)}`),
           h('p', { class: 'muted', style: 'font-size:28px' }, voteUrl().replace('https://', ''))))));
   },
+  fb(s) {
+    return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
+      h('div', { class: 'join' }, joinBox(420, window.FB.event), h('div', { class: 'groups' }, bullets(s.li)))));
+  },
   text(s) {
     return decorate(h('section', { class: 'slide' }, h('h2', {}, L(s.h)),
       h('div', { class: 'cols' + (s.wide || s.video ? ' wide' : '') }, h('div', { class: 'txt' }, bullets(s.li)),
