@@ -58,9 +58,9 @@
 <div class="print" id="printArea"></div>
 <div class="certs" id="certArea"></div>
 
-<script src="data.js?v=71"></script>
-<script src="common.js?v=71"></script>
-<script src="cert-print.js?v=71"></script>
+<script src="data.js?v=72"></script>
+<script src="common.js?v=72"></script>
+<script src="cert-print.js?v=72"></script>
 <script>
   LANG = 'pl'; // organiser station: consents and certificates print in Polish
   // Consents stay on this tablet only (never sent over the internet); print them as PDF for the project files.
@@ -115,9 +115,10 @@
   function bossInfo() { const b = bossData(); document.getElementById('bossInfo').textContent = `Podpis: ${b.sig ? '✓' : '–'} · Pieczątka: ${b.stamp ? '✓' : '–'}`; }
   document.getElementById('certs').onclick = () => {
     const all = list(); if (!all.length) { alert('Brak zapisanych osób.'); return; }
-    document.getElementById('printArea').innerHTML = '';
-    document.getElementById('certArea').innerHTML = all.map((c) => certHtml(c.name, c.sig, bossData())).join('');
-    setPage('A4 portrait'); setTimeout(print, 400);
+    const b = document.getElementById('certs'), t = b.textContent; b.disabled = true; b.textContent = '⏳ PDF…';
+    certPdf(all.map((c) => ({ name: c.name, sig: c.sig, boss: bossData() })), 'certyfikaty-kaszebi-w-europie.pdf')
+      .catch(() => alert('Nie udało się utworzyć PDF. Sprawdź internet i spróbuj ponownie.'))
+      .finally(() => { b.disabled = false; b.textContent = t; });
   };
   bossInfo();
   document.getElementById('backup').onclick = () => {

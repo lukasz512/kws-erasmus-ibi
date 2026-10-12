@@ -7,7 +7,7 @@
     .cert .bd { box-sizing: border-box; height: 100%; border: 5px solid #0B1F3A; padding: 4px; }
     .cert:last-child { page-break-after: auto; break-after: auto; }
     .cert .fr { box-sizing: border-box; height: 100%; border: 1.5px solid #0B1F3A; position: relative; padding: 32px 44px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .cert .fr::before { content: ''; position: absolute; inset: 6px; border: 1px solid #E5B800; pointer-events: none; }
+    .cert .fr::before { content: ''; position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 1px solid #E5B800; pointer-events: none; }
     .cert h1, .cert h3, .cert p, .cert ul { margin: 0; }
     .cert .kick { font: 700 10.5px 'Public Sans', Arial; letter-spacing: .26em; text-transform: uppercase; color: #003399; }
     .cert h1 { font: 600 40px/1.1 'Source Serif 4', Georgia, serif; margin-top: 10px; }
@@ -62,5 +62,31 @@
         <div class="fund">${UI.certFund.map((t) => `<p>${L(t)}</p>`).join('')}<p class="no">${L(UI.certProjNo)}: <b>${esc(window.PROJECT_NO)}</b></p></div>
       </footer>
     </div></div></div>`;
+  };
+  // PDF built in the page (one image per A4 page), so phone and desktop browsers can never split a certificate over two pages.
+  const lib = (src) => new Promise((ok, no) => document.head.append(Object.assign(document.createElement('script'), { src, onload: ok, onerror: no })));
+  let libs;
+  window.certPdf = async function (people, file) {
+    libs = libs || Promise.all([lib('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'), lib('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')]);
+    await libs; await document.fonts.ready;
+    const box = Object.assign(document.createElement('div'), { style: 'position:fixed;left:-3000px;top:0;width:210mm;background:#fff' });
+    document.body.append(box);
+    const pdf = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    try {
+      for (let i = 0; i < people.length; i++) {
+        box.innerHTML = certHtml(people[i].name, people[i].sig, people[i].boss);
+        await Promise.all([...box.querySelectorAll('img')].map((im) => im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; })));
+        const cv = await window.html2canvas(box.firstElementChild, { scale: 3, backgroundColor: '#fff', useCORS: true, logging: false });
+        if (i) pdf.addPage();
+        pdf.addImage(cv.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 297);
+      }
+    } finally { box.remove(); }
+    const blob = pdf.output('blob');
+    const f = new File([blob], file, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.canShare({ files: [f] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      try { await navigator.share({ files: [f] }); return; } catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: file });
+    document.body.append(a); a.click(); a.remove();
   };
 })();

@@ -50,9 +50,9 @@
 </div>
 <div class="certs" id="cert"></div>
 
-<script src="data.js?v=71"></script>
-<script src="common.js?v=71"></script>
-<script src="cert-print.js?v=71"></script>
+<script src="data.js?v=72"></script>
+<script src="common.js?v=72"></script>
+<script src="cert-print.js?v=72"></script>
 <script>
   if (!params.get('lang') && store('kws-lang')) LANG = store('kws-lang');
   const topic = params.get('t');
@@ -229,8 +229,11 @@
 
   function printCert() {
     // President's signature/stamp come from this device's storage (added on prezes.html); without them the line stays empty.
-    document.getElementById('cert').innerHTML = certHtml(st.name, st.sig, bossData());
-    setTimeout(print, 300);
+    const b = this && this.tagName ? this : null, t = b && b.textContent;
+    if (b) { b.disabled = true; b.textContent = '⏳ PDF…'; }
+    certPdf([{ name: st.name, sig: st.sig, boss: bossData() }], 'certyfikat-kaszebi-w-europie.pdf')
+      .catch(() => { document.getElementById('cert').innerHTML = certHtml(st.name, st.sig, bossData()); setTimeout(print, 300); })
+      .finally(() => { if (b) { b.disabled = false; b.textContent = t; } });
   }
   draw();
 </script>
